@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content" >
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:isScrollContainer="true"
+        android:orientation="vertical"
+        android:scrollbars="vertical" >
+
+        <TextView
+            android:id="@+id/screen_identity_textView_displayname"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="2px"
+            android:text="display_name"
+            android:textSize="20sp" >
+        </TextView>
+
+        <EditText
+            android:id="@+id/screen_identity_editText_displayname"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/screen_identity_textView_displayname"
+            android:ellipsize="end"
+            android:gravity="fill_horizontal"
+            android:text="company_name" >
+        </EditText>
+
+        <TextView
+            android:id="@+id/screen_identity_textView_impu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/screen_identity_editText_displayname"
+            android:layout_marginLeft="2px"
+            android:layout_marginTop="2dp"
+            android:text="public_identity"
+            android:textSize="20sp" >
+        </TextView>
+
+        <EditText
+            android:id="@+id/screen_identity_editText_impu"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/screen_identity_textView_impu"
+            android:text="sip:alice@open-ims.test" >
+        </EditText>
+
+        <TextView
+            android:id="@+id/screen_identity_textView_impi"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/screen_identity_editText_impu"
+            android:layout_marginTop="2dp"
+            android:text="private_identity"
+            android:textSize="20sp" >
+        </TextView>
+
+        <EditText
+            android:id="@+id/screen_identity_editText_impi"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/screen_identity_textView_impi"
+            android:text="alice@open-ims.test" >
+        </EditText>
+
+        <TextView
+            android:id="@+id/screen_identity_textView_password"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/screen_identity_editText_impi"
+            android:layout_marginTop="2dp"
+            android:text="password_identity"
+            android:textSize="20sp" >
+        </TextView>
+
+        <EditText
+            android:id="@+id/screen_identity_editText_password"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/screen_identity_textView_password"
+            android:inputType="textPassword" >
+        </EditText>
+
+        <TextView
+            android:id="@+id/screen_identity_TextView_realm"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/screen_identity_editText_password"
+            android:layout_marginTop="2dp"
+            android:text="realm"
+            android:textSize="20sp" >
+        </TextView>
+
+        <EditText
+            android:id="@+id/screen_identity_editText_realm"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/screen_identity_TextView_realm"
+            android:hint="host address" >
+        </EditText>
+
+        <CheckBox
+            android:id="@+id/screen_identity_checkBox_earlyIMS"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/screen_identity_editText_realm"
+            android:layout_marginTop="4dp"
+            android:text="early_IMS_security"
+            android:textSize="20sp" >
+        </CheckBox>
+
+        <RadioGroup
+            android:id="@+id/screen_natt_radioGroup_stun"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_below="@+id/screen_identity_checkBox_earlyIMS" >
+
+            <RadioButton
+                android:id="@+id/screen_ami_radioButton_ami_disable"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="Disable AMI Login" >
+            </RadioButton>
+
+            <RadioButton
+                android:id="@+id/screen_ami_radioButton_ami_enable"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="Enable AMI Login" >
+            </RadioButton>
+
+            <RelativeLayout
+                android:id="@+id/screen_ami_rl"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:isScrollContainer="true"
+                android:orientation="vertical"
+                android:scrollbars="vertical" >
+
+                <LinearLayout
+                    android:id="@+id/screen_ami_linearLayout_ipversion"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content" >
+
+                    <RadioGroup
+                        android:id="@+id/screen_ami_radioGroup_ipversion"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5px"
+                        android:orientation="horizontal" >
+
+                        <RadioButton
+                            android:id="@+id/screen_ami_radioButton_ipv4"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="5dp"
+                            android:checked="true"
+                            android:text="IPv4"
+                            android:textSize="16dp" >
+                        </RadioButton>
+
+                        <RadioButton
+                            android:id="@+id/screen_ami_radioButton_ipv6"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="5dp"
+                            android:text="IPv6"
+                            android:textSize="16dp" >
+                        </RadioButton>
+                    </RadioGroup>
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/screen_ami_textView_host"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/screen_ami_linearLayout_ipversion"
+                    android:layout_marginLeft="5px"
+                    android:layout_marginRight="5px"
+                    android:layout_marginTop="2dp"
+                    android:text="AMI Host"
+                    android:textSize="20dp" >
+                </TextView>
+
+                <EditText
+                    android:id="@+id/screen_ami_editText_host"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/screen_ami_textView_host"
+                    android:layout_marginLeft="5px"
+                    android:layout_marginRight="5px"
+                    android:text="127.0.0.1" >
+                </EditText>
+
+                <TextView
+                    android:id="@+id/screen_ami_textView_port"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/screen_ami_editText_host"
+                    android:layout_marginLeft="5px"
+                    android:layout_marginRight="5px"
+                    android:layout_marginTop="2dp"
+                    android:text="AMI Port"
+                    android:textSize="20dp" >
+                </TextView>
+
+                <TextView
+                    android:id="@+id/screen_ami_textView_username"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/screen_ami_editText_port"
+                    android:layout_marginLeft="5px"
+                    android:layout_marginRight="5px"
+                    android:layout_marginTop="2dp"
+                    android:text="AMI USERNAME"
+                    android:textSize="20dp" >
+                </TextView>
+
+                <EditText
+                    android:id="@+id/screen_ami_editText_username"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/screen_ami_textView_username"
+                    android:layout_marginLeft="5px"
+                    android:layout_marginRight="5px"
+                    android:text="admin" >
+                </EditText>
+
+                <TextView
+                    android:id="@+id/screen_ami_textView_secret"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/screen_ami_editText_username"
+                    android:layout_marginLeft="5px"
+                    android:layout_marginRight="5px"
+                    android:layout_marginTop="2dp"
+                    android:text="AMI Secret"
+                    android:textSize="20dp" >
+                </TextView>
+
+                <EditText
+                    android:id="@+id/screen_ami_editText_secret"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_below="@+id/screen_ami_textView_secret"
+                    android:ems="10"
+                    android:inputType="textPassword" >
+
+                    <requestFocus />
+                </EditText>
+
+                <EditText
+                    android:id="@+id/screen_ami_editText_port"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_below="@+id/screen_ami_textView_port"
+                    android:ems="10"
+                    android:inputType="number"
+                    android:text="5060" />
+            </RelativeLayout>
+        </RadioGroup>
+    </RelativeLayout>
+
+</ScrollView>

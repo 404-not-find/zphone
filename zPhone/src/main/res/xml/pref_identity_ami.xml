@@ -1,0 +1,39 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <EditTextPreference
+        android:capitalize="words"
+        android:defaultValue="@string/pref_default_identity_ami_account"
+        android:inputType="textCapWords"
+        android:key="identity_ami_acount"
+        android:maxLines="1"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:summary="@string/pref_summary_identity_amin_account"
+        android:title="@string/pref_title_identity_ami_account" />
+
+    
+
+    <EditTextPreference
+        android:capitalize="words"
+        android:defaultValue="@string/pref_default_identity_ami_host_port"
+        android:inputType="textCapWords"
+        android:key="identity_ami_host_port"
+        android:maxLines="1"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:summary="@string/pref_summary_identity_ami_host_port"
+        android:title="@string/pref_title_identity_ami_host_port" />
+    
+    <EditTextPreference
+        android:capitalize="words"
+        android:defaultValue="@string/pref_default_identity_ami_password"
+        android:inputType="textPassword"
+        android:key="identity_ami_password"
+        android:maxLines="1"
+        android:password="true"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:summary="@string/pref_summary_identity_ami_password"
+        android:title="@string/pref_title_identity_ami_password" />
+
+</PreferenceScreen>

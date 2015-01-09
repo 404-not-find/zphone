@@ -1,0 +1,14 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/action_contact"
+        android:icon="@drawable/ic_action_user"
+        android:showAsAction="ifRoom"
+        android:title="@string/action_contact"/>
+    <item
+        android:id="@+id/item_samplebadge"
+        android:actionLayout="@layout/menu_badge"
+        android:showAsAction="always"
+        android:title="sample_1"/>
+
+</menu>

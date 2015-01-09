@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/dark_grey" >
+
+    <TextView
+        android:id="@+id/view_call_trying_textView_info"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_marginBottom="10dp"
+        android:gravity="center_horizontal"
+        android:textColor="@color/white"
+        android:textSize="30sp"
+        android:textStyle="bold" >
+    </TextView>
+
+    <ImageView
+        android:id="@+id/view_call_trying_imageView_avatar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/view_call_trying_textView_info"
+        android:layout_alignRight="@+id/view_call_trying_textView_info"
+        android:layout_below="@+id/view_call_trying_textView_info"
+        android:layout_margin="5dp"
+        android:contentDescription="@null"
+        android:src="@drawable/ic_contact_picture_holo_light" >
+    </ImageView>
+
+    <TextView
+        android:id="@+id/view_call_trying_textView_remote"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/view_call_trying_imageView_avatar"
+        android:layout_below="@+id/view_call_trying_imageView_avatar"
+        android:layout_marginBottom="6dp"
+        android:layout_marginLeft="6dp"
+        android:layout_marginRight="6dp"
+        android:layout_marginTop="10dp"
+        android:gravity="center_horizontal"
+        android:textColor="@color/white"
+        android:textSize="25sp"
+        android:textStyle="bold" >
+    </TextView>
+
+    <LinearLayout
+        android:id="@+id/view_call_trying_linearLayout_pick_or_hang"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="3dp"
+        android:layout_marginLeft="3dp"
+        android:layout_marginRight="3dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:paddingBottom="72dp"
+        android:paddingLeft="18dp"
+        android:paddingRight="18dp"
+        android:weightSum="6" >
+
+        <Button
+            android:id="@+id/view_call_trying_imageButton_transfer"
+            android:layout_width="match_parent"
+            android:layout_height="72dp"
+            android:background="@drawable/call_forwarded_selector"
+            android:gravity="center"
+            android:text="@string/string_call_forward"
+            android:textColor="@color/white"
+            android:textSize="24sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="18dp" />
+
+        <Button
+            android:id="@+id/view_call_trying_imageButton_pick"
+            android:layout_width="match_parent"
+            android:layout_height="72dp"
+            android:background="@drawable/call_accept_selector"
+            android:gravity="center"
+            android:text="@string/string_call_answer"
+            android:textColor="@color/white"
+            android:textSize="24sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="18dp" />
+
+        <Button
+            android:id="@+id/view_call_trying_imageButton_hang"
+            android:layout_width="match_parent"
+            android:layout_height="72dp"
+            android:background="@drawable/end_call_selector"
+            android:gravity="center"
+            android:text="@string/string_call_reject"
+            android:textColor="@color/white"
+            android:textSize="24sp" />
+    </LinearLayout>
+
+</RelativeLayout>

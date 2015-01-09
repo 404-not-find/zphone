@@ -1,0 +1,13 @@
+<preference-headers xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <!-- These settings headers are only used on tablets. -->
+
+    <header
+        android:fragment="com.zycoo.android.zphone.IdentitySettingsActivity$AcountPreferenceFragment"
+        android:title="@string/pref_header_identity_acount" />
+    <header
+        android:fragment="com.zycoo.android.zphone.IdentitySettingsActivity$AMIAcountPreferenceFragment"
+        android:title="@string/pref_header_identity_ami_acount"
+         />
+
+</preference-headers>

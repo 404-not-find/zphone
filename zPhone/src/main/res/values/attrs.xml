@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="Options">
+        <attr name="text1" format="string"></attr>
+        <attr name="text2" format="string"></attr>
+        <attr name="textSize1" format="float"></attr>
+        <attr name="textSize2" format="float"></attr>
+        <attr name="weight" format="integer"></attr>
+        <attr name="text2visible" format="boolean"></attr>
+    </declare-styleable>
+</resources>

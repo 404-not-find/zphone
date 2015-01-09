@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@+id/dialPadContainer"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="3dp">
+
+        <ImageView
+            android:layout_centerVertical="true"
+            android:id="@+id/backspace_ib"
+            android:contentDescription="@null"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:tint="@color/red_900"
+            android:src="@drawable/ic_backspace_white"/>
+
+        <TextView
+            android:id="@+id/digitsText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@id/backspace_ib"
+            android:background="@color/grey_200"
+            android:ellipsize="start"
+            android:gravity="center"
+            android:maxLines="1"
+            android:padding="6dip"
+            android:singleLine="true"
+            android:textColor="@color/grey_700"
+            android:textSize="28sp"/>
+    </RelativeLayout>
+
+    <com.zycoo.android.zphone.ui.dialpad.Dialpad
+        android:id="@+id/dialPad"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/grey_200"/>
+
+</LinearLayout>

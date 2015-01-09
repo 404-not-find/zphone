@@ -1,0 +1,175 @@
+<configuration>
+
+    <!-- <property name="LOG_DIR" value="/data/data/com.example/files" /> -->
+
+    <property
+        name="LOG_DIR"
+        value="/sdcard/zycoo/logs" />
+
+    <!-- Create a logcat appender -->
+
+    <appender
+        name="logcat"
+        class="ch.qos.logback.classic.android.LogcatAppender" >
+
+        <encoder>
+
+            <pattern>
+                        %msg
+            </pattern>
+        </encoder>
+    </appender>
+
+    <!-- Create a file appender for TRACE-level messages -->
+
+    <appender
+        name="InfoLog"
+        class="ch.qos.logback.core.FileAppender" >
+
+        <filter class="ch.qos.logback.classic.filter.LevelFilter" >
+
+            <level>
+                    INFO
+            </level>
+
+            <onMatch>
+                    ACCEPT                
+            </onMatch>
+
+            <onMismatch>
+                    NEUTRAL
+            </onMismatch>
+        </filter>
+
+        <filter class="ch.qos.logback.classic.filter.LevelFilter" >
+
+            <level>
+                    WARN
+            </level>
+
+            <onMatch>
+                    ACCEPT                
+            </onMatch>
+
+            <onMismatch>
+                    NEUTRAL
+            </onMismatch>
+        </filter>
+
+        <filter class="ch.qos.logback.classic.filter.LevelFilter" >
+
+            <level>
+                    ERROR
+            </level>
+
+            <onMatch>
+                    ACCEPT                
+            </onMatch>
+
+            <onMismatch>
+                    DENY
+            </onMismatch>
+        </filter>
+
+        <file>
+                ${LOG_DIR}/info.log
+        </file>
+
+        <encoder>
+
+            <pattern>
+                    %d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n
+            </pattern>
+        </encoder>
+
+        <filter>
+        </filter>
+
+        <filter>
+        </filter>
+    </appender>
+
+    <!-- Create a file appender for DEBUG-level messages -->
+
+    <appender
+        name="DebugLog"
+        class="ch.qos.logback.core.FileAppender" >
+
+        <filter class="ch.qos.logback.classic.filter.LevelFilter" >
+
+            <level>
+                DEBUG
+            </level>
+
+            <onMatch>
+                ACCEPT
+            </onMatch>
+
+            <onMismatch>
+                DENY
+            </onMismatch>
+        </filter>
+
+        <file>
+            ${LOG_DIR}/debug.log
+        </file>
+
+        <encoder>
+
+            <pattern>
+                %d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n
+            </pattern>
+        </encoder>
+    </appender>
+
+    <appender
+        name="ErrorLog"
+        class="ch.qos.logback.core.FileAppender" >
+
+        <filter class="ch.qos.logback.classic.filter.LevelFilter" >
+
+            <level>
+                ERROR
+            </level>
+
+            <onMatch>
+                ACCEPT
+            </onMatch>
+
+            <onMismatch>
+                DENY
+            </onMismatch>
+        </filter>
+
+        <file>
+            ${LOG_DIR}/error.log
+        </file>
+
+        <encoder>
+
+            <pattern>
+                %d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n
+            </pattern>
+        </encoder>
+    </appender>
+
+    <!--
+    <logger
+        name="com.tqcenglish.androidtest.MainActivity"
+        level="TRACE" >
+        <appender-ref ref="TraceLog" />
+    </logger>
+    -->
+
+    <root level="TRACE" >
+
+        <appender-ref ref="logcat" />
+
+        <appender-ref ref="DebugLog" />
+
+        <appender-ref ref="InfoLog" />
+
+        <appender-ref ref="ErrorLog" />
+    </root>
+
+</configuration>

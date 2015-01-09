@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+              style="@style/FragmentStyle"
+              android:layout_width="fill_parent"
+              android:layout_height="72dp">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:paddingBottom="5dp"
+        android:paddingLeft="16dp"
+        android:paddingTop="5dp"
+        android:layout_width="match_parent"
+        android:background="?attr/actionBarItemBackground"
+        android:layout_height="match_parent">
+
+
+        <ImageView
+            android:id="@+id/screen_tab_contacts_item_imageView_avatar"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_account_box_grey600">
+        </ImageView>
+
+        <TextView
+            android:id="@+id/screen_tab_contacts_item_textView_displayname"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_margin="4dp"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:lines="1"
+            android:paddingLeft="72dp"
+            android:text="John Doe"
+            android:textColor="@color/grey_500"
+            android:textSize="16sp">
+        </TextView>
+    </LinearLayout>
+</LinearLayout>

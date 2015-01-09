@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="background_tab_pressed">#6633B5E5</color>
+    <color name="actionbar_text">#ffffff</color>
+    <color name="holo_red">#FF4444</color>
+    <color name="holo_red2">#CC0000</color>
+    <color name="holo_blue">#33B5E5</color>
+    <color name="holo_blue2">#0099CC</color>
+    <color name="holo_purple">#AA66CC</color>
+    <color name="holo_purple2">#9933CC</color>
+    <color name="holo_green">#99CC00</color>
+    <color name="holo_green2">#669900</color>
+    <color name="holo_yellow">#FFBB33</color>
+    <color name="holo_orange">#FF8800</color>
+    <color name="light_grey">#e0e0e0</color>
+    <color name="light_medium_grey">#c7c7c7</color>
+    <color name="dark_medium_grey">#606060</color>
+    <color name="dark_grey">#3e3e3e</color>
+    <!-- undobar -->
+    <color name="divider">#afafaf</color>
+    <color name="message_text">#ffffff</color>
+    <color name="button_text">#acacac</color>
+    <color name="button_background">#db555555</color>
+    <color name="button_background_pressed">#858585</color>
+
+
+
+</resources>

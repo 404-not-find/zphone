@@ -1,0 +1,53 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="#ABABAB" >
+
+    <EditTextPreference
+        android:capitalize="words"
+        android:defaultValue="@string/pref_default_display_name"
+        android:inputType="textCapWords"
+        android:key="identity_acount_display_name"
+        android:maxLines="1"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:summary="@string/pref_summary_identity_display_name"
+        android:title="@string/pref_title_display_name" />
+    <EditTextPreference
+        android:capitalize="words"
+        android:defaultValue="@string/pref_default_identity_account"
+        android:inputType="textCapWords"
+        android:key="identity_acount"
+        android:maxLines="1"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:summary="@string/pref_summary_identity_account"
+        android:title="@string/pref_title_identity_account" />
+    <EditTextPreference
+        android:capitalize="words"
+        android:defaultValue="@string/pref_default_identity_host_port"
+        android:inputType="textCapWords"
+        android:key="identity_acount_host_port"
+        android:maxLines="1"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:summary="@string/pref_summary_identity_host_port"
+        android:title="@string/pref_title_identity_host_port" />
+    <EditTextPreference
+        android:capitalize="words"
+        android:defaultValue="@string/pref_default_identity_password"
+        android:inputType="textCapWords"
+        android:key="identity_acount_password"
+        android:maxLines="1"
+        android:password="true"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:summary="@string/pref_summary_identity_password"
+        android:title="@string/pref_title_identity_password" />
+    <!--
+         <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="3gpp_early_ims_security_checkbox"
+        android:summary="@string/pref_description_identity_3gpp_early_ims_security"
+        android:title="@string/pref_title_identity_3gpp_early_ims_security" />
+    -->
+
+</PreferenceScreen>
