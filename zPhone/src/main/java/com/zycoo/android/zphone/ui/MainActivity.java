@@ -38,6 +38,8 @@ import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.diegocarloslima.fgelv.bak.WrapperExpandableListAdapter;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 import com.hp.views.PagerSlidingTabStrip;
 import com.hp.views.PagerSlidingTabStrip.TitleIconTabProvider;
 import com.zycoo.android.zphone.BuildConfig;
@@ -123,6 +125,14 @@ public class MainActivity extends SherlockFragmentActivity implements
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // Get tracker.
+        Tracker t = ((ZphoneApplication) getApplication()).getTracker(
+                ZphoneApplication.TrackerName.APP_TRACKER);
+        // Set screen name.
+        t.setScreenName(MainActivity.class.getCanonicalName());
+        // Send a screen view.
+        t.send(new HitBuilders.AppViewBuilder().build());
+        
         if (BuildConfig.DEBUG) {
             Utils.enableStrictMode();
         }

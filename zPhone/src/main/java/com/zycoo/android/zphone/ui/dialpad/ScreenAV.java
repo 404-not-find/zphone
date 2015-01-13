@@ -294,12 +294,13 @@ public class ScreenAV extends SherlockFragmentActivity implements OnClickListene
         }
         final PowerManager powerManager = ZphoneApplication.getPowerManager();
         if (powerManager != null && mWakeLock == null) {
-            mWakeLock = powerManager.newWakeLock(PowerManager.ON_AFTER_RELEASE
+            /*mWakeLock = powerManager.newWakeLock(PowerManager.ON_AFTER_RELEASE
                             | PowerManager.SCREEN_BRIGHT_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP,
-                    TAG);
-            if (mWakeLock != null) {
+                    TAG);*/
+            mWakeLock = powerManager.newWakeLock(32, TAG);
+           /* if (mWakeLock != null) {
                 mWakeLock.acquire();
-            }
+            }*/
         }
         if (mProxSensor == null && !ZphoneApplication.isBuggyProximitySensor()) {
             mProxSensor = new MyProxSensor(this);
@@ -310,12 +311,12 @@ public class ScreenAV extends SherlockFragmentActivity implements OnClickListene
     protected void onPause() {
         super.onPause();
         Log.d(TAG, "onPause()");
-        if (mProxSensor != null) {
+        /*if (mProxSensor != null) {
             mProxSensor.stop();
         }
         if (mWakeLock != null && mWakeLock.isHeld()) {
             mWakeLock.release();
-        }
+        }*/
         if (mListener != null && mListener.canDetectOrientation()) {
             mListener.disable();
         }
@@ -1147,7 +1148,7 @@ public class ScreenAV extends SherlockFragmentActivity implements OnClickListene
     /**
      * MyProxSensor 监视原始的传感器数据
      */
-    static class MyProxSensor implements SensorEventListener {
+    class MyProxSensor implements SensorEventListener {
 
 
         private final SensorManager mSensorManager;
@@ -1182,6 +1183,8 @@ public class ScreenAV extends SherlockFragmentActivity implements OnClickListene
 
         @Override
         public void onSensorChanged(SensorEvent event) {
+            float[] its = event.values;
+
             try { // Keep it until we get a phone supporting this feature
                 if (mAVScreen == null) {
                     Log.e(ScreenAV.TAG, "invalid state");
@@ -1199,6 +1202,23 @@ public class ScreenAV extends SherlockFragmentActivity implements OnClickListene
                 }
             } catch (Exception e) {
                 e.printStackTrace();
+            }
+
+            if (null != mWakeLock && its != null && event.sensor.getType() == Sensor.TYPE_PROXIMITY) {
+                if (its[0] != mMaxRange) {// 贴近手机
+                    if (mWakeLock.isHeld()) {
+                        return;
+                    } else {
+                        mWakeLock.acquire();// 申请设备电源锁
+                    }
+                } else {// 远离手机
+                    if (mWakeLock.isHeld()) {
+                        return;
+                    } else {
+                        mWakeLock.setReferenceCounted(false);
+                        mWakeLock.release(); // 释放设备电源锁
+                    }
+                }
             }
         }
     }

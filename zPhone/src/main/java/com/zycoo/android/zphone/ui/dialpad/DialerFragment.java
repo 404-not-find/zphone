@@ -314,26 +314,31 @@ public class DialerFragment extends SuperAwesomeCardFragment implements OnClickL
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         /*
-         * Intent serviceIntent = new Intent(SipManager.INTENT_SIP_SERVICE); //
-         * Optional, but here we bundle so just ensure we are using csipsimple
-         * package serviceIntent.setPackage(activity.getPackageName());
-         * getActivity().bindService(serviceIntent, connection,
-         * Context.BIND_AUTO_CREATE); // timings.addSplit("Bind asked for two");
-         * if (prefsWrapper == null) { prefsWrapper = new
-         * PreferencesWrapper(getActivity()); } if (dialFeedback == null) {
-         * dialFeedback = new DialingFeedback(getActivity(), false); }
-         * dialFeedback.resume();
-         */
+        Intent serviceIntent = new Intent(SipManager.INTENT_SIP_SERVICE); //
+        Optional, but here we bundle so just ensure we are using csipsimple
+        package serviceIntent.setPackage(activity.getPackageName());
+        getActivity().bindService(serviceIntent, connection,
+                Context.BIND_AUTO_CREATE); // timings.addSplit("Bind asked for two");
+        if (prefsWrapper == null) {
+            prefsWrapper = new
+                    PreferencesWrapper(getActivity());
+        }
+        */
+
+        if (dialFeedback == null) {
+            dialFeedback = new DialingFeedback(getActivity(), false);
+        }
+        dialFeedback.resume();
 
     }
 
     @Override
     public void onDetach() {
         /*
-         * try { getActivity().unbindService(connection); } catch (Exception e)
-         * { // Just ignore that Log.w(THIS_FILE, "Unable to un bind", e); }
-         * dialFeedback.pause();
+          try { getActivity().unbindService(connection); } catch (Exception e)
+          { // Just ignore that Log.w(THIS_FILE, "Unable to un bind", e); }
          */
+        dialFeedback.pause();
         super.onDetach();
     }
 
@@ -403,12 +408,9 @@ public class DialerFragment extends SuperAwesomeCardFragment implements OnClickL
                         }
                     }).start();
         }
-        if(!mSipService.isRegistered())
-        {
+        if (!mSipService.isRegistered()) {
             Toast.makeText(getActivity(), R.string.not_register, Toast.LENGTH_SHORT).show();
-        }
-        else
-        {
+        } else {
             //Toast.makeText(getActivity(), "", Toast.LENGTH_SHORT).show();
         }
 
@@ -503,7 +505,7 @@ public class DialerFragment extends SuperAwesomeCardFragment implements OnClickL
 
     @Override
     public void onTrigger(int keyCode, int dialTone) {
-        // dialFeedback.giveFeedback(dialTone);
+        dialFeedback.giveFeedback(dialTone);
         keyPressed(keyCode);
 
     }
@@ -517,7 +519,7 @@ public class DialerFragment extends SuperAwesomeCardFragment implements OnClickL
     public boolean onLongClick(View v) {
         int vId = v.getId();
         if (vId == R.id.button0) {
-            // dialFeedback.hapticFeedback();
+            dialFeedback.hapticFeedback();
             keyPressed(KeyEvent.KEYCODE_PLUS);
             return true;
         } else if (vId == R.id.button1) {

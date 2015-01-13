@@ -4,15 +4,20 @@ package com.zycoo.android.zphone;
 import android.app.Activity;
 import android.content.res.Resources;
 
+import com.google.android.gms.analytics.GoogleAnalytics;
+import com.google.android.gms.analytics.Tracker;
+
 import org.doubango.ngn.NgnApplication;
 import org.doubango.ngn.services.INgnConfigurationService;
 import org.doubango.ngn.services.INgnSipService;
 import org.doubango.ngn.utils.NgnConfigurationEntry;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class ZphoneApplication extends NgnApplication {
+    private final static String PROPERTY_ID = "UA-47275396-3";
     private static List<Activity> mActivitys = new ArrayList<Activity>();
     protected INgnConfigurationService mConfigurationService;
     private INgnSipService mSipService;
@@ -78,5 +83,25 @@ public class ZphoneApplication extends NgnApplication {
 
     public static INgnSipService getSipService() {
         return sInstance.mSipService;
+    }
+
+    public enum TrackerName {
+        APP_TRACKER, // Tracker used only in this app.
+        GLOBAL_TRACKER, // Tracker used by all the apps from a company. eg: roll-up tracking.
+        ECOMMERCE_TRACKER, // Tracker used by all ecommerce transactions from a company.
+    }
+
+    HashMap<TrackerName, Tracker> mTrackers = new HashMap<TrackerName, Tracker>();
+    public synchronized Tracker getTracker(TrackerName trackerId) {
+        if (!mTrackers.containsKey(trackerId)) {
+
+            GoogleAnalytics analytics = GoogleAnalytics.getInstance(this);
+            Tracker t = (trackerId == TrackerName.APP_TRACKER) ? analytics.newTracker(PROPERTY_ID)
+                    : (trackerId == TrackerName.GLOBAL_TRACKER) ? analytics.newTracker(R.xml.global_tracker)
+                    : analytics.newTracker(R.xml.ecommerce_tracker);
+            mTrackers.put(trackerId, t);
+
+        }
+        return mTrackers.get(trackerId);
     }
 }

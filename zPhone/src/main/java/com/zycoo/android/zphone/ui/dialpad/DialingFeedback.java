@@ -25,7 +25,7 @@
  */
 
 
-package com.zycoo.android.zphone.utils;
+package com.zycoo.android.zphone.ui.dialpad;
 
 import android.app.Activity;
 import android.content.Context;
@@ -56,9 +56,8 @@ public class DialingFeedback {
 	private Vibrator vibrator = null;
 	private Timer toneTimer = null;
 
-	//private PreferencesWrapper prefsWrapper;
-	private boolean dialPressTone = true;
-	private boolean dialPressVibrate = true;
+	private boolean dialPressTone = false;
+	private boolean dialPressVibrate = false;
 
 	private int ringerMode;
 
@@ -67,13 +66,12 @@ public class DialingFeedback {
 		this.context = context;
 		this.inCall = inCall;
 		toneStream = inCall ? AudioManager.STREAM_VOICE_CALL : AudioManager.STREAM_MUSIC;
-		//prefsWrapper = new PreferencesWrapper(context);
 	}
 	
 	public void resume() {
 		
-		//dialPressTone = prefsWrapper.dialPressTone(inCall);
-		//dialPressVibrate = prefsWrapper.dialPressVibrate();
+		dialPressTone = true;
+		dialPressVibrate = true;
 
         if (dialPressTone) {
             // Create dialtone just for user feedback
