@@ -37,6 +37,8 @@ import android.media.AudioManager;
 import android.net.ConnectivityManager;
 import android.os.Build;
 import android.os.PowerManager;
+import android.support.multidex.MultiDex;
+import android.support.multidex.MultiDexApplication;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.Display;
@@ -301,7 +303,8 @@ import android.view.WindowManager;
  * Global object defining the application. You should extends this class in your own
  * Android application. 
  */
-public class NgnApplication extends Application{
+
+public class NgnApplication extends Application {
 	private final static String TAG = NgnApplication.class.getCanonicalName();
 	
 	private static NgnApplication sInstance;

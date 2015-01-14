@@ -2,7 +2,10 @@
 package com.zycoo.android.zphone;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.res.Resources;
+import android.support.multidex.MultiDex;
+import android.util.Log;
 
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
@@ -73,6 +76,7 @@ public class ZphoneApplication extends NgnApplication {
     public static String getUserName() {
         return sInstance.mConfigurationService.getString(NgnConfigurationEntry.IDENTITY_IMPI, "");
     }
+
     public static String getNickName() {
         return sInstance.mConfigurationService.getString(NgnConfigurationEntry.IDENTITY_DISPLAY_NAME, "Zycoo");
     }
@@ -92,6 +96,7 @@ public class ZphoneApplication extends NgnApplication {
     }
 
     HashMap<TrackerName, Tracker> mTrackers = new HashMap<TrackerName, Tracker>();
+
     public synchronized Tracker getTracker(TrackerName trackerId) {
         if (!mTrackers.containsKey(trackerId)) {
 
@@ -103,5 +108,12 @@ public class ZphoneApplication extends NgnApplication {
 
         }
         return mTrackers.get(trackerId);
+    }
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        Log.d("TAG", "attachBaseContext");
+        MultiDex.install(this);
     }
 }
