@@ -38,6 +38,7 @@ import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.diegocarloslima.fgelv.bak.WrapperExpandableListAdapter;
+import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.hp.views.PagerSlidingTabStrip;
@@ -131,8 +132,9 @@ public class MainActivity extends SherlockFragmentActivity implements
         // Set screen name.
         t.setScreenName(MainActivity.class.getCanonicalName());
         // Send a screen view.
-        t.send(new HitBuilders.AppViewBuilder().build());
-        
+        t.send(new HitBuilders.ScreenViewBuilder().build());
+
+
         if (BuildConfig.DEBUG) {
             Utils.enableStrictMode();
         }
