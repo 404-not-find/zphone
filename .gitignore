@@ -4,4 +4,4 @@ build/
 import-summary.txt
 local.properties
 ZPhone.iml
-
+*.apk

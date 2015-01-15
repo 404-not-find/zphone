@@ -92,11 +92,6 @@
 -keep class org.simpleframework.xml.core.**{ *; }
 -keep class org.simpleframework.xml.util.**{ *; }
 
--keepattributes ElementList, Root
--keepclassmembers class * {
-    @org.simpleframework.xml.* *;
-}
+-keepattributes *Annotation*
+-keepattributes Signature
 
-
--renamesourcefileattribute SourceFile
--keepattributes SourceFile,LineNumberTable
