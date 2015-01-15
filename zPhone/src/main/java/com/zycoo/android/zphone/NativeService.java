@@ -97,6 +97,7 @@ public class NativeService extends NgnNativeService implements MqttCallback {
 
         mLogger.debug("NativeService onStartCommand");
         if (!Engine.getInstance().isStarted()) {
+            mLogger.debug("NativeService Engine not start");
             if (Engine.getInstance().start()) {
                 mLogger.debug("onStartCommand start engine successful");
             } else {
@@ -105,6 +106,7 @@ public class NativeService extends NgnNativeService implements MqttCallback {
             flags = START_STICKY;
             return super.onStartCommand(intent, flags, startId);
         }
+
         // 后台服务，启动广播接受，修改状态栏显示，同时发送广播事件
         mBroadcastReceiver = new BroadcastReceiver() {
             @Override

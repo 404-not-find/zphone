@@ -70,3 +70,33 @@
 
 -dontwarn org.apache.**
 -dontwarn com.actionbarsherlock.BuildConfig
+
+-keep class org.doubango.** { *; }
+-keep class com.zycoo.android.zphone.** { *; }
+
+#http://stackoverflow.com/questions/14111150/application-stopped-working-after-enabling-proguard
+-keepclassmembers class * extends com.actionbarsherlock.ActionBarSherlock {
+    <init>(android.app.Activity, int);
+}
+
+-keep class com.google.gson.** { *; }
+-keep class org.slf4j.Logger
+-keep class org.slf4j.LoggerFactory
+-keep class ch.qos.logback.core.**{ *; }
+-keep class ch.qos.logback.classic.**{ *; }
+-keep public class * extends android.app.Application
+
+
+-keep public class org.simpleframework.**{ *; }
+-keep class org.simpleframework.xml.**{ *; }
+-keep class org.simpleframework.xml.core.**{ *; }
+-keep class org.simpleframework.xml.util.**{ *; }
+
+-keepattributes ElementList, Root
+-keepclassmembers class * {
+    @org.simpleframework.xml.* *;
+}
+
+
+-renamesourcefileattribute SourceFile
+-keepattributes SourceFile,LineNumberTable

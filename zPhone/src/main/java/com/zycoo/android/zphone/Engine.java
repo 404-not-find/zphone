@@ -12,6 +12,8 @@ import com.zycoo.android.zphone.ui.LaunchActivity;
 import org.doubango.ngn.NgnEngine;
 import org.doubango.ngn.NgnNativeService;
 import org.doubango.ngn.sip.NgnAVSession;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Engine
         extends NgnEngine
@@ -19,7 +21,7 @@ public class Engine
     private static final String CONTENT_TITLE = "ZPhone";
     private static final int NOTIF_APP_ID = 19833894;
     private static final int NOTIF_AVCALL_ID = 19833892;
-
+    private static final Logger sLogger = LoggerFactory.getLogger(Engine.class);
     public static Engine getInstance()
     {
         if (sInstance == null)
@@ -36,6 +38,7 @@ public class Engine
     @Override
     public boolean start()
     {
+        sLogger.debug("Engine start");
         return super.start();
     }
 

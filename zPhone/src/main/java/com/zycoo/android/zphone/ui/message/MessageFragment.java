@@ -359,12 +359,14 @@ public class MessageFragment extends SuperAwesomeCardFragment implements OnChild
                 }
                 mNativeService.subscribe();
             }
-            try {
+           /* try {
                 new UpdateMessage().Get();
             } catch (RuntimeException e) {
                 pullResult = false;
                 mLogger.error("pullrefresh failure " + e.getMessage());
-            }
+                e.getStackTrace();
+            }*/
+            new UpdateMessage().Get();
 
             return super.doInBackground(params);
         }
