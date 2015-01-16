@@ -62,7 +62,7 @@ public class AboutActivity extends BaseScreen implements AdapterView.OnItemClick
         adapter = new ScreenSettingsAdapter(this, items);
         mListView.setAdapter(adapter);
         mListView.setOnItemClickListener(this);
-        mVersionTv.setText("ZPhone " + Utils.getVersion(this));
+        mVersionTv.setText(getResources().getString(R.string.app_name) + " "+Utils.getVersion(this));
     }
 
     private void initData() {

@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           xmlns:tools="http://schemas.android.com/tools"
           package="com.zycoo.android.zphone"
-          android:versionCode="150105"
+          android:versionCode="150116"
           android:versionName="1.1">
 
     <uses-sdk

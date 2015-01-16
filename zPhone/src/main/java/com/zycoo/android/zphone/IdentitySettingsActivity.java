@@ -57,6 +57,7 @@ public class IdentitySettingsActivity extends SherlockPreferenceActivity impleme
         NgnApplication.getContext().getSharedPreferences(NgnConfigurationEntry.SHARED_PREF_NAME,
                 0).registerOnSharedPreferenceChangeListener(this);
     }
+
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
@@ -210,7 +211,9 @@ public class IdentitySettingsActivity extends SherlockPreferenceActivity impleme
         public boolean onPreferenceChange(Preference preference, Object value) {
             String stringValue = value.toString();
             if (preference.getKey().equals("identity_acount_password")) {
-                preference.setSummary("******");
+                if (!stringValue.equals("")) {
+                    preference.setSummary("******");
+                }
             } else {
                 preference.setSummary(stringValue);
             }
@@ -228,13 +231,7 @@ public class IdentitySettingsActivity extends SherlockPreferenceActivity impleme
                 break;
             case "identity_acount":
                 String acount = mConfigurationService.getString(key, "804");
-                mConfigurationService.putString(
-                        NgnConfigurationEntry.IDENTITY_IMPU,
-                        "sip:"
-                                + acount
-                                + "@"
-                                + mConfigurationService.getString(
-                                NgnConfigurationEntry.NETWORK_REALM, "127.0.0.1"));
+
                 mConfigurationService.putString(NgnConfigurationEntry.IDENTITY_IMPI, acount);
                 break;
             case "identity_acount_host_port":
@@ -263,6 +260,12 @@ public class IdentitySettingsActivity extends SherlockPreferenceActivity impleme
             default:
                 break;
         }
+        mConfigurationService.putString(
+                NgnConfigurationEntry.IDENTITY_IMPU,
+                "sip:"
+                        + mConfigurationService.getString(NgnConfigurationEntry.IDENTITY_IMPI, "default")
+                        + "@"
+                        + mConfigurationService.getString(NgnConfigurationEntry.NETWORK_REALM, "127.0.0.1"));
         boolean result = mConfigurationService.commit();
         logger.debug("add_to_contacts config result " + result);
     }
