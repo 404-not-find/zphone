@@ -179,7 +179,10 @@ public class MainActivity extends SherlockFragmentActivity implements
         //Animation animationFadeIn = AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_in);
         //getView().startAnimation(animationFadeIn);
         //animationFadeIn.setFillAfter(true);
+
+
         //ZoomOutPageTransformer
+        /*
         pager.setPageTransformer(false, new ViewPager.PageTransformer() {
             private float MIN_SCALE = 0.85f;
             private float MIN_ALPHA = 0.5f;
@@ -206,6 +209,26 @@ public class MainActivity extends SherlockFragmentActivity implements
                     // Scale the page down (between MIN_SCALE and 1)
                     Utils.CustomSetScaleXY(view, scaleFactor, scaleFactor);
                     // Fade the page relative to its size.
+                    Utils.CustomSetAlpha(view, MIN_ALPHA + (scaleFactor - MIN_SCALE)
+                            / (1 - MIN_SCALE) * (1 - MIN_ALPHA));
+                } else { // (1,+Infinity]
+                    // This page is way off-screen to the right.
+                    Utils.CustomSetAlpha(view);
+                }
+            }
+        });
+        */
+        pager.setPageTransformer(false, new ViewPager.PageTransformer() {
+            private float MIN_SCALE = 0.5f;
+            private float MIN_ALPHA = 0.4f;
+
+            @Override
+            public final void transformPage(final View view, final float position) {
+                if (position < -1) { // [-Infinity,-1)
+                    // This page is way off-screen to the left.
+                    Utils.CustomSetAlpha(view);
+                } else if (position <= 1) { // [-1,1]
+                    float scaleFactor = Math.max(MIN_SCALE, 1 - Math.abs(position));
                     Utils.CustomSetAlpha(view, MIN_ALPHA + (scaleFactor - MIN_SCALE)
                             / (1 - MIN_SCALE) * (1 - MIN_ALPHA));
                 } else { // (1,+Infinity]

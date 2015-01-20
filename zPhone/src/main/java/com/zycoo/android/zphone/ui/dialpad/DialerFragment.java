@@ -4,6 +4,7 @@ package com.zycoo.android.zphone.ui.dialpad;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -311,35 +312,18 @@ public class DialerFragment extends SuperAwesomeCardFragment implements OnClickL
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        /*
-        Intent serviceIntent = new Intent(SipManager.INTENT_SIP_SERVICE); //
-        Optional, but here we bundle so just ensure we are using csipsimple
-        package serviceIntent.setPackage(activity.getPackageName());
-        getActivity().bindService(serviceIntent, connection,
-                Context.BIND_AUTO_CREATE); // timings.addSplit("Bind asked for two");
-        if (prefsWrapper == null) {
-            prefsWrapper = new
-                    PreferencesWrapper(getActivity());
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser) {
+            if (dialFeedback == null) {
+                dialFeedback = new DialingFeedback(getActivity(), false);
+            }
+            dialFeedback.resume();
+        } else {
+            if (null != dialFeedback) {
+                dialFeedback.pause();
+            }
         }
-        */
-
-        if (dialFeedback == null) {
-            dialFeedback = new DialingFeedback(getActivity(), false);
-        }
-        dialFeedback.resume();
-
-    }
-
-    @Override
-    public void onDetach() {
-        /*
-          try { getActivity().unbindService(connection); } catch (Exception e)
-          { // Just ignore that Log.w(THIS_FILE, "Unable to un bind", e); }
-         */
-        dialFeedback.pause();
-        super.onDetach();
     }
 
     private void attachButtonListener(View v, int id, boolean longAttach) {
@@ -394,24 +378,22 @@ public class DialerFragment extends SuperAwesomeCardFragment implements OnClickL
     public void placeCall() {
 
         if (mSipService.isRegistered() && 0 != digits.getText().toString().length()) {
-            mLogger.debug("call number " + digits.getText().toString());
-            mLogger.debug("start audio call");
-
-
+            final String number = digits.getText().toString();
+            mLogger.debug("start audio call  call number " + number);
+            digits.setText("");
             new Thread(
                     // voice call
                     new Runnable() {
                         @Override
                         public void run() {
-                            ScreenAV.makeCall(digits.getText().toString(), NgnMediaType.Audio,
+                            ScreenAV.makeCall(number, NgnMediaType.Audio,
                                     ZphoneApplication.getContext());
+
                         }
                     }).start();
         }
         if (!mSipService.isRegistered()) {
             Toast.makeText(getActivity(), R.string.not_register, Toast.LENGTH_SHORT).show();
-        } else {
-            //Toast.makeText(getActivity(), "", Toast.LENGTH_SHORT).show();
         }
 
     }

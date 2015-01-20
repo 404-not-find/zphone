@@ -18,7 +18,7 @@ import org.slf4j.LoggerFactory;
 public class Engine
         extends NgnEngine
 {
-    private static final String CONTENT_TITLE = "ZPhone";
+    private static final String CONTENT_TITLE = ZphoneApplication.getContext().getResources().getString(R.string.app_name);
     private static final int NOTIF_APP_ID = 19833894;
     private static final int NOTIF_AVCALL_ID = 19833892;
     private static final Logger sLogger = LoggerFactory.getLogger(Engine.class);
@@ -70,6 +70,7 @@ public class Engine
             case NOTIF_AVCALL_ID:
                 tickerText =
                         String.format("%s (%d)", tickerText, NgnAVSession.getSize());
+                notification.flags |= Notification.FLAG_ONGOING_EVENT;
                 intent.putExtra("action", LaunchActivity.ACTION_SHOW_AVSCREEN);
                 break;
             default:
@@ -129,7 +130,7 @@ public class Engine
         builder.setTicker(tickerText);
         builder.setContentIntent(contentIntent);
         notification = builder.build();
-        if (NOTIF_APP_ID == notifId)
+        //if (NOTIF_APP_ID == notifId)
         {
             notification.flags |= Notification.FLAG_ONGOING_EVENT;
         }

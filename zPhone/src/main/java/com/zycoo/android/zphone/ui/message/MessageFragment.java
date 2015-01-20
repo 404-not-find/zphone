@@ -353,12 +353,12 @@ public class MessageFragment extends SuperAwesomeCardFragment implements OnChild
         @Override
         protected Void doInBackground(Void... params) {
 
-            if (Utils.isPro(getActivity())) {
+            /*if (Utils.isPro(getActivity())) {
                 if (!mNativeService.isConnected()) {
                     mNativeService.connectAction();
                 }
                 mNativeService.subscribe();
-            }
+            }*/
             try {
                 new UpdateMessage().Get();
             } catch (RuntimeException e) {
@@ -428,7 +428,7 @@ public class MessageFragment extends SuperAwesomeCardFragment implements OnChild
                             .getApplicationContext(),
                             "SoftPhone.db", null, 1)
                             .getWritableDatabase();
-                    wSQLiteDatabase.execSQL("remove_from_call_log from MONITORS where FILE_NAME=\'"
+                    wSQLiteDatabase.execSQL("delete  from MONITORS where FILE_NAME=\'"
                             + monitorBean.getFile_name() + "\'");
                     wSQLiteDatabase.close();
                     final String deleteUrl = String

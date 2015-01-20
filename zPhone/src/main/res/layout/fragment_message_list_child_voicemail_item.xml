@@ -22,7 +22,7 @@
             android:layout_height="50dp"
             android:contentDescription="@null"
             android:gravity="center_vertical"
-            android:src="@drawable/ic_voicemail_grey600"/>
+            android:src="@drawable/ic_markunread_grey600"/>
 
         <LinearLayout
             android:id="@+id/id_message_child_item_lv"
