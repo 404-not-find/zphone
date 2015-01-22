@@ -180,7 +180,6 @@ public class HistoryEventItemAdapter
 
                         @Override
                         public void run() {
-                            // TODO Auto-generated method stub
                             if (Engine.getInstance().getSipService().isRegistered()) {
                                 ScreenAV.makeCall(number,
                                         NgnMediaType.Audio,

@@ -205,7 +205,7 @@ public class MessageFragment extends SuperAwesomeCardFragment implements OnChild
      * @return file_name, wd, inbox_old, extension
      */
     public String[] getVoiceMailFileNameAndWd(int childPosition) {
-        //voicemail
+        //voiceMail
         VoiceMailBean voiceMailBean = messagerAdapter.getVoiceMails().get(childPosition);
         int wd = 0;
         String file_name = null;
@@ -267,8 +267,10 @@ public class MessageFragment extends SuperAwesomeCardFragment implements OnChild
                     //添加菜单项  
                     menu.add(UNIQUE_FRAGMENT_GROUP_ID, 1, 0,
                             getResources().getString(R.string.voicemail_play));
-                    menu.add(UNIQUE_FRAGMENT_GROUP_ID, 2, 0,
-                            getResources().getString(R.string.voicemail_delete));
+                    //TODO 删除需要管理员权限
+                    //menu.add(UNIQUE_FRAGMENT_GROUP_ID, 2, 0,
+                    //      getResources().getString(R.string.voicemail_delete));
+                    break;
                 default:
                     break;
             }
@@ -493,7 +495,7 @@ public class MessageFragment extends SuperAwesomeCardFragment implements OnChild
                         startActivity(it);
                         break;
                     case 2:
-                        //voicemail
+                        //voiceMail
                         final String number = strs[3];
                         new Thread(
                                 new Runnable() {
@@ -545,6 +547,7 @@ public class MessageFragment extends SuperAwesomeCardFragment implements OnChild
                         request.ok();
                     } catch (RuntimeException e) {
                         mLogger.error("error " + e.getMessage());
+                        result = false;
                     }
 
                     /*if (request.ok()){

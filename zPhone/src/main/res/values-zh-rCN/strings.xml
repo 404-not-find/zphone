@@ -7,7 +7,6 @@
     <string name="action_contact">联系人</string>
     <string name="android_versions_title">版本</string>
     <string name="android_versions_description">版本描述</string>
-    <string name="title_activity_splash">加载</string>
     <string name="title_activity_login">登录</string>
 
 
@@ -23,7 +22,7 @@
     <string name="prompt_email">邮箱</string>
     <string name="prompt_password">密码(可选)</string>
     <string name="action_sign_in">登录或注册</string>
-    <string name="action_sign_in_short">登录in</string>
+    <string name="action_sign_in_short">登录</string>
     <string name="error_invalid_email">邮件地址无效</string>
     <string name="error_invalid_password">密码太短</string>
     <string name="error_incorrect_password">不正确的密码</string>
@@ -62,15 +61,15 @@
     ContactsListFragment when a search query match occurs that is not the display name.
     -->
     <string name="search_match_other">Matches Other Field</string>
-    <string name="no_address">No addresses found</string>
-    <string name="no_intent_found">No application found to handle this action</string>
+    <string name="no_address">没有可用地址</string>
+    <string name="no_intent_found">不能处理当前请求</string>
 
 
     <!-- me -->
     <string name="registration_ok">注册成功</string>
     <string name="registration_nok">注册失败</string>
     <string name="registration_inprogress">注册中 &#8230;</string>
-    <string name="unregistration_inprogress">注销中 &#8230;</string>
+    <string name="unregistration_inprogress">正在注销 &#8230;</string>
     <string name="unregistration_ok">注销成功</string>
     <string name="unregistration_nok">注销失败</string>
     <string name="theme_color">主题颜色</string>
@@ -119,7 +118,7 @@
     <string name="not_support_call_me">不能拨打自己</string>
     <string name="loading">加载 &#8230;</string>
     <string name="done">完成</string>
-    <string name="add_to_contacts">保存</string>
+    <string name="add_to_contacts">保存到联系人</string>
     <string name="remove_from_call_log">删除</string>
     <string name="clear_all_call_log">删除所有通话记录</string>
 
@@ -186,7 +185,7 @@
 
     <!-- setting about -->
     <string name="features">功能介绍</string>
-    <string name="faq">FAQ</string>
+    <string name="faq">常见问题问答</string>
     <string name="feedback">反馈</string>
     <string name="check_for_updates">检查新版本</string>
 
@@ -197,4 +196,11 @@
     <string name="operation_failure">操作失败</string>
     <string name="operation_successful">操作成功</string>
     <string name="not_register">当前未注册</string>
+    <string name="advanced">高级选项</string>
+    <string name="advancedShort">高级</string>
+    <string name="srtp_mode">SRTP 模式</string>
+    <string name="srtp_type">SRTP 类型</string>
+    <string name="enable_ipv6">开启IPv6</string>
+    <string name="enable_keypad_tones">开启按键拨号音</string>
+    <string name="enable_keypad_vibration">开启拨号震动</string>
 </resources>

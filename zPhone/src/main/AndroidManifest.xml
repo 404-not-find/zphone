@@ -43,7 +43,7 @@
         android:name="com.zycoo.android.zphone.ZphoneApplication"
         android:anyDensity="true"
         android:allowBackup="true"
-        android:icon="@drawable/ic_launcher"
+        android:icon="@drawable/ic_launcher_new"
         android:label="@string/app_name"
         android:persistent="true"
         android:theme="@style/AppTheme">
@@ -81,7 +81,7 @@
             android:windowSoftInputMode="adjustResize|stateVisible"></activity>
         <activity
             android:name=".ui.SplashActivity"
-            android:label="@string/title_activity_splash"
+            android:label="@string/app_name"
             android:screenOrientation="portrait"></activity>
         <activity
             android:name=".ui.dialpad.ScreenAV"

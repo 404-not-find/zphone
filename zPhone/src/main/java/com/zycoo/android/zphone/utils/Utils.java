@@ -228,6 +228,11 @@ public class Utils {
         }
     }
 
+    public static String formatTime(long time)
+    {
+        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        return dateFormat.format(time);
+    }
     public static String getTime() {
         DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         Calendar cal = Calendar.getInstance();
