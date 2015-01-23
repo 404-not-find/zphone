@@ -33,48 +33,60 @@ import android.media.AudioManager;
 import android.media.ToneGenerator;
 import android.os.Vibrator;
 
+import com.zycoo.android.zphone.Engine;
+
+import org.doubango.ngn.services.INgnConfigurationService;
+
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class DialingFeedback {
 
-	/** The length of vibrate (haptic) feedback in milliseconds */
-	private static final int HAPTIC_LENGTH_MS = 50;
-	
-    /** The length of DTMF tones in milliseconds */
+    /**
+     * The length of vibrate (haptic) feedback in milliseconds
+     */
+    private static final int HAPTIC_LENGTH_MS = 50;
+
+    /**
+     * The length of DTMF tones in milliseconds
+     */
     private static final int TONE_LENGTH_MS = 150;
 
-    /** The DTMF tone volume relative to other sounds in the stream */
+    /**
+     * The DTMF tone volume relative to other sounds in the stream
+     */
     private static final int TONE_RELATIVE_VOLUME = 80;
 
     private boolean inCall;
     private int toneStream;
     private Activity context;
-    
-	private ToneGenerator toneGenerator = null;
-	private Object toneGeneratorLock = new Object();
-	private Vibrator vibrator = null;
-	private Timer toneTimer = null;
+    private ToneGenerator toneGenerator = null;
+    private Object toneGeneratorLock = new Object();
+    private Vibrator vibrator = null;
+    private Timer toneTimer = null;
 
-	//private PreferencesWrapper prefsWrapper;
-	private boolean dialPressTone = false;
-	private boolean dialPressVibrate = false;
+    //private PreferencesWrapper prefsWrapper;
+    private boolean dialPressTone;
+    private boolean dialPressVibrate;
 
-	private int ringerMode;
+    private INgnConfigurationService mConfigurationService;
+    private int ringerMode;
 
-	public DialingFeedback(Activity context, boolean inCall) {
-		
-		this.context = context;
-		this.inCall = inCall;
-		toneStream = inCall ? AudioManager.STREAM_VOICE_CALL : AudioManager.STREAM_MUSIC;
-		//prefsWrapper = new PreferencesWrapper(context);
-	}
-	
-	public void resume() {
-		
-		//dialPressTone = prefsWrapper.dialPressTone(inCall);
-		//dialPressVibrate = prefsWrapper.dialPressVibrate();
+    public DialingFeedback(Activity context, boolean inCall) {
 
+        this.context = context;
+        this.inCall = inCall;
+        mConfigurationService = Engine.getInstance().getConfigurationService();
+        toneStream = inCall ? AudioManager.STREAM_VOICE_CALL : AudioManager.STREAM_MUSIC;
+        //prefsWrapper = new PreferencesWrapper(context);
+    }
+
+    public void resume() {
+
+        //dialPressTone = prefsWrapper.dialPressTone(inCall);
+        //dialPressVibrate = prefsWrapper.dialPressVibrate();
+        dialPressTone = mConfigurationService.getBoolean(ZycooConfigurationEntry.GENERAL_KEYPAD_TONES, ZycooConfigurationEntry.DEFAULT_GENERAL_KEYPAD_TONES);
+        dialPressVibrate = mConfigurationService.getBoolean(ZycooConfigurationEntry.GENERAL_KEYPAD_VIBRATION, ZycooConfigurationEntry.DEFAULT_GENERAL_KEYPAD_VIBRATION);
         if (dialPressTone) {
             // Create dialtone just for user feedback
             synchronized (toneGeneratorLock) {
@@ -98,86 +110,87 @@ public class DialingFeedback {
             toneTimer = null;
             toneGenerator = null;
         }
-		
-		//Create the vibrator
-		if (dialPressVibrate) {
-			if (vibrator == null) {
-				vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
-			}
-		} else {
-			vibrator = null;
-		}
 
-		//Store the current ringer mode
-		AudioManager am = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
-		ringerMode = am.getRingerMode();
+        //Create the vibrator
+        if (dialPressVibrate) {
+            if (vibrator == null) {
+                vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
+            }
+        } else {
+            vibrator = null;
+        }
 
-	}
-	
-	public void pause() {
+        //Store the current ringer mode
+        AudioManager am = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+        ringerMode = am.getRingerMode();
 
-		//Destroy dialtone
-		synchronized (toneGeneratorLock) {
-			if (toneGenerator != null) {
-			    toneGenerator.stopTone();
-				toneGenerator.release();
-				toneGenerator = null;
-			}
-			if(toneTimer != null) {
-				toneTimer.cancel();
-				toneTimer.purge();
-				toneTimer = null;
-			}
-		}
-		
-	}
+    }
 
-	/**
-	 * Tone play to be used when a button in dialpad
-	 * is pressed
-	 * @param tone The tone associated to the button
-	 */
-	public void giveFeedback(int tone) {
-		
-		switch (ringerMode) {
-			case AudioManager.RINGER_MODE_NORMAL:
-				if (dialPressVibrate) {
-				    vibrator.vibrate(HAPTIC_LENGTH_MS);
-				}
-				if (dialPressTone) {
-				    ThreadedTonePlay threadedTone = new ThreadedTonePlay(tone);
-				    threadedTone.start();
-				}
-				break;
-			case AudioManager.RINGER_MODE_VIBRATE:
-				if (dialPressVibrate) {
-				    vibrator.vibrate(HAPTIC_LENGTH_MS);
-				}
-				break;
-			case AudioManager.RINGER_MODE_SILENT:
-				break;
-		}
-	}
-	
-	/**
-	 * Haptic vibration to be used when a button in dialpad 
-	 * is long pressed for example.
-	 */
-	public void hapticFeedback() {
-		if (dialPressVibrate && ringerMode != AudioManager.RINGER_MODE_SILENT) {
-			vibrator.vibrate(HAPTIC_LENGTH_MS);
-		}
-	}
-	
-	class ThreadedTonePlay extends Thread {
-	    private final int tone;
-        
-	    ThreadedTonePlay(int t){
-	        tone = t;
-	    }
-	    
-	    @Override
-	    public void run() {
+    public void pause() {
+
+        //Destroy dialtone
+        synchronized (toneGeneratorLock) {
+            if (toneGenerator != null) {
+                toneGenerator.stopTone();
+                toneGenerator.release();
+                toneGenerator = null;
+            }
+            if (toneTimer != null) {
+                toneTimer.cancel();
+                toneTimer.purge();
+                toneTimer = null;
+            }
+        }
+
+    }
+
+    /**
+     * Tone play to be used when a button in dialpad
+     * is pressed
+     *
+     * @param tone The tone associated to the button
+     */
+    public void giveFeedback(int tone) {
+
+        switch (ringerMode) {
+            case AudioManager.RINGER_MODE_NORMAL:
+                if (dialPressVibrate) {
+                    vibrator.vibrate(HAPTIC_LENGTH_MS);
+                }
+                if (dialPressTone) {
+                    ThreadedTonePlay threadedTone = new ThreadedTonePlay(tone);
+                    threadedTone.start();
+                }
+                break;
+            case AudioManager.RINGER_MODE_VIBRATE:
+                if (dialPressVibrate) {
+                    vibrator.vibrate(HAPTIC_LENGTH_MS);
+                }
+                break;
+            case AudioManager.RINGER_MODE_SILENT:
+                break;
+        }
+    }
+
+    /**
+     * Haptic vibration to be used when a button in dialpad
+     * is long pressed for example.
+     */
+    public void hapticFeedback() {
+        if (dialPressVibrate && ringerMode != AudioManager.RINGER_MODE_SILENT) {
+            vibrator.vibrate(HAPTIC_LENGTH_MS);
+        }
+    }
+
+    class ThreadedTonePlay extends Thread {
+        private final int tone;
+
+        ThreadedTonePlay(int t) {
+            tone = t;
+        }
+
+        @Override
+        public void run() {
             synchronized (toneGeneratorLock) {
                 if (toneGenerator == null) {
                     return;
@@ -186,19 +199,19 @@ public class DialingFeedback {
                 toneGenerator.startTone(tone);
                 toneTimer.schedule(new StopTimerTask(), TONE_LENGTH_MS);
             }
-	    }
-	}
-	
-	class StopTimerTask extends TimerTask{
-		@Override
-		public void run() {
-			synchronized (toneGeneratorLock) {
-				if (toneGenerator == null) {
-					return;
-				}
-				toneGenerator.stopTone();
-			}
-		}
-	}
+        }
+    }
+
+    class StopTimerTask extends TimerTask {
+        @Override
+        public void run() {
+            synchronized (toneGeneratorLock) {
+                if (toneGenerator == null) {
+                    return;
+                }
+                toneGenerator.stopTone();
+            }
+        }
+    }
 
 }

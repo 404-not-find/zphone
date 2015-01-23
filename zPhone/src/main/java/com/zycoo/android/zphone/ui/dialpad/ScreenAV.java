@@ -140,6 +140,7 @@ public class ScreenAV extends SherlockFragmentActivity implements OnClickListene
     // 方向事件监听器
     private OrientationEventListener mListener;
     private PowerManager.WakeLock mWakeLock;
+    private PowerManager.WakeLock mProSensorWakeLock;
     private static final int SELECT_CONTENT = 1;
     private final static int MENU_PICKUP = 0;
     private final static int MENU_HANGUP = 1;
@@ -297,9 +298,14 @@ public class ScreenAV extends SherlockFragmentActivity implements OnClickListene
             mWakeLock = powerManager.newWakeLock(PowerManager.ON_AFTER_RELEASE
                             | PowerManager.SCREEN_BRIGHT_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP,
                     TAG);
+
             if (mWakeLock != null) {
                 mWakeLock.acquire();
             }
+        }
+        if(powerManager != null && mProSensorWakeLock == null)
+        {
+            mProSensorWakeLock = powerManager.newWakeLock(32, TAG);
         }
         if (mProxSensor == null && !ZphoneApplication.isBuggyProximitySensor()) {
             mProxSensor = new MyProxSensor(this);
@@ -313,6 +319,7 @@ public class ScreenAV extends SherlockFragmentActivity implements OnClickListene
         if (mProxSensor != null) {
             mProxSensor.stop();
         }
+        */
         if (mWakeLock != null && mWakeLock.isHeld()) {
             mWakeLock.release();
         }
@@ -368,111 +375,6 @@ public class ScreenAV extends SherlockFragmentActivity implements OnClickListene
         super.onDestroy();
     }
 
-    /*
-     * @Override public boolean onCreateOptionsMenu(Menu menu) { if (mAVSession
-     * == null) { return true; } MenuItem itemSendStopVideo = null; MenuItem
-     * itemPickUp = menu.add(0, ScreenAV.MENU_PICKUP, 0,
-     * getString(R.string.string_answer)).setIcon(R.drawable.phone_pick_up_48);
-     * MenuItem itemHangUp = menu.add(0, ScreenAV.MENU_HANGUP, 0,
-     * getString(R.string.string_endcall)).setIcon(R.drawable.phone_hang_up_48);
-     * MenuItem itemHoldResume = menu.add( 0, ScreenAV.MENU_HOLD_RESUME, 0,
-     * mAVSession.isLocalHeld() ? getString(R.string.string_resume) :
-     * getString(R.string.string_hold)).setIcon( mAVSession.isLocalHeld() ?
-     * R.drawable.phone_resume_48 : R.drawable.phone_hold_48); if (mIsVideoCall)
-     * { itemSendStopVideo = menu.add(1, ScreenAV.MENU_SEND_STOP_VIDEO, 0,
-     * getString(R.string.string_send_video)); } MenuItem itemShareContent =
-     * menu.add(1, ScreenAV.MENU_SHARE_CONTENT, 0, "Share Content")
-     * .setIcon(R.drawable.image_gallery_48); MenuItem itemSpeaker = menu.add(
-     * 1, ScreenAV.MENU_SPEAKER, 0, mAVSession.isSpeakerOn() ?
-     * getString(R.string.string_speaker_off) :
-     * getString(R.string.string_speaker_on)).setIcon(
-     * R.drawable.phone_speaker_48); switch (mAVSession.getState()) { case
-     * INCOMING: { itemPickUp.setEnabled(true); itemHangUp.setEnabled(true);
-     * itemHoldResume.setEnabled(false); itemSpeaker.setEnabled(false); if
-     * (itemSendStopVideo != null) { itemSendStopVideo.setEnabled(false); }
-     * itemShareContent.setEnabled(false); break; } case INPROGRESS: {
-     * itemPickUp.setEnabled(false); itemHangUp.setEnabled(true);
-     * itemHoldResume.setEnabled(false); itemSpeaker.setEnabled(false); if
-     * (itemSendStopVideo != null) { itemSendStopVideo.setEnabled(false); }
-     * itemShareContent.setEnabled(false); break; } case INCALL: {
-     * itemHangUp.setEnabled(true); itemHoldResume.setEnabled(true);
-     * itemSpeaker.setEnabled(true); if (itemSendStopVideo != null) {
-     * itemSendStopVideo.setTitle( mAVSession.isSendingVideo() ? "Stop Video" :
-     * getString(R.string.string_send_video)).setIcon(
-     * mAVSession.isSendingVideo() ? R.drawable.video_stop_48 :
-     * R.drawable.video_start_48); itemSendStopVideo.setEnabled(true); //
-     * Replace Answer by camera switcher itemPickUp.setEnabled(true);
-     * itemPickUp.setTitle(getString(R.string.string_switch_camera)).setIcon(
-     * R.drawable.refresh_48); } else { itemPickUp.setEnabled(false); }
-     * itemShareContent.setEnabled(true); break; } case TERMINATED: case
-     * TERMINATING: { itemPickUp.setEnabled(false);
-     * itemHangUp.setEnabled(false); itemHoldResume.setEnabled(false);
-     * itemSpeaker.setEnabled(false); if (itemSendStopVideo != null) {
-     * itemSendStopVideo.setEnabled(false); }
-     * itemShareContent.setEnabled(false); break; } default: { break; } } return
-     * true; }
-     */
-
-    /* @Override
-     public boolean onOptionsItemSelected(MenuItem item)
-     {
-         if (mAVSession == null)
-         {
-             return true;
-         }
-         switch (item.getItemId())
-         {
-             case ScreenAV.MENU_PICKUP: {
-                 if (mAVSession.getState() == InviteState.INCALL)
-                 {
-                     Log.d(TAG, "Toggle Camera");
-                     mAVSession.toggleCamera();
-                 }
-                 else
-                 {
-                     acceptCall();
-                 }
-                 break;
-             }
-             case ScreenAV.MENU_HANGUP: {
-                 if (mTvInfo != null)
-                 {
-                     mTvInfo.setText("Ending the call...");
-                 }
-                 hangUpCall();
-                 break;
-             }
-             case ScreenAV.MENU_HOLD_RESUME: {
-                 if (mAVSession.isLocalHeld())
-                 {
-                     mAVSession.resumeCall();
-                 }
-                 else
-                 {
-                     mAVSession.holdCall();
-                 }
-                 break;
-             }
-             case ScreenAV.MENU_SEND_STOP_VIDEO: {
-                 startStopVideo(!mAVSession.isSendingVideo());
-                 break;
-             }
-             case ScreenAV.MENU_SHARE_CONTENT: {
-                 Intent intent = new Intent();
-                 intent.setType("").addCategory(Intent.CATEGORY_OPENABLE)
-                         .setAction(Intent.ACTION_GET_CONTENT);
-                 startActivityForResult(Intent.createChooser(intent, "Select content"),
-                         SELECT_CONTENT);
-                 break;
-             }
-             case ScreenAV.MENU_SPEAKER: {
-                 mAVSession.toggleSpeakerphone();
-                 break;
-             }
-         }
-         return true;
-     }
-    */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -1149,7 +1051,7 @@ public class ScreenAV extends SherlockFragmentActivity implements OnClickListene
      */
     static class MyProxSensor implements SensorEventListener {
 
-
+        private final INgnConfigurationService mConfigurationService;
         private final SensorManager mSensorManager;
         private Sensor mSensor;
         private final ScreenAV mAVScreen;
@@ -1158,6 +1060,7 @@ public class ScreenAV extends SherlockFragmentActivity implements OnClickListene
         MyProxSensor(ScreenAV avScreen) {
             mAVScreen = avScreen;
             mSensorManager = ZphoneApplication.getSensorManager();
+            mConfigurationService = Engine.getInstance().getConfigurationService();
         }
 
         void start() {
@@ -1199,6 +1102,23 @@ public class ScreenAV extends SherlockFragmentActivity implements OnClickListene
                 }
             } catch (Exception e) {
                 e.printStackTrace();
+            }
+            boolean enable_pro_sensor = mConfigurationService.getBoolean(ZycooConfigurationEntry.GENERAL_PROXIMITY_SENSOR, ZycooConfigurationEntry.DEFAULT_GENERAL_PROXIMITY_SENSOR);
+            if (enable_pro_sensor && null != mProSensorWakeLock && its != null && event.sensor.getType() == Sensor.TYPE_PROXIMITY) {
+                if (its[0] != mMaxRange) {// 贴近手机
+                    if (mProSensorWakeLock.isHeld()) {
+                        return;
+                    } else {
+                        mProSensorWakeLock.acquire();// 申请设备电源锁
+                    }
+                } else {// 远离手机
+                    if (mProSensorWakeLock.isHeld()) {
+                        return;
+                    } else {
+                        mProSensorWakeLock.setReferenceCounted(false);
+                        mProSensorWakeLock.release(); // 释放设备电源锁
+                    }
+                }
             }
         }
     }

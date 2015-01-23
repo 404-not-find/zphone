@@ -210,8 +210,9 @@ public class NativeService extends NgnNativeService implements MqttCallback {
                                     if (mWakeLock != null && !mWakeLock.isHeld()) {
                                         mWakeLock.acquire(10);
                                     }
-                                    ZphoneApplication.getContext().getApplicationContext()
-                                            .startActivity(income);
+                                    getApplication().startActivity(income);
+                                    /*ZphoneApplication.getContext().getApplicationContext()
+                                            .startActivity(income);*/
                                     //ScreenAV.receiveCall(avSession);
                                     mEngine.getSoundService().startRingTone();
                                 } else {

@@ -277,6 +277,9 @@
     <string name="maximum">Maximum</string>
     <string name="default_defined">Default (User Defined)</string>
     <string name="rtc_web">RTCWeb (Override)</string>
+    <string name="enable_keypad_vibration">Enable Keypad vibration</string>
+    <string name="enable_keypad_tones">Enable Keypad tones</string>
+    <string name="enable_proximity_sensor">Enable Proximity Sensor</string>
 
     <!-- setting network -->
     <string name="enable_wifi">Enable Wifi</string>

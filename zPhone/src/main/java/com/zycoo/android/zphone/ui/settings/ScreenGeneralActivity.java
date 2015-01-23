@@ -16,6 +16,7 @@ import com.zycoo.android.zphone.ui.me.ListViewItemSwitchIconWithText;
 import com.zycoo.android.zphone.ui.me.ListViewItemSwitchIconWithTextViewHolder;
 import com.zycoo.android.zphone.ui.me.ListViewItemWhite;
 import com.zycoo.android.zphone.utils.Utils;
+import com.zycoo.android.zphone.utils.ZycooConfigurationEntry;
 
 import org.doubango.ngn.services.INgnConfigurationService;
 import org.doubango.ngn.utils.NgnConfigurationEntry;
@@ -28,6 +29,7 @@ import org.slf4j.LoggerFactory;
  * Created by tqcenglish on 14-12-18.
  */
 public class ScreenGeneralActivity extends BaseScreen implements AdapterView.OnItemClickListener {
+    private static final int ITEMS_NUMBER = 17;
     private ListViewItem[] items;
     private ListView mListView;
     private BaseAdapter adapter;
@@ -51,7 +53,7 @@ public class ScreenGeneralActivity extends BaseScreen implements AdapterView.OnI
         setContentView(R.layout.listview);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         mListView = (ListView) findViewById(android.R.id.list);
-        items = new ListViewItem[12];
+        items = new ListViewItem[ITEMS_NUMBER];
         new InitDataTask().execute();
 
         adapter = new ScreenSettingsAdapter(this, items);
@@ -102,6 +104,11 @@ public class ScreenGeneralActivity extends BaseScreen implements AdapterView.OnI
                 mConfigurationService.getFloat(
                         NgnConfigurationEntry.GENERAL_AUDIO_PLAY_LEVEL,
                         NgnConfigurationEntry.DEFAULT_GENERAL_AUDIO_PLAY_LEVEL)));
+        items[12] = new ListViewItemWhite(40);
+        items[13] = new ListViewItemSwitchIconWithText(R.string.enable_keypad_tones, true, mConfigurationService.getBoolean(ZycooConfigurationEntry.GENERAL_KEYPAD_TONES, ZycooConfigurationEntry.DEFAULT_GENERAL_KEYPAD_TONES));
+        items[14] = new ListViewItemSwitchIconWithText(R.string.enable_keypad_vibration, true, mConfigurationService.getBoolean(ZycooConfigurationEntry.GENERAL_KEYPAD_VIBRATION, ZycooConfigurationEntry.DEFAULT_GENERAL_KEYPAD_VIBRATION));
+        items[15] = new ListViewItemSwitchIconWithText(R.string.enable_proximity_sensor, false, mConfigurationService.getBoolean(ZycooConfigurationEntry.GENERAL_PROXIMITY_SENSOR, ZycooConfigurationEntry.DEFAULT_GENERAL_PROXIMITY_SENSOR));
+        items[16] = new ListViewItemWhite(80);
     }
 
     @Override
@@ -114,6 +121,9 @@ public class ScreenGeneralActivity extends BaseScreen implements AdapterView.OnI
             case 5:
             case 7:
             case 8:
+            case 13:
+            case 14:
+            case 15:
                 ListViewItemSwitchIconWithTextViewHolder switchIconWithTextViewHolder = (ListViewItemSwitchIconWithTextViewHolder) view.getTag(ListViewItemSwitchIconWithTextViewHolder.switch_icon_with_text_id);
                 switchIconWithTextViewHolder.setChecked(!switchIconWithTextViewHolder.getSwitchButton().isChecked());
                 switchIconWithTextViewHolder.getSwitchButton().toggle();
@@ -127,7 +137,7 @@ public class ScreenGeneralActivity extends BaseScreen implements AdapterView.OnI
     @Override
     protected void onPause() {
         if (super.mComputeConfiguration) {
-            for (int i = 0; i < 12; i++) {
+            for (int i = 0; i < ITEMS_NUMBER; i++) {
                 switch (i) {
                     case 1:
                         mConfigurationService.putBoolean(NgnConfigurationEntry.GENERAL_AEC, ((ListViewItemSwitchIconWithText) items[i]).isChecked());
@@ -158,6 +168,17 @@ public class ScreenGeneralActivity extends BaseScreen implements AdapterView.OnI
                         break;
                     case 11:
                         mConfigurationService.putFloat(NgnConfigurationEntry.GENERAL_AUDIO_PLAY_LEVEL, sAudioPlaybackLevels[((ListViewItemSpinnerWithText) items[i]).getSelection()].mValue);
+                        break;
+                    case 13:
+                        mConfigurationService.putBoolean(ZycooConfigurationEntry.GENERAL_KEYPAD_TONES, ((ListViewItemSwitchIconWithText) items[i]).isChecked());
+                        break;
+                    case 14:
+                        mConfigurationService.putBoolean(ZycooConfigurationEntry.GENERAL_KEYPAD_VIBRATION, ((ListViewItemSwitchIconWithText) items[i]).isChecked());
+                        break;
+                    case 15:
+                        mConfigurationService.putBoolean(ZycooConfigurationEntry.GENERAL_PROXIMITY_SENSOR, ((ListViewItemSwitchIconWithText) items[i]).isChecked());
+                        break;
+                    default:
                         break;
 
                 }

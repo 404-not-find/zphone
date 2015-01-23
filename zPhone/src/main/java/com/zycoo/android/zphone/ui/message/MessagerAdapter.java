@@ -36,9 +36,8 @@ public class MessagerAdapter extends BaseExpandableListAdapter {
     private final LayoutInflater mLayoutInflater;
     private final String[] mGroups;
     private final int[] mGroupDrawables = {
-            R.drawable.ic_voicemail_grey600,
-            R.drawable.ic_email_grey600
-
+            R.drawable.ic_email_grey600,
+            R.drawable.ic_voicemail_grey600
     };
     private List<List<?>> mAllChilds;
     private List<VoiceMailBean> mVoiceMails;

@@ -61,7 +61,7 @@ public class HelpActivity extends BaseScreen
             mWebView.goBack();   //goBack()表示返回webView的上一页面
             return true;
         }
-        return false;
+        return super.onKeyDown(keyCoder, event);
     }
 
     private class WebViewClient extends WebChromeClient {

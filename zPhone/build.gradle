@@ -17,6 +17,7 @@ android {
     buildToolsVersion "21.1.2"
     productFlavors {
         pro {
+            minSdkVersion 21
             applicationId = "com.zycoo.android.zphone.pro"
         }
         free {
@@ -50,6 +51,7 @@ android {
         }
 
         release {
+
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
         }
