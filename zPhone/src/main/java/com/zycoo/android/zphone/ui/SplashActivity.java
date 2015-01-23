@@ -101,7 +101,14 @@ public class SplashActivity extends Activity {
             @Override
             public void run() {
                 if (!Engine.getInstance().isStarted()) {
-                    Engine.getInstance().start();
+                    if(Engine.getInstance().start())
+                    {
+                        mLogger.debug("engine start ok");
+                    }
+                    else
+                    {
+                        mLogger.debug("engine start failure");
+                    }
                 }
             }
         });

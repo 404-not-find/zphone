@@ -21,6 +21,7 @@
 package org.doubango.ngn;
 
 import java.io.File;
+import java.util.logging.Logger;
 
 import org.doubango.ngn.media.NgnProxyPluginMgr;
 import org.doubango.ngn.services.INgnConfigurationService;
@@ -298,21 +299,18 @@ public class NgnEngine {
 		if(mStarted){
 			return true;
 		}
-		
 		boolean success = true;
-		
 		success &= getConfigurationService().start();
 		success &= getStorageService().start();
 		success &= getNetworkService().start();
 		success &= getHttpClientService().start();
 		success &= getHistoryService().start();
 		success &= getContactService().start();
-		success &= getSipService().start();
+        success &= getSipService().start();
 		success &= getSoundService().start();
-		
 		if(success){
 			success &= getHistoryService().load();
-			/* success &=*/ getContactService().load();
+			/* success &=*/getContactService().load();
 			
 			NgnApplication.getContext().startService(
 					new Intent(NgnApplication.getContext(), getNativeServiceClass()));
@@ -320,7 +318,6 @@ public class NgnEngine {
 		else{
 			Log.e(TAG, "Failed to start services");
 		}
-		
 		mStarted = true;
 		return success;
 	}
@@ -335,7 +332,7 @@ public class NgnEngine {
 		}
 		
 		boolean success = true;
-		
+
 		success &= getConfigurationService().stop();
 		success &= getHttpClientService().stop();
 		success &= getHistoryService().stop();
