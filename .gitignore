@@ -1,5 +1,7 @@
 build/
-.gradle
-.idea
+.gradle/
+.idea/
 import-summary.txt
+local.properties
+ZPhone.iml
 
