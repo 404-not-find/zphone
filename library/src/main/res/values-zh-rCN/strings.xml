@@ -1,0 +1,6 @@
+<resources>
+    <!-- undo -->
+    <string name="undo">撤销</string>
+    <!-- android-ago -->
+    <string name="just_now">刚刚</string>
+</resources>

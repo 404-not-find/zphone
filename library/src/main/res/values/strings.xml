@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">ZPhoneLib</string>
+    <!-- undo -->
+    <string name="undo">UNDO</string>
+    <!-- android-ago -->
+    <string name="just_now">Just Now</string>
+</resources>

@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="MissingTranslation"
+    >
+    <string name="action_settings">设置</string>
+    <string name="action_contact">联系人</string>
+    <string name="android_versions_title">版本</string>
+    <string name="android_versions_description">版本描述</string>
+    <string name="title_activity_splash">加载</string>
+    <string name="title_activity_login">登录</string>
+
+
+    <!--i18n-->
+    <string name="day_today">今天</string>
+    <string name="day_yesterday">昨天</string>
+    <string name="hour">小时</string>
+    <string name="minute">分</string>
+    <string name="second">秒</string>
+
+
+    <!-- Strings related to login -->
+    <string name="prompt_email">邮箱</string>
+    <string name="prompt_password">密码(可选)</string>
+    <string name="action_sign_in">登录或注册</string>
+    <string name="action_sign_in_short">登录in</string>
+    <string name="error_invalid_email">邮件地址无效</string>
+    <string name="error_invalid_password">密码太短</string>
+    <string name="error_incorrect_password">不正确的密码</string>
+    <string name="error_field_required">必须填入</string>
+
+
+    <!-- ui Setting -->
+    <string name="spinner_pcscf_discovery">选择PCSCF 扫描模式</string>
+    <string name="spinner_transport">选择网络协议</string>
+    <string name="general">基本设置</string>
+    <string name="identity">帐号</string>
+    <string name="network">网络</string>
+    <string name="secuity">安全</string>
+    <string name="codecs">编码</string>
+    <string name="qos_qoe">通话质量</string>
+
+
+    !-- Contact demo -->
+    <string name="activity_contacts_list">联系人列表</string>
+    <string name="activity_contact_detail">联系人详细</string>
+    <string name="contacts_list_search_results_title">联系人搜索结果 \"%s\"</string>
+    <string name="imageview_description">联系人头像</string>
+    <string name="address_button_description">查看地址</string>
+    <string name="menu_search">搜索</string>
+    <string name="menu_add_contact">添加联系人</string>
+    <string name="menu_edit_contact">编辑联系人</string>
+    <string name="no_contacts">没有发现联系人</string>
+    <string name="no_contact_selected">没有联系人选中</string>
+    <string name="search_contacts_hint">搜索联系人 &#8230;</string>
+    <string name="search_hint">搜索 &#8230;</string>
+    《!--
+    When using ContactsContract.Contacts#CONTENT_FILTER_URI to search contacts, a match occurs
+    when using a number of different fields, such as name, e-mail address, address, phone
+    number, etc. When a match occurs that is not the name, there is currently no way to tell
+    which other field was matched. This string is displayed in the secondary display text in
+    ContactsListFragment when a search query match occurs that is not the display name.
+    -->
+    <string name="search_match_other">Matches Other Field</string>
+    <string name="no_address">No addresses found</string>
+    <string name="no_intent_found">No application found to handle this action</string>
+
+
+    <!-- me -->
+    <string name="registration_ok">注册成功</string>
+    <string name="registration_nok">注册失败</string>
+    <string name="registration_inprogress">注册中 &#8230;</string>
+    <string name="unregistration_inprogress">注销中 &#8230;</string>
+    <string name="unregistration_ok">注销成功</string>
+    <string name="unregistration_nok">注销失败</string>
+    <string name="theme_color">主题颜色</string>
+    <string name="setting">设置</string>
+    <string name="account">帐号</string>
+    <string name="help">帮助</string>
+    <string name="about">关于</string>
+    <string name="exit">退出</string>
+    <string name="sure_exit">确定退出?</string>
+    <string name="yes">是</string>
+    <string name="no">否</string>
+
+    <!-- fragment contacts -->
+    <string name="contacts_local">本地联系人</string>
+    <string name="contacts_remote">远程联系人</string>
+    <string name="contacts_pbx_reload">更新</string>
+    <string name="contacts_search_local">搜索本地联系人  &#8230;</string>
+    <string name="contacts_search_remote">搜索PBX联系人  &#8230;</string>
+    <string name="contacts_pbx_footer">位联系人</string>
+    <string name="call_choice">拨号选择</string>
+    <string name="edit_number_before_call">编辑后再号码</string>
+    <string name="video_call">视频拨号</string>
+    <string name="audio_call">语音拨号</string>
+
+
+    <!-- Main Activity -->
+    <string name="message">消息</string>
+    <string name="contacts">联系人</string>
+    <string name="dialer">拨号</string>
+    <string name="me">我</string>
+
+    <!-- Account -->
+    <string name="pref_header_identity_acount">帐号</string>
+    <string name="pref_title_display_name">显示名</string>
+    <string name="pref_default_display_name">智科</string>
+    <string name="pref_summary_identity_display_name">昵称</string>
+    <string name="pref_title_identity_account">帐号</string>
+    <string name="pref_title_identity_host_port">域名:[端口]</string>
+    <string name="pref_title_identity_password">密码</string>
+    <string name="pref_summary_identity_password">文本密码</string>
+
+
+    <!-- Activity -->
+    <string name="title_activity_contacts_pbx">PBX联系人</string>
+    <string name="not_support_iax">不支持IAX协议</string>
+    <string name="not_support_call_me">不能拨打自己</string>
+    <string name="loading">加载 &#8230;</string>
+    <string name="done">完成</string>
+    <string name="add_to_contacts">保存</string>
+    <string name="remove_from_call_log">删除</string>
+    <string name="clear_all_call_log">删除所有通话记录</string>
+
+    <!-- Message -->
+    <string name="dashboard">即时通知</string>
+    <string name="pull_down_to_refresh">下拉刷新</string>
+    <string name="note">记事</string>
+    <string name="voice_mail">语音邮件</string>
+    <string name="record">录音</string>
+    <string name="conference">会议</string>
+    <string name="choice">选择</string>
+    <string name="voicemail_play">播放</string>
+    <string name="voicemail_call">语音回拨</string>
+    <string name="voicemail_make_as_new">标记未读</string>
+    <string name="voicemail_make_as_read">标记已读</string>
+    <string name="voicemail_delete">删除</string>
+    <string name="visit_the_official_website">访问官网</string>
+
+
+    <!-- AV -->
+    <string name="string_end_call">结束通话</string>
+    <string name="string_call_forward">呼叫转接</string>
+    <string name="string_call_answer">接听</string>
+    <string name="string_call_reject">拒接</string>
+    <string name="string_call_keypad">拨号盘</string>
+    <string name="string_call_hold">保持</string>
+    <string name="string_call_mute">静音</string>
+    <string name="string_call_speaker">免提</string>
+    <string name="string_audio_video_sessions">通话选择</string>
+
+    <string name="string_call_transfer">呼叫转移</string>
+    <string name="string_call_terminated">通话终止</string>
+    <string name="string_terminating_dialog">停止通话</string>
+    <string name="string_not_found">不能接通</string>
+    <string name="string_request_canceled">呼叫取消</string>
+    <string name="string_incall">通话中</string>
+    <string name="string_in_coming">呼入电话</string>
+    <string name="string_outgoing">呼出电话</string>
+    <string name="string_in_progress">处理中</string>
+    <string name="string_choice_call">选择通话</string>
+
+    <!-- setting general -->
+    <string name="enable_aec">开启回声消除</string>
+    <string name="voice_activity_detector">语音活动检测</string>
+    <string name="noise_reduction">降低噪音</string>
+    <string name="launch_when_system_starts">开机启动</string>
+    <string name="intercept_outgoing_calls">拦截拨出呼叫</string>
+    <string name="enable_video_full_screen_mode">开启视频全屏模式</string>
+    <string name="enable_front_facing_camera">开启前置摄像头</string>
+    <string name="media_profile">多媒体配置</string>
+    <string name="audio_playback_level">录音质量</string>
+    <string name="enum_domain">E.164号码映射服务器</string>
+
+
+    <!-- setting network -->
+    <string name="enable_wifi">开启Wifi</string>
+    <string name="enable_mobile_network">开启 4G/3G/2.5G</string>
+    <string name="transport">传输协议</string>
+
+    <!-- MQTT -->
+    <string name="mqtt_connect">连接</string>
+    <string name="mqtt_disconnect">断开</string>
+
+
+    <!-- setting about -->
+    <string name="rate_zphone">评价ZPhone</string>
+    <string name="features">功能介绍</string>
+    <string name="faq">FAQ</string>
+    <string name="feedback">反馈</string>
+    <string name="check_for_updates">检查新版本</string>
+
+    <!-- Toast -->
+    <string name="connect_server_failure">连接服务器失败</string>
+    <string name="network_failure">连接网络失败</string>
+    <string name="cancel_delete">取消删除</string>
+    <string name="operation_failure">操作失败</string>
+    <string name="operation_successful">操作成功</string>
+    <string name="not_register">当前未注册</string>
+</resources>

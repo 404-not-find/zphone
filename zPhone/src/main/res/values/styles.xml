@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <style name="AppBaseTheme" parent="Theme.Sherlock.Light.DarkActionBar"></style>
+
+    <!-- Application theme. -->
+    <style name="AppTheme" parent="AppBaseTheme"></style>
+
+    <style name="textViewStyle">
+        <item name="android:textColor">@color/gray</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="ActivityStyle">
+        <item name="android:background">@color/gray</item>
+    </style>
+
+    <style name="FragmentStyle">
+        <item name="android:background">@color/grey_200</item>
+    </style>
+
+    <style name="DialtactsDigitsTextAppearance">
+        <item name="android:maxLines">1</item>
+        <item name="android:scrollHorizontally">true</item>
+        <item name="android:textSize">@dimen/dialpad_digits_text_size</item>
+        <item name="android:freezesText">true</item>
+        <item name="android:focusableInTouchMode">true</item>
+        <item name="android:editable">true</item>
+        <item name="android:cursorVisible">false</item>
+        <item name="android:layout_weight">0</item>
+    </style>
+
+    <style name="DialtactsDialpadButtonStyle">
+        <item name="android:layout_width">0dip</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:background">@drawable/dial_pad_selector</item>
+    </style>
+
+    <style name="list_left_column">
+        <item name="android:layout_width">68dip</item>
+        <item name="android:layout_height">68dip</item>
+    </style>
+
+    <style name="ContactListView">
+
+        <!--
+        <item name="android:verticalScrollbarPosition">right</item>
+        <item name="android:fastScrollAlwaysVisible">true</item>
+        -->
+        <item name="android:scrollbarStyle">outsideInset</item>
+    </style>
+
+    <style name="listViewActivatedStyle"/>
+
+    <style name="quickContactBadgeStyle">
+        <item name="android:background">@drawable/quickcontact_badge_small</item>
+    </style>
+
+    <style name="searchTextHiglight">
+        <item name="android:textColor">@color/holo_blue</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="addressHeader" parent="@android:style/TextAppearance.Small">
+        <!--
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textStyle">bold</item>
+        -->
+    </style>
+
+    <style name="addressDetail" parent="@android:style/TextAppearance.Medium">
+        <!--
+        <item name="android:fontFamily">sans-serif-light</item>
+        <item name="android:textIsSelectable">true</item>
+        -->
+    </style>
+
+    <style name="contactNameTitle" parent="@android:style/TextAppearance.Large">
+        <item name="android:textSize">38sp</item>
+        <!--
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textIsSelectable">true</item>
+        -->
+    </style>
+
+
+    <style name="addressButton"/>
+
+
+    <style name="List_item_background">
+        <item name="android:background">@drawable/list_item_selector</item>
+    </style>
+
+    <style name="List_item_white_background">
+        <item name="android:background">@color/grey_200</item>
+    </style>
+
+    <!-- Single-line list Text only-->
+    <style name="Text_only">
+        <item name="android:layout_height">@dimen/avatar_with_text_height</item>
+    </style>
+
+    <style name="Text_only_Text">
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:textSize">@dimen/text_only_text_size</item>
+        <item name="android:layout_marginLeft">@dimen/text_only_padding_left</item>
+        <item name="android:gravity">center_vertical</item>
+    </style>
+
+    <!-- Single-line Icon with text-->
+    <style name="Icon_with_text">
+        <item name="android:layout_height">@dimen/icon_with_text_height</item>
+    </style>
+
+    <style name="Icon_with_text_Text_right">
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:textSize">@dimen/icon_with_text_text_size</item>
+        <item name="android:layout_marginLeft">@dimen/icon_with_text_text_padding_left_16dp</item>
+        <item name="android:gravity">center_vertical</item>
+    </style>
+
+    <style name="Icon_with_text_Icon_right">
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:layout_marginRight">@dimen/icon_with_text_icon_padding_right</item>
+    </style>
+
+
+    <!-- Single-line Avatar with text -->
+
+    <style name="Avatar_with_text" parent="List_item_background">
+        <item name="android:layout_height">@dimen/avatar_with_text_height</item>
+    </style>
+
+    <style name="Avatar_with_text_Text">
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:textSize">@dimen/avatar_with_text_text_size</item>
+        <item name="android:layout_marginLeft">@dimen/avatar_with_text_text_padding_left</item>
+        <item name="android:gravity">center_vertical</item>
+        <!--<item name="android:paddingTop">@dimen/avatar_with_text_text_padding_top</item>
+        <item name="android:paddingBottom">@dimen/avatar_with_text_text_padding_bottom</item>-->
+
+    </style>
+
+    <style name="Avatar_with_text_Avatar">
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_marginLeft">@dimen/avatar_with_text_avatar_padding_left</item>
+    </style>
+
+
+    <!-- Three-line list Avatar with text --><style name="Three_line_list_Avatar_with_text">
+    <item name="android:layout_height">@dimen/three_list_avatar_with_text_height</item>
+</style>
+
+    <style name="Three_line_list_Avatar_with_text_Avatar">
+        <item name="android:layout_marginLeft">@dimen/three_list_avatar_with_text_avatar_padding
+        </item>
+    </style>
+
+    <style name="Three_line_list_Avatar_with_text_Text">
+        <item name="android:layout_marginLeft">
+            @dimen/three_list_avatar_with_text_text_padding_left
+        </item>
+        <item name="android:layout_marginTop">
+            @dimen/three_list_avatar_with_text_text_padding_top
+        </item>
+        <item name="android:layout_marginBottom">
+            @dimen/three_list_avatar_with_text_text_padding_bottom
+        </item>
+        <item name="android:layout_marginRight">
+            @dimen/three_list_avatar_with_text_text_padding_right
+        </item>
+    </style>
+
+    <!-- Three-line list Avatar with text and icon--><style name="Three_line_list_Avatar_with_text_icon">
+    <item name="android:layout_height">@dimen/three_list_avatar_with_text_icon_height</item>
+    <item name="android:paddingBottom">@dimen/three_list_avatar_with_text_icon_padding_bottom</item>
+    <item name="android:paddingTop">@dimen/three_list_avatar_with_text_icon_padding_top</item>
+</style>
+
+    <style name="Three_line_list_Avatar_with_text_icon_Avatar">
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_marginLeft">@dimen/three_list_avatar_with_text_icon_avatar_padding
+        </item>
+    </style>
+
+    <style name="Three_line_list_Avatar_with_text_icon_Icon">
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_marginRight">@dimen/three_list_avatar_with_text_icon_icon_padding_right
+        </item>
+    </style>
+
+    <style name="Three_line_list_Avatar_with_text_icon_Text">
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_marginLeft">
+            @dimen/three_list_avatar_with_text_icon_text_padding_left_104
+        </item>
+        <!--<item name="android:layout_marginTop">
+            @dimen/three_list_avatar_with_text_icon_text_padding_top
+        </item>-->
+        <item name="android:layout_marginBottom">
+            @dimen/three_list_avatar_with_text_icon_text_padding_bottom
+        </item>
+    </style>
+
+
+</resources>

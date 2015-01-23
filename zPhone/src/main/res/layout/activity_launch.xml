@@ -1,0 +1,50 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/zycoo"
+    tools:context="${relativePackage}.${activityClass}" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/zycoo"
+        tools:context="${relativePackage}.${activityClass}" >
+
+        <ProgressBar
+            android:id="@+id/id_launch_pgb"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="90dp" />
+
+        <com.romainpiel.titanic.library.TitanicTextView
+            android:id="@+id/my_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/id_launch_pgb"
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="35dp"
+            android:gravity="center"
+            android:paddingBottom="5dp"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:text="@string/loading"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="70sp"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/id_splash_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="16dp"
+            android:text="@string/loading"
+            android:textColor="@color/light_blue"
+            android:textSize="20sp" />
+    </RelativeLayout>
+
+</FrameLayout>

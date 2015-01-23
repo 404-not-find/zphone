@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Copyright (C) 2007 The Android Open Source Project
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+<!-- 拨号历史 item 定制布局 -->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@+id/call_histroy_itme_lv"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:descendantFocusability="blocksDescendants"
+              android:orientation="vertical">
+
+    <!--
+        This layout may represent either a call log item or one of the
+        headers in the call log.
+
+        The former will make the @id/call_log_item visible and the
+        @id/call_log_header gone.
+
+        The latter will make the @id/call_log_header visible and the
+        @id/call_log_item gone
+    -->
+
+    <LinearLayout
+        android:id="@+id/primary_action_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/call_log_outer_margin"
+        android:layout_marginRight="@dimen/call_log_outer_margin"
+        android:background="?attr/actionBarItemBackground"
+        android:focusable="true"
+        android:gravity="center_vertical"
+        android:nextFocusLeft="@+id/quick_contact_photo"
+        android:nextFocusRight="@+id/secondary_action_icon"
+        android:orientation="horizontal">
+
+        <!-- 修改联系人快捷方式为imageview -->
+
+
+        <LinearLayout
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/call_log_inner_margin"
+            android:layout_weight="3"
+            android:gravity="center_vertical"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/call_log_inner_margin"
+            android:paddingTop="@dimen/call_log_inner_margin">
+
+            <LinearLayout
+                android:id="@+id/call_type"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:weightSum="5">
+
+                <TextView
+                    android:id="@+id/call_numbe"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:singleLine="true"
+                    android:text="name"
+                    android:textColor="?android:attr/textColorPrimary"
+                    android:textSize="18sp"/>
+
+                <ImageView
+                    android:id="@+id/call_type_icons"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:layout_marginRight="@dimen/call_log_icon_margin"
+                    android:layout_weight="1"/>
+
+                <TextView
+                    android:id="@+id/call_count_and_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:singleLine="true"
+                    android:textColor="?android:attr/textColorSecondary"
+                    android:textSize="14sp"
+                    android:visibility="gone"/>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:textColor="?android:attr/textColorSecondary"
+                android:textSize="14sp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/call_log_inner_margin"
+            android:layout_weight="2"
+            android:gravity="center_vertical"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/call_log_inner_margin"
+            android:paddingTop="@dimen/call_log_inner_margin">
+
+            <com.github.curioustechizen.ago.RelativeTimeTextView
+                android:id="@+id/call_history_time_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top|right"
+                android:layout_marginRight="5dp"
+                android:singleLine="true"
+                android:text="27"/>
+
+            <com.github.curioustechizen.ago.RelativeTimeTextView
+                android:id="@+id/call_history_duration_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right|bottom"
+                android:layout_marginRight="5dp"
+                android:singleLine="true"
+                android:text="27"/>
+        </LinearLayout>
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="1dip"
+            android:layout_height="@dimen/call_log_call_action_size"
+            android:layout_gravity="center_vertical"
+            android:background="@color/light_blue"/>
+
+        <ImageButton
+            android:id="@+id/secondary_action_icon"
+            android:layout_width="@dimen/call_log_call_action_width"
+            android:layout_height="match_parent"
+            android:layout_marginRight="15dp"
+            android:background="?attr/actionBarItemBackground"
+            android:clickable="true"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:nextFocusLeft="@id/primary_action_view"
+            android:paddingBottom="@dimen/call_log_inner_margin"
+            android:paddingLeft="@dimen/call_log_inner_margin"
+            android:paddingRight="@dimen/call_log_inner_margin"
+            android:paddingTop="@dimen/call_log_inner_margin"
+            android:scaleType="center"
+            android:src="@drawable/call_outgoing_45"/>
+    </LinearLayout>
+
+    <View
+        android:id="@+id/call_log_divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dip"
+        android:layout_marginLeft="@dimen/call_log_outer_margin"
+        android:layout_marginRight="@dimen/call_log_outer_margin"
+        android:background="#55ffffff"/>
+</LinearLayout>

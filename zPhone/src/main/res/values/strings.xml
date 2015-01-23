@@ -1,0 +1,328 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools"
+           tools:ignore="MissingTranslation">
+
+    <string name="app_name" translatable="false">ZPhone</string>
+    <string name="hello_world" translatable="false">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="action_contact">Contact</string>
+    <string name="android_versions_title">Android Versions</string>
+    <string name="android_versions_description">version description</string>
+    <string name="title_activity_splash">SplashActivity</string>
+    <string name="title_activity_login">Sign in</string>
+
+
+    <!--i18n-->
+    <string name="day_today">today</string>
+    <string name="day_yesterday">yesterday</string>
+    <string name="hour">h</string>
+    <string name="minute">m</string>
+    <string name="second">s</string>
+    <string name="alphabet" translatable="false">ABCDEFGHIJKLMNOPQRSTUVWXYZ</string>
+
+
+    <!-- Strings related to login -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password (optional)</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_field_required">This field is required</string>
+
+    <!-- ui Setting -->
+    <string name="spinner_pcscf_discovery">Select PCSCF Discovery Mode</string>
+    <string name="spinner_transport">Select Network Transport</string>
+    <string name="general">General</string>
+    <string name="secuity">Secuity</string>
+    <string name="codecs">Codecs</string>
+    <string name="natt">Natt</string>
+    <string name="identity">Identity</string>
+    <string name="network">NetWork</string>
+    <string name="qos_qoe">QosQoe</string>
+
+    <!-- Contact demo -->
+    <string name="activity_contacts_list">Contacts List</string>
+    <string name="activity_contact_detail">Contact Detail</string>
+    <string name="contacts_list_search_results_title">Contacts List Search for \"%s\"</string>
+    <string name="app_description">This is a sample app, demonstrating use of the Android system Contacts Provider.</string>
+    <string name="imageview_description">Contact Thumbnail</string>
+    <string name="address_button_description">View Address</string>
+    <string name="menu_search">Search</string>
+    <string name="menu_add_contact">Add Contact</string>
+    <string name="menu_edit_contact">Edit Contact</string>
+    <string name="no_contacts">No Contacts Found</string>
+    <string name="no_contact_selected">No Contact Selected</string>
+    <string name="search_contacts_hint">Find contacts …</string>
+    <string name="search_hint">Search …</string>
+
+
+
+
+    <!--
+         When using ContactsContract.Contacts#CONTENT_FILTER_URI to search contacts, a match occurs
+         when using a number of different fields, such as name, e-mail address, address, phone
+         number, etc. When a match occurs that is not the name, there is currently no way to tell
+         which other field was matched. This string is displayed in the secondary display text in
+         ContactsListFragment when a search query match occurs that is not the display name.
+    -->
+    <string name="search_match_other">Matches Other Field</string>
+    <string name="no_address">No addresses found</string>
+    <string name="no_intent_found">No application found to handle this action</string>
+
+
+    <!-- me -->
+    <string name="registration_ok">Registration OK</string>
+    <string name="registration_nok">Registration Not OK</string>
+    <string name="registration_inprogress">Registration In Progress</string>
+    <string name="unregistration_inprogress">Unregistration In Progress</string>
+    <string name="unregistration_ok">Unregistration OK</string>
+    <string name="unregistration_nok">Unregistration Not OK</string>
+    <string name="theme_color">Theme Color</string>
+    <string name="setting">Setting</string>
+    <string name="account">Account</string>
+    <string name="help">Help</string>
+    <string name="about">About</string>
+    <string name="exit">Exit</string>
+    <string name="sure_exit">Are you sure you want to exit?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+
+    <!-- fragment contacts -->
+    <string name="contacts_local">Local</string>
+    <string name="contacts_remote">Remote</string>
+    <string name="contacts_search">Search</string>
+    <string name="contacts_pbx_reload">Reload Contacts</string>
+    <string name="contacts_search_local">Search on Local  …</string>
+    <string name="contacts_search_remote">Search on Remote  …</string>
+    <string name="contacts_pbx_footer">contacts</string>
+    <string name="call_choice">Call Choice</string>
+    <string name="edit_number_before_call">Edit number before call</string>
+    <string name="video_call">Video Call</string>
+    <string name="audio_call">Audio Call</string>
+
+    <!-- Main Activity -->
+    <string name="message">Message</string>
+    <string name="contacts">Contacts</string>
+    <string name="dialer">Dialer</string>
+    <string name="me">Me</string>
+
+    <!-- Account -->
+    <string name="pref_header_identity_acount">Acount</string>
+    <string name="pref_title_display_name">Account name</string>
+    <string name="pref_default_display_name">Zycoo</string>
+    <string name="pref_summary_identity_display_name">Account name</string>
+    <string name="pref_title_identity_account">Username</string>
+    <string name="pref_default_identity_account">804</string>
+    <string name="pref_summary_identity_account">eg.804</string>
+    <string name="pref_title_identity_host_port">Host:[port]</string>
+    <string name="pref_default_identity_host_port">192.168.1.49:5060</string>
+    <string name="pref_summary_identity_host_port">eg.192.168.1.49:5060</string>
+    <string name="pref_title_identity_password">Password</string>
+    <string name="pref_default_identity_password">123456</string>
+    <string name="pref_summary_identity_password">text password</string>
+    <string name="pref_title_identity_3gpp_early_ims_security">3GPP EarlyIMS Security</string>
+    <string name="pref_description_identity_3gpp_early_ims_security">3GPP TS 33.978</string>
+
+    <!-- MQTT -->
+    <string name="mqtt_connect">Connect</string>
+    <string name="mqtt_disconnect">Disconnect</string>
+    <string name="server">Server</string>
+    <string name="port">Port</string>
+    <string name="newConnection">New Connection</string>
+    <string name="newConnectionShort">+</string>
+    <string name="title_activity_new_connection">New Connection</string>
+    <string name="clientID">Client ID</string>
+    <string name="connectedto">Connected to </string>
+    <string name="subscribe">Subscribe</string>
+    <string name="publish">Publish</string>
+    <string name="title_activity_subscribe">Subscribe</string>
+    <string name="disconnected">Disconnected from</string>
+    <string name="topic">Topic</string>
+    <string name="history">History</string>
+    <string name="title_activity_history">History</string>
+    <string name="subscribed">Subscribed to </string>
+    <string name="token">org.eclipse.paho.android.service.sample.ClientConnections</string>
+    <string name="no_status">Unknown connection status to</string>
+    <string name="connecting">Connecting to</string>
+    <string name="disconnecting">Disconnecting from</string>
+    <string name="connectionError">An error occurred connecting to</string>
+    <string name="title_activity_publish">Publish</string>
+    <string name="qos0">0</string>
+    <string name="qos1">1</string>
+    <string name="qos2">2</string>
+    <string name="empty"></string>
+    <string name="qos">QOS</string>
+    <string name="retained">Retained</string>
+    <string name="cleanSession">Clean Session</string>
+    <string name="advanced">Advanced Options</string>
+    <string name="advancedShort">Advanced</string>
+    <string name="title_activity_advanced">Advanced</string>
+    <string name="uname">User Name</string>
+    <string name="pass">Password</string>
+    <string name="ssl">SSL</string>
+    <string name="timeout">Time Out</string>
+    <string name="keepalive">Keep Alive \nTimeout</string>
+    <string name="title_activity_last_will">Last Will Message</string>
+    <string name="setLastWill">Set Last Will Message</string>
+    <string name="willMessage">Set Last Will Message</string>
+    <string name="willMessageShort">Last Will</string>
+    <string name="notifyTitle">MQTT Message Received</string>
+    <string name="notifyTitle_connectionLost">MQTT Client Has Lost Connection</string>
+    <string name="title_activity_connection_details">Connection Details</string>
+    <string name="startLogging">Enable Logging</string>
+    <string name="endLogging">Disable Logging</string>
+    <string name="missingOptions">ClientID, server address or Port number is missing. Please correct or press back arrow cancel.</string>
+    <string name="dateFormat">dd/MM/yy \'at\' HH:mm:ss</string>
+    <string name="unkown_error">Unknown Error</string>
+    <string name="delete_connection">Delete Connection</string>
+    <string name="disconnectClient">Disconnect Client?</string>
+    <string name="deleteDialog">The selected client is currently connected or connecting, deleting this connection will cause it to be disconnected.</string>
+    <string name="continueBtn">Continue</string>
+    <string name="cancelBtn">Cancel</string>
+
+    <!-- Strings that need formatting -->
+    <string name="messageRecieved">Received message %1$s &lt;br/> &lt;small>Topic: %2$s &lt;/small> </string>
+    <string name="timestamp">&lt;br/> &lt;small> %1$s &lt;/small></string>
+    <string name="notification">%1$s has received %2$s on topic %3$s</string>
+    <string name="toast_pub_success">Published message: %1$s to topic: %2$s</string>
+    <string name="toast_sub_success">Subscribed to %1$s</string>
+    <string name="toast_disconnected">Disconnected</string>
+    <string name="toast_pub_failed">Failed to publish message: %1$s to topic: %2$s</string>
+    <string name="toast_sub_failed">Failed to subscribe to %1$s</string>
+    <string name="connection_lost">%1$s has lost connection to %2$s</string>
+    <string name="failure_disconnect">Disconnect failed.&lt;br/> &lt;small>Reason: %s&lt;/small> </string>
+    <string name="failure_connect">Client failed to connect.&lt;br/> &lt;small>Reason: %s&lt;/small></string>
+    <string name="client_connected">Client connected successfully</string>
+
+    <!-- Hints -->
+    <string name="serverURIHint">example.example.com</string>
+    <string name="portHint">1883</string>
+    <string name="contentDescriptionSSL">Enable SSL</string>
+    <string name="contentDescriptionCleanSession">Clean Session</string>
+    <string name="topicHint">hello</string>
+    <string name="messageHint">Hello World</string>
+    <string name="unameHint">user</string>
+    <string name="passwordHint">password</string>
+    <string name="timeoutHint">60</string>
+    <string name="keepaliveHint">200</string>
+
+    <!-- Activity -->
+    <string name="title_activity_contacts_pbx">PBX Contacts</string>
+    <string name="not_support_iax">not support iax protrol</string>
+    <string name="not_support_call_me">don\'t call me</string>
+    <string name="done">OK</string>
+    <string name="remove_from_call_log">Remove from call log</string>
+    <string name="clear_all_call_log">Clear all call log</string>
+    <string name="add_to_contacts">Add to contacts</string>
+    <string name="loading">Loading …</string>
+
+
+    <!-- Message -->
+    <string name="dashboard">Dashboard</string>
+    <string name="pull_down_to_refresh">Pull down to refresh</string>
+    <string name="note">Note</string>
+    <string name="voice_mail">VoiceMail</string>
+    <string name="record">Record</string>
+    <string name="conference">Conference</string>
+    <string name="choice">Choice</string>
+    <string name="voicemail_play">Play</string>
+    <string name="voicemail_call">Call</string>
+    <string name="voicemail_make_as_new">Make as new</string>
+    <string name="voicemail_make_as_read">Make as read</string>
+    <string name="voicemail_delete">Delete</string>
+    <string name="visit_the_official_website">Visit the official website</string>
+
+    <!-- AV -->
+    <string name="string_end_call">End call</string>
+    <string name="string_call_forward">Forward</string>
+    <string name="string_call_answer">Answer</string>
+    <string name="string_call_reject">Regect</string>
+    <string name="string_call_keypad">Keypad</string>
+    <string name="string_call_hold">Hold</string>
+    <string name="string_call_mute">Mute</string>
+    <string name="string_call_speaker">Speaker</string>
+    <string name="string_call_transfer">Transfer</string>
+    <string name="string_call_terminated">Call terminated</string>
+    <string name="string_terminating_dialog">Terminating dialog</string>
+    <string name="string_not_found">Not Found</string>
+    <string name="string_request_canceled">Request canceled</string>
+    <string name="string_incall">In call</string>
+    <string name="string_in_coming">In coming</string>
+    <string name="string_outgoing">Outgoing</string>
+    <string name="string_in_progress">In Progress</string>
+    <string name="string_choice_call">Choice call</string>
+    <string name="string_audio_video_sessions">Audio/Video Sessions</string>
+
+
+    <!-- setting general -->
+    <string name="enable_aec">Enable AEC</string>
+    <string name="voice_activity_detector">Voice activity detector</string>
+    <string name="noise_reduction">Noise reduction</string>
+    <string name="launch_when_system_starts">Launch when system starts</string>
+    <string name="intercept_outgoing_calls">Intercept Outgoing Calls</string>
+    <string name="enable_video_full_screen_mode">Enable Video Full-Ccreen Mode</string>
+    <string name="enable_front_facing_camera">Enable Front Facing Camera</string>
+    <string name="media_profile">Media Profile</string>
+    <string name="audio_playback_level">Audio Playback Level</string>
+    <string name="enum_domain">ENUM(E.164 Number Mapping) domain</string>
+    <string name="low">Low</string>
+    <string name="medium">Medium</string>
+    <string name="high">High</string>
+    <string name="maximum">Maximum</string>
+    <string name="default_defined">Default (User Defined)</string>
+    <string name="rtc_web">RTCWeb (Override)</string>
+
+    <!-- setting network -->
+    <string name="enable_wifi">Enable Wifi</string>
+    <string name="enable_mobile_network">Enable 4G/3G/2.5G</string>
+    <string name="enable_ipv6">Enable IPv6</string>
+    <string name="transport">Transport</string>
+    <string name="tls">TLS</string>
+    <string name="udp">UDP</string>
+    <string name="tcp">TCP</string>
+
+    <!-- setting secuity -->
+    <string name="srtp_mode">SRTP Mode</string>
+    <string name="srtp_type">SRTP Type</string>
+
+    <!-- setting codes -->
+    <string name="pcma">PCMA</string>
+    <string name="pcmu">PCMU</string>
+    <string name="gsm">GSM</string>
+    <string name="amr_nb_oa">AMR NB OA</string>
+    <string name="amr_nb_be">AMR NB  BE</string>
+    <string name="i_lbc">iLBC</string>
+    <string name="speex_nb">Speex NB</string>
+    <string name="speex_wb">Speex WB</string>
+    <string name="speex_uwb">Speex UWB</string>
+    <string name="opus">OPUS</string>
+    <string name="g_722">G.722</string>
+    <string name="g_729">G.729</string>
+    <string name="vp8">VP8</string>
+    <string name="mp4v_es">MP4V ES</string>
+    <string name="theora">Theora</string>
+    <string name="h264_bp">H264 BP</string>
+    <string name="h264_mp">H264 MP</string>
+    <string name="h_263">H.263</string>
+    <string name="h_263_plus">H.263+</string>
+    <string name="h_263_plus_plus">H.283++</string>
+    <string name="title_activity_about">AboutActivity</string>
+
+    <!-- setting about -->
+    <string name="rate_zphone">Rate ZPhone</string>
+    <string name="features">Features</string>
+    <string name="faq">FAQ</string>
+    <string name="feedback">FeedBack</string>
+    <string name="check_for_updates">Check for Updates</string>
+
+    <!-- Toast -->
+    <string name="connect_server_failure">connect  server failure</string>
+    <string name="network_failure">connect network failure</string>
+    <string name="cancel_delete">cancel delete</string>
+    <string name="operation_failure">operation failure</string>
+    <string name="operation_successful">operation successful</string>
+    <string name="not_register">not register</string>
+
+</resources>

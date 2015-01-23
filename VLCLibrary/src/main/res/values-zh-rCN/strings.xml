@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="foreground_service_notificaton_ticker_text">音频播放</string>
+    <string name="foreground_service_notification_title">播放中  &#8230;</string>
+    <string name="foreground_service_notification_message">点击控制播放</string>
+</resources>

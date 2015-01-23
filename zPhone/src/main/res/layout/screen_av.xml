@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/screen_av_relativeLayout"
+     >
+
+   <!--  <LinearLayout
+        android:id="@+id/buttonContainer"
+        android:layout_width="fill_parent"
+        android:layout_height="80dp"
+        android:layout_alignParentBottom="true"
+        android:background="#40000000"
+        android:orientation="horizontal" >
+
+        <ImageButton
+            android:id="@+id/speakerphoneButton"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:contentDescription="@null"
+            android:focusable="true"
+            android:src="@drawable/callvolume" />
+
+        <ImageButton
+            android:id="@+id/callMicrophoneButton"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:contentDescription="@null"
+            android:src="@drawable/callmicrophone" />
+
+        <ImageButton
+            android:id="@+id/callVideoButton"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:contentDescription="@null"
+            android:src="@drawable/callvideo" />
+
+        <ImageButton
+            android:id="@+id/callHoldButton"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:contentDescription="@null"
+            android:src="@drawable/callhold" />
+
+        <ImageButton
+            android:id="@+id/callHangupButton"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:contentDescription="@null"
+            android:src="@drawable/callhangup" />
+    </LinearLayout> -->
+
+</RelativeLayout>

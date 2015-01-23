@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent"
+              android:isScrollContainer="true"
+              android:orientation="vertical"
+              android:background="@color/grey_200"
+              android:scrollbars="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="20dp"/>
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="48dp"
+        android:background="@color/grey_100"
+        android:gravity="center"
+        android:padding="10dp"
+        android:text="@string/string_audio_video_sessions"
+        android:textSize="18dp"
+        android:textStyle="bold">
+    </TextView>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="20dp"/>
+
+    <ListView
+        android:id="@+id/screen_av_queue_listView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:isScrollContainer="true"
+        android:paddingLeft="16dp"
+        android:scrollbars="vertical"
+        android:smoothScrollbar="true"/>
+
+</LinearLayout>

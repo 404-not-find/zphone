@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="fill_parent"
+                android:background="@color/grey_100"
+                android:layout_height="48dp">
+
+    <LinearLayout
+        android:id="@+id/screen_av_queue_item_lv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+
+        <ImageView
+            android:id="@+id/screen_av_queue_item_imageView"
+            android:layout_width="40dp"
+            android:layout_marginLeft="16dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_phone_in_talk_grey600">
+        </ImageView>
+    </LinearLayout>
+
+
+    <TextView
+        android:layout_marginLeft="72dp"
+        android:paddingTop="5dp"
+        android:id="@+id/screen_av_queue_item_textView_remote"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="sip:bob@open-ims.test"
+        android:textSize="16sp"
+        android:textStyle="bold">
+    </TextView>
+
+    <TextView
+        android:layout_marginLeft="72dp"
+        android:id="@+id/screen_av_queue_item_textView_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/screen_av_queue_item_textView_remote"
+        android:textSize="14sp"
+        android:text="Held">
+    </TextView>
+
+</RelativeLayout>
