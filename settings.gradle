@@ -1,6 +1,5 @@
-include ':androidngnstack', ':VLCLibrary', ':libvlc', ':PanningViewLibrary'
-include ':paho'
-project(':paho').projectDir = new File('pahoAndroidService')
+include ':androidngnstack', ':VLCLibrary', ':libvlc', ':PanningViewLibrary', ':paho'
 include ':library'
 include ':zPhone'
 include ':switchButton'
+project(':paho').projectDir = new File('pahoAndroidService')

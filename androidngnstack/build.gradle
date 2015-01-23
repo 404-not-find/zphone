@@ -7,16 +7,18 @@ android {
     defaultConfig {
         minSdkVersion 7
         targetSdkVersion 21
+        multiDexEnabled true
     }
 
     buildTypes {
         release {
-            //minifyEnabled true
-            //proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
         }
     }
 }
 
 dependencies {
-    compile files('libs/simple-xml-2.3.4.jar')
+    //compile files('libs/simple-xml-2.3.4.jar')
+    compile 'org.simpleframework:simple-xml:2.7.1'
 }

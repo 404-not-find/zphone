@@ -478,11 +478,7 @@ public class ContactsPBXActivity extends SherlockActivity implements OnClickList
             super.onProgressUpdate(values);
         }
 
-        @Override
-        protected void onCancelled(Void result)
-        {
-            super.onCancelled(result);
-        }
+
 
         @Override
         protected void onCancelled()
