@@ -13,8 +13,8 @@ public class MeListViewItemAccount extends ListViewItem {
     public void setStatusChangeListener(MeListAdapter.OnStatusChangeListener listener) {
         this.listener = listener;
     }
-    public MeListAdapter.OnStatusChangeListener getStatusChangeListener()
-    {
+
+    public MeListAdapter.OnStatusChangeListener getStatusChangeListener() {
         return listener;
     }
 }

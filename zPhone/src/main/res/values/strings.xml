@@ -9,7 +9,6 @@
     <string name="action_contact">Contact</string>
     <string name="android_versions_title">Android Versions</string>
     <string name="android_versions_description">version description</string>
-    <string name="title_activity_splash">SplashActivity</string>
     <string name="title_activity_login">Sign in</string>
 
 
@@ -47,7 +46,6 @@
     <string name="activity_contacts_list">Contacts List</string>
     <string name="activity_contact_detail">Contact Detail</string>
     <string name="contacts_list_search_results_title">Contacts List Search for \"%s\"</string>
-    <string name="app_description">This is a sample app, demonstrating use of the Android system Contacts Provider.</string>
     <string name="imageview_description">Contact Thumbnail</string>
     <string name="address_button_description">View Address</string>
     <string name="menu_search">Search</string>
@@ -93,7 +91,6 @@
     <!-- fragment contacts -->
     <string name="contacts_local">Local</string>
     <string name="contacts_remote">Remote</string>
-    <string name="contacts_search">Search</string>
     <string name="contacts_pbx_reload">Reload Contacts</string>
     <string name="contacts_search_local">Search on Local  …</string>
     <string name="contacts_search_remote">Search on Remote  …</string>
@@ -165,7 +162,7 @@
     <string name="title_activity_advanced">Advanced</string>
     <string name="uname">User Name</string>
     <string name="pass">Password</string>
-    <string name="ssl">SSL</string>
+    <string name="ssl" translatable="false">SSL</string>
     <string name="timeout">Time Out</string>
     <string name="keepalive">Keep Alive \nTimeout</string>
     <string name="title_activity_last_will">Last Will Message</string>
@@ -178,13 +175,12 @@
     <string name="startLogging">Enable Logging</string>
     <string name="endLogging">Disable Logging</string>
     <string name="missingOptions">ClientID, server address or Port number is missing. Please correct or press back arrow cancel.</string>
-    <string name="dateFormat">dd/MM/yy \'at\' HH:mm:ss</string>
+    <string name="dateFormat" translatable="false">dd/MM/yy \'at\' HH:mm:ss</string>
     <string name="unkown_error">Unknown Error</string>
     <string name="delete_connection">Delete Connection</string>
     <string name="disconnectClient">Disconnect Client?</string>
     <string name="deleteDialog">The selected client is currently connected or connecting, deleting this connection will cause it to be disconnected.</string>
     <string name="continueBtn">Continue</string>
-    <string name="cancelBtn">Cancel</string>
 
     <!-- Strings that need formatting -->
     <string name="messageRecieved">Received message %1$s &lt;br/> &lt;small>Topic: %2$s &lt;/small> </string>
@@ -242,7 +238,7 @@
     <string name="string_end_call">End call</string>
     <string name="string_call_forward">Forward</string>
     <string name="string_call_answer">Answer</string>
-    <string name="string_call_reject">Regect</string>
+    <string name="string_call_reject">Reject</string>
     <string name="string_call_keypad">Keypad</string>
     <string name="string_call_hold">Hold</string>
     <string name="string_call_mute">Mute</string>
@@ -286,9 +282,9 @@
     <string name="enable_mobile_network">Enable 4G/3G/2.5G</string>
     <string name="enable_ipv6">Enable IPv6</string>
     <string name="transport">Transport</string>
-    <string name="tls">TLS</string>
-    <string name="udp">UDP</string>
-    <string name="tcp">TCP</string>
+    <string name="tls" translatable="false">TLS</string>
+    <string name="udp" translatable="false">UDP</string>
+    <string name="tcp" translatable="false">TCP</string>
 
     <!-- setting secuity -->
     <string name="srtp_mode">SRTP Mode</string>
@@ -298,16 +294,16 @@
     <string name="pcma">PCMA</string>
     <string name="pcmu">PCMU</string>
     <string name="gsm">GSM</string>
-    <string name="amr_nb_oa">AMR NB OA</string>
-    <string name="amr_nb_be">AMR NB  BE</string>
+    <string name="amr_nb_oa" translatable="false">AMR NB OA</string>
+    <string name="amr_nb_be" translatable="false">AMR NB  BE</string>
     <string name="i_lbc">iLBC</string>
-    <string name="speex_nb">Speex NB</string>
-    <string name="speex_wb">Speex WB</string>
-    <string name="speex_uwb">Speex UWB</string>
+    <string name="speex_nb" translatable="false">Speex NB</string>
+    <string name="speex_wb" translatable="false">Speex WB</string>
+    <string name="speex_uwb" translatable="false">Speex UWB</string>
     <string name="opus">OPUS</string>
-    <string name="g_722">G.722</string>
-    <string name="g_729">G.729</string>
-    <string name="vp8">VP8</string>
+    <string name="g_722" translatable="false">G.722</string>
+    <string name="g_729" translatable="false">G.729</string>
+    <string name="vp8" translatable="false">VP8</string>
     <string name="mp4v_es">MP4V ES</string>
     <string name="theora">Theora</string>
     <string name="h264_bp">H264 BP</string>

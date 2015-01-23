@@ -303,8 +303,7 @@ public class ScreenAV extends SherlockFragmentActivity implements OnClickListene
                 mWakeLock.acquire();
             }
         }
-        if(powerManager != null && mProSensorWakeLock == null)
-        {
+        if (powerManager != null && mProSensorWakeLock == null) {
             mProSensorWakeLock = powerManager.newWakeLock(32, TAG);
         }
         if (mProxSensor == null && !ZphoneApplication.isBuggyProximitySensor()) {

@@ -1,33 +1,45 @@
 <!DOCTYPE HTML>
-
 <head>
-    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-    <img src="file:///android_asset/www/img/zycoo_logo.jpg" height="50" width="100" />
-    <br/>
-    <h1>SoftPhone 帮助文档</h1>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+    <script src="file:///android_asset/www/script/jquery.js"></script>
+    <script src="file:///android_asset/www/script/jquery.mobile-1.4.5.min.js"></script>
+    <link href="file:///android_asset/www/css/jquery.mobile-1.4.5.min.css" rel="stylesheet" media="screen"
+          type="text/css"/>
 </head>
 
 <body>
-    <h2>注册</h2>
-    1. “我”的界面点击帐号选项进入帐号填写界面.<br/>
-    显示名可以任意填写. 帐号，域名，密码需要与PBX上对应的帐号,端口与ip或域名用":"分割。
-    <b>默认端口5060</b>
-    <b> 在进入设置界面时会注销当前帐号，退出当前界面会自动注册帐号。</b>
-    <h2>编码</h2>
-    PCMA<br/>
-    PCMU<br/>
-    GSM</br>
-    G.722</br>
-    Speex NB</br>
-    <h2>常见问题</h2>
-    <b>IAX2</b>&nbsp&nbsp 只支持Sip协议帐号.IAX2或IAX不支持.<br/>
-    <b>DTMF</b>&nbsp&nbsp 模式只支持RFC2833. SIP Info和inband不支持.<br/>
-    <b>语音邮件</b>&nbsp&nbspPBX需要运行服务程序.<br/>
-    <b>录音</b>&nbsp&nbsp需要运行服务程序.<br/>
-    <!--
-    <h4>TLS</h4>
-    <b>TLS不支持</b>
-    -->
+<h1>常见问题</h1>
+<ul data-role="listview" data-inset="true">
+    <li>
+        <div data-role="collapsible" data-inset="false" data-iconpos="right" data-collapsed-icon="carat-r"
+             data-expanded-icon="carat-d">
+            <h4>支持的协议</h4>
+            <p style="font-size:15px;"> CooCall 是基于开源框架 Doubango. 只支持 sip 协议, 不支持 iax2 等协议</p>
+        </div>
+    </li>
+
+    <li>
+        <div data-role="collapsible" data-inset="false" data-iconpos="right" data-collapsed-icon="carat-r"
+             data-expanded-icon="carat-d">
+            <h4>支持的 DTMF模式</h4>
+
+            <p style="font-size:15px;"> CooCall 只支持RFC2833. SIP Info和inband不支持</p>
+        </div>
+    </li>
+    <li>
+        <div data-role="collapsible" data-inset="false" data-iconpos="right" data-collapsed-icon="carat-r"
+             data-expanded-icon="carat-d">
+            <h4>支持的语音编码</h4>
+            <ul data-role="listview">
+                <li>PCMA</li>
+                <li>PCMU</li>
+                <li>GSM</li>
+                <li>G.722</li>
+                <li>Speex NB</li>
+            </ul>
+        </div>
+    </li>
+</ul>
 </body>
 
 

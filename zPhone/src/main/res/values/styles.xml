@@ -113,7 +113,7 @@
         <item name="android:layout_height">@dimen/icon_with_text_height</item>
     </style>
 
-    <style name="Icon_with_text_Text_right">
+    <style name="Icon_with_text_Text_start">
         <item name="android:layout_height">match_parent</item>
         <item name="android:textSize">@dimen/icon_with_text_text_size</item>
         <item name="android:layout_marginLeft">@dimen/icon_with_text_text_padding_left_16dp</item>
@@ -173,7 +173,8 @@
         </item>
     </style>
 
-    <!-- Three-line list Avatar with text and icon--><style name="Three_line_list_Avatar_with_text_icon">
+    <!-- Three-line list Avatar with text and icon-->
+    <style name="Three_line_list_Avatar_with_text_icon">
     <item name="android:layout_height">@dimen/three_list_avatar_with_text_icon_height</item>
     <item name="android:paddingBottom">@dimen/three_list_avatar_with_text_icon_padding_bottom</item>
     <item name="android:paddingTop">@dimen/three_list_avatar_with_text_icon_padding_top</item>

@@ -116,7 +116,7 @@ public class ContactsContainerFragment extends SuperAwesomeCardFragment implemen
         }
 
         menu.add(UNIQUE_MENU_GROUP_ID, UNIQUE_MENU_SEARCH_ID, 0,
-                ZphoneApplication.getAppResources().getString(R.string.contacts_search))
+                ZphoneApplication.getAppResources().getString(R.string.contacts_search_local))
                 .setActionView(sv)
                 .setIcon(R.drawable.ic_search_white).setShowAsAction(
                 MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);

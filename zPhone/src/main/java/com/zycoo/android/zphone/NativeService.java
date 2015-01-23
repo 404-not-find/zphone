@@ -38,7 +38,10 @@ import org.doubango.ngn.events.NgnMsrpEventArgs;
 import org.doubango.ngn.events.NgnRegistrationEventArgs;
 import org.doubango.ngn.events.NgnRegistrationEventTypes;
 import org.doubango.ngn.media.NgnMediaType;
+import org.doubango.ngn.model.NgnHistoryAVCallEvent;
+import org.doubango.ngn.model.NgnHistoryEvent;
 import org.doubango.ngn.services.INgnConfigurationService;
+import org.doubango.ngn.services.INgnHistoryService;
 import org.doubango.ngn.sip.NgnAVSession;
 import org.doubango.ngn.utils.NgnConfigurationEntry;
 import org.eclipse.paho.android.service.MqttAndroidClient;
@@ -53,29 +56,36 @@ import org.slf4j.LoggerFactory;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.List;
 import java.util.Map;
+import java.util.Observable;
+import java.util.Observer;
 
 /**
  * @author tqcenglish Oct 8, 2014 11:10:26 AM
  */
-public class NativeService extends NgnNativeService implements MqttCallback {
+public class NativeService extends NgnNativeService implements MqttCallback, Observer {
     private final static String LOG_TAG = NativeService.class.getCanonicalName();
     private Logger mLogger = LoggerFactory.getLogger(NativeService.class);
     public static final String ACTION_STATE_EVENT = LOG_TAG + ".ACTION_STATE_EVENT";
     private PowerManager.WakeLock mWakeLock;
     private BroadcastReceiver mBroadcastReceiver;
     private Engine mEngine;
+    private INgnHistoryService mHistoryService;
     private INgnConfigurationService mConfigurationService;
     private IBinder mBinder = new NativeServiceBinder();
     private Handler mMainActivityHandler;
     private ChangeListener changeListener = new ChangeListener();
     private String clientHandle;
     private JsonParser jsonparer;
+    private boolean mConnected = false;
 
     public NativeService() {
         super();
-        mEngine = (Engine) Engine.getInstance();
+        mEngine = Engine.getInstance();
         mConfigurationService = mEngine.getConfigurationService();
+        mHistoryService = mEngine.getHistoryService();
+        mHistoryService.getObservableEvents().addObserver(this);
         jsonparer = new JsonParser();
     }
 
@@ -90,6 +100,7 @@ public class NativeService extends NgnNativeService implements MqttCallback {
                             | PowerManager.SCREEN_BRIGHT_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP,
                     LOG_TAG);
         }
+
     }
 
     @Override
@@ -194,11 +205,12 @@ public class NativeService extends NgnNativeService implements MqttCallback {
                             break;
                         case INCOMING:
                             if (NgnMediaType.isAudioVideoType(mediaType)) {
+                                mConnected = true;
                                 final NgnAVSession avSession = NgnAVSession.getSession(args
                                         .getSessionId());
                                 if (avSession != null) {
-                                    mEngine.showAVCallNotif(R.drawable.phone_call_25,
-                                            "Call in coming");
+                                    mEngine.showAVCallNotif(R.drawable.call_incoming_45,
+                                            getResources().getString(R.string.string_in_coming));
                                     Intent income = new Intent(ZphoneApplication.getContext()
                                             .getApplicationContext(),
                                             LaunchActivity.class);
@@ -225,14 +237,13 @@ public class NativeService extends NgnNativeService implements MqttCallback {
                             break;
                         case INPROGRESS:
                             if (NgnMediaType.isAudioVideoType(mediaType)) {
-                                mEngine.showAVCallNotif(R.drawable.phone_call_25, "Call outing");
+                                mEngine.showAVCallNotif(R.drawable.call_outgoing_45, "Call outing");
                             }
                             break;
                         case RINGING:
                             if (NgnMediaType.isAudioVideoType(mediaType)) {
                                 mEngine.getSoundService().startRingBackTone();
                             }
-
                             break;
                         case CONNECTED:
                         case EARLY_MEDIA:
@@ -319,6 +330,33 @@ public class NativeService extends NgnNativeService implements MqttCallback {
         return super.onUnbind(intent);
     }
 
+    @Override
+    public void update(Observable observable, Object data) {
+        if (mConnected) {
+            List<NgnHistoryEvent> events = mHistoryService.getObservableEvents().filter(new NgnHistoryAVCallEvent.HistoryEventAVFilter());
+            for (NgnHistoryEvent event : events) {
+                mLogger.debug("is connect " + mConnected);
+                if (event.getStatus() == NgnHistoryEvent.StatusType.Missed) {
+                    if ((new java.util.Date().getTime()) - event.getEndTime() < 60000) {
+                        mEngine.showMissCallNotif(R.drawable.call_missed_45, event.getDisplayName(), event.getRemoteParty(), event.getEndTime());
+                        break;
+                    }
+                }
+            }
+            mConnected = false;
+        }
+    }
+
+    public boolean isInComingMiss(String phrase) {
+        switch (phrase) {
+            case "Call Terminated":
+            case "Call Cancelled":
+                return true;
+            default:
+                return false;
+        }
+    }
+
     public class NativeServiceBinder extends Binder {
         public NativeService getService() {
             return NativeService.this;
@@ -333,7 +371,6 @@ public class NativeService extends NgnNativeService implements MqttCallback {
     /**
      * mqtt connect
      *
-     * @param data
      * @author tqcenglish
      */
     public void connectAction() {
@@ -561,7 +598,7 @@ public class NativeService extends NgnNativeService implements MqttCallback {
             args[0] = c.getId();
             args[1] = c.getHostName();
 
-            String message = this.getString(R.string.connection_lost, args);
+            String message = this.getString(R.string.connection_lost, args[0], args[1]);
 
             //build intent
             Intent intent = new Intent();
@@ -660,5 +697,4 @@ public class NativeService extends NgnNativeService implements MqttCallback {
         }
 
     }
-
 }
