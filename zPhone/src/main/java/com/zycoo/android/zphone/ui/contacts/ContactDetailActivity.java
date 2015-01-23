@@ -89,7 +89,8 @@ public class ContactDetailActivity extends SherlockFragmentActivity {
                 // parentActivityName attribute (and via meta-data tag for OS versions before API
                 // Level 16). See the "Tasks and Back Stack" guide for more information:
                 // http://developer.android.com/guide/components/tasks-and-back-stack.html
-                NavUtils.navigateUpFromSameTask(this);
+                //NavUtils.navigateUpFromSameTask(this);
+                finish();
                 return true;
         }
         // Otherwise, pass the item to the super implementation for handling, as described in the

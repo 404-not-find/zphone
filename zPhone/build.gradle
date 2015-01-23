@@ -1,6 +1,10 @@
 apply plugin: 'com.android.application'
 
 android {
+
+    lintOptions {
+        abortOnError false
+    }
     signingConfigs {
         config {
             keyAlias 'android'
@@ -22,7 +26,7 @@ android {
             targetSdkVersion 21
             testInstrumentationRunner 'android.test.'
             testApplicationId 'com.zycoo.aInstrumentationTestRunnerndroid.zphone.test'
-            versionName 'Beta'
+            versionName '1.0 Beta'
             signingConfig signingConfigs.config
         }
     }
@@ -42,8 +46,7 @@ android {
     buildTypes {
         debug {
             applicationIdSuffix ".debug"
-            minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+            minifyEnabled false
         }
 
         release {

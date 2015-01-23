@@ -8,5 +8,16 @@
         android:id="@+id/id_about_htlp_wv"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+    <ProgressBar
+        android:id="@+id/web_view_pb"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="10dp"
+        android:indeterminateOnly="false"
+        android:max="100"
+        android:progressDrawable="@drawable/progress_bar_states"
+        android:layout_centerInParent="true"
+        >
+    </ProgressBar>
 
 </RelativeLayout>

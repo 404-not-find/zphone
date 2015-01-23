@@ -71,6 +71,7 @@
 -dontwarn org.apache.**
 -dontwarn com.actionbarsherlock.BuildConfig
 
+-keep class org.videolan.libvlc.**{ *; }
 -keep class org.doubango.** { *; }
 -keep class com.zycoo.android.zphone.** { *; }
 
