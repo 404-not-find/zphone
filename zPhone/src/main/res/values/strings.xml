@@ -324,5 +324,5 @@
     <string name="operation_failure">operation failure</string>
     <string name="operation_successful">operation successful</string>
     <string name="not_register">not register</string>
-
+    <string name="not_empty">Not empty</string>
 </resources>

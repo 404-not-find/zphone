@@ -1,7 +1,7 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     android:background="#ABABAB" >
 
-    <EditTextPreference
+    <com.zycoo.android.zphone.widget.CustomEditTextPreference
         android:capitalize="words"
         android:defaultValue="@string/pref_default_display_name"
         android:inputType="textCapWords"
