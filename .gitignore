@@ -1,6 +1,5 @@
-build
+build/
 .gradle
 .idea
 import-summary.txt
-*build*
 
