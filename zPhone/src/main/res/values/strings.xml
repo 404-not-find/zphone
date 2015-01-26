@@ -115,7 +115,7 @@
     <!--<string name="pref_default_identity_account">804</string>-->
     <string name="pref_default_identity_account">""</string>
     <string name="pref_summary_identity_account">eg.804</string>
-    <string name="pref_title_identity_host_port">Host:[port]</string>
+    <string name="pref_title_identity_host_port">Host[:port]</string>
     <string name="pref_default_identity_host_port">""</string>
     <!--<string name="pref_default_identity_host_port">192.168.1.49:5060</string>-->
     <string name="pref_summary_identity_host_port">eg.192.168.1.49:5060</string>

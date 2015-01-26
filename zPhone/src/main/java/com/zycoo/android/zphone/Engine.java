@@ -101,8 +101,7 @@ public class Engine
         mNotifManager.notify(notifId, notification);
     }
 
-    private void showNotificationNew(int notifId, int drawableId, String title, String contentText, String ticker, long when) {
-
+    private void showNotificationNew(int notifId, int drawableId, String title, String contentText, String tickerText, long when) {
         // Set the icon, scrolling text and timestamp
         // 设置图标，滚动文本和时间戳
         final Notification notification;
@@ -119,8 +118,8 @@ public class Engine
                 break;
 
             case NOTIF_AVCALL_ID:
-                ticker =
-                        String.format("%s (%d)", ticker, NgnAVSession.getSize());
+                tickerText =
+                        String.format("%s (%d)", tickerText, NgnAVSession.getSize());
                 intent.putExtra("action", LaunchActivity.ACTION_SHOW_AVSCREEN);
                 break;
             case NOTIF_MISS_CALL_ID:
@@ -143,8 +142,8 @@ public class Engine
         {
             builder.setContentText(contentText);
         }
-        if(ticker !=null ) {
-            builder.setTicker(ticker);
+        if(tickerText !=null ) {
+            builder.setTicker(tickerText);
         }
         if(when != 0)
         {
@@ -181,7 +180,7 @@ public class Engine
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
             showNotificationOld(notifId, drawableId, tickerText, titleText);
         } else {
-            showNotificationNew(notifId, drawableId, titleText, contextText, titleText, when);
+            showNotificationNew(notifId, drawableId, titleText, contextText, tickerText, when);
         }
 
     }

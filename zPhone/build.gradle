@@ -105,5 +105,8 @@ dependencies {
     compile files('libs/asterisk-java.jar')
     //http://mvnrepository.com/artifact/org.asteriskjava/asterisk-java/1.0.0.M3
     //compile 'org.asteriskjava:asterisk-java:1.0.0.M3'
+
+    //---------------android-segmented-control------------------
+    compile 'info.hoang8f:android-segmented:1.0.4'
 }
 

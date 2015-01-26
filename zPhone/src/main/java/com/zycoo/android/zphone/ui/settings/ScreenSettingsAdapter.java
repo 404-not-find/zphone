@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 
@@ -237,6 +238,7 @@ public class ScreenSettingsAdapter extends BaseAdapter {
         //pro or free
         ListViewItem item = objects[position];
         if (!item.isVisible()) {
+            convertView.setLayoutParams(new AbsListView.LayoutParams(-1, 1));
             convertView.setVisibility(View.GONE);
         }
         return convertView;

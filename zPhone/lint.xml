@@ -2,5 +2,6 @@
 <lint>
 	<issue
         id="MissingTranslation"
-        severity="ignore" />
+	severity="ignore" />
+
 </lint>
