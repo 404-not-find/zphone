@@ -203,4 +203,5 @@
     <string name="enable_ipv6">开启IPv6</string>
     <string name="enable_keypad_tones">开启按键拨号音</string>
     <string name="enable_keypad_vibration">开启拨号震动</string>
+    <string name="enable_proximity_sensor">开启距离感应传感器</string>
 </resources>
