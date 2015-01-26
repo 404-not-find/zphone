@@ -7,15 +7,20 @@ import android.content.res.Resources;
 import android.support.multidex.MultiDex;
 import android.util.Log;
 
+import com.google.android.gms.analytics.GoogleAnalytics;
+import com.google.android.gms.analytics.Tracker;
+
 import org.doubango.ngn.NgnApplication;
 import org.doubango.ngn.services.INgnConfigurationService;
 import org.doubango.ngn.services.INgnSipService;
 import org.doubango.ngn.utils.NgnConfigurationEntry;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class ZphoneApplication extends NgnApplication {
+    private final static String PROPERTY_ID = "UA-47275396-3";
     private static List<Activity> mActivitys = new ArrayList<Activity>();
     protected INgnConfigurationService mConfigurationService;
     private INgnSipService mSipService;

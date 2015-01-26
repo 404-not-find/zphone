@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <!-- https://github.com/1sters/material_design_zh/blob/master/SOURCE/style/color.md -->
     <color name="red_500">#e51c23</color>
     <color name="red_100">#f9bdbb</color>
@@ -14,7 +13,7 @@
     <color name="grey_200">#eeeeee</color>
     <color name="grey_300">#E0E0E0</color>
     <color name="grey_400">#BDBDBD</color>
-    <color name="greey_600">#757575</color>
+    <color name="grey_600">#757575</color>
     <color name="grey_700">#616161</color>
     <color name="light_blue">#03a9f4</color>
     <color name="blue_700">#0288d1</color>
@@ -22,5 +21,4 @@
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
     <color name="half_tra">#90000000</color>
-
 </resources>

@@ -315,7 +315,7 @@ public class ScreenAV extends SherlockFragmentActivity implements OnClickListene
     protected void onPause() {
         super.onPause();
         Log.d(TAG, "onPause()");
-        if (mProxSensor != null) {
+        /*if (mProxSensor != null) {
             mProxSensor.stop();
         }
         */
@@ -1048,7 +1048,7 @@ public class ScreenAV extends SherlockFragmentActivity implements OnClickListene
     /**
      * MyProxSensor 监视原始的传感器数据
      */
-    static class MyProxSensor implements SensorEventListener {
+    class MyProxSensor implements SensorEventListener {
 
         private final INgnConfigurationService mConfigurationService;
         private final SensorManager mSensorManager;
@@ -1084,6 +1084,7 @@ public class ScreenAV extends SherlockFragmentActivity implements OnClickListene
 
         @Override
         public void onSensorChanged(SensorEvent event) {
+            float[] its = event.values;
             try { // Keep it until we get a phone supporting this feature
                 if (mAVScreen == null) {
                     Log.e(ScreenAV.TAG, "invalid state");

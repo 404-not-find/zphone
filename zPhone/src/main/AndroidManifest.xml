@@ -7,7 +7,9 @@
 
     <uses-sdk
         android:minSdkVersion="8"
-        android:targetSdkVersion="21"/>
+        android:targetSdkVersion="21"
+        tools:overrideLibrary="com.google.android.gms"
+        />
 
     <uses-permission android:name="android.permission.READ_CALL_LOG"/>
     <uses-permission android:name="android.permission.WRITE_CALL_LOG"/>
@@ -208,5 +210,8 @@
         <instrumentation android:targetPackage="com.zycoo.android.zphone"
                          android:name="android.test.InstrumentationTestRunner" />
         <uses-library android:name="android.test.runner" />
+        <!--Google Analytics-->
+        <meta-data android:name="com.google.android.gms.version"
+                   android:value="@integer/google_play_services_version" />
     </application>
 </manifest>

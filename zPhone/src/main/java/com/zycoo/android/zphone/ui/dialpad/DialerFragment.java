@@ -392,8 +392,7 @@ public class DialerFragment extends SuperAwesomeCardFragment implements OnClickL
                         }
                     }).start();
         }
-        if(!mSipService.isRegistered())
-        {
+        if (!mSipService.isRegistered()) {
             Toast.makeText(getActivity(), R.string.not_register, Toast.LENGTH_SHORT).show();
         }
 
@@ -488,7 +487,7 @@ public class DialerFragment extends SuperAwesomeCardFragment implements OnClickL
 
     @Override
     public void onTrigger(int keyCode, int dialTone) {
-        // dialFeedback.giveFeedback(dialTone);
+        dialFeedback.giveFeedback(dialTone);
         keyPressed(keyCode);
 
     }
@@ -502,7 +501,7 @@ public class DialerFragment extends SuperAwesomeCardFragment implements OnClickL
     public boolean onLongClick(View v) {
         int vId = v.getId();
         if (vId == R.id.button0) {
-            // dialFeedback.hapticFeedback();
+            dialFeedback.hapticFeedback();
             keyPressed(KeyEvent.KEYCODE_PLUS);
             return true;
         } else if (vId == R.id.button1) {
