@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <style name="AppBaseTheme" parent="Theme.Sherlock.Light.DarkActionBar"></style>
+
+    <!-- Application theme. -->
+    <style name="AppTheme" parent="AppBaseTheme"></style>
+
+    <style name="Icon_with_text_Text_start_base">
+        <item name="android:layout_marginStart">@dimen/icon_with_text_text_padding_left_16dp</item>
+    </style>
+
+    <style name="Icon_with_text_Icon_end_base">
+        <item name="android:layout_marginEnd">@dimen/icon_with_text_icon_padding_right</item>
+    </style>
+
+    <style name="Avatar_with_text_Avatar_base">
+        <item name="android:layout_marginStart">@dimen/avatar_with_text_avatar_padding_left</item>
+    </style>
+
+    <style name="Avatar_with_text_Text_base">
+        <item name="android:layout_marginStart">@dimen/avatar_with_text_text_padding_left</item>
+    </style>
+
+    <style name="Text_only_Text_base">
+        <item name="android:layout_marginStart">@dimen/text_only_padding_left</item>
+    </style>
+    <style name="Three_line_list_Avatar_with_text_icon_Avatar_base">
+        <item name="android:layout_marginStart">
+            @dimen/three_list_avatar_with_text_icon_avatar_padding
+        </item>
+    </style>
+    <style name="Three_line_list_Avatar_with_text_icon_Text_base">
+        <item name="android:layout_marginStart">
+            @dimen/three_list_avatar_with_text_icon_text_padding_left_104
+        </item>
+    </style>
+</resources>

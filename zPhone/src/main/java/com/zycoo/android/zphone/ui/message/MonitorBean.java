@@ -1,6 +1,10 @@
 
 package com.zycoo.android.zphone.ui.message;
 
+import java.util.Locale;
+
+import static java.util.Locale.US;
+
 public class MonitorBean {
     private int duration;
     private String time;
@@ -69,7 +73,7 @@ public class MonitorBean {
     public String insertSql() {
         String sql = String
                 .format("INSERT INTO MONITORS(DURATION, TIME, FILE_FORMATE, FROM_EXTENSION, TO_EXTENSION, TYPE, FILE_NAME) VALUES(%d, '%s', '%s', '%s', '%s', '%s', '%s')",
-                        duration, time, file_formate, from, to, type, file_name);
+                        String.format(Locale.US, "%d", duration), time, file_formate, from, to, type, file_name);
         return sql;
     }
 

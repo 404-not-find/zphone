@@ -74,7 +74,6 @@ public class ScreenGeneralActivity extends BaseScreen implements AdapterView.OnI
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            isFreeVersion();
             adapter.notifyDataSetInvalidated();
             super.onPostExecute(aVoid);
         }
@@ -82,6 +81,7 @@ public class ScreenGeneralActivity extends BaseScreen implements AdapterView.OnI
         @Override
         protected Void doInBackground(Void... params) {
             initData();
+            isFreeVersion();
             return null;
         }
     }

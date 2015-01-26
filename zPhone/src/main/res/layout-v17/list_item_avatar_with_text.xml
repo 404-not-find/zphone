@@ -3,33 +3,33 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    style="@style/List_item_background">
+    >
 
     <RelativeLayout
-        style="@style/Icon_with_text"
+        style="@style/Avatar_with_text"
         android:layout_width="match_parent"
         android:id="@+id/id_item_me_rl">
 
+        <ImageView
+            android:id="@+id/id_item_av_iv"
+            style="@style/Avatar_with_text_Avatar"
+            android:layout_width="wrap_content"
+            android:tint="@color/light_blue"
+            android:src="@drawable/ic_settings_white" />
+
         <TextView
             android:id="@+id/id_item_name_tv"
-            style="@style/Icon_with_text_Text_start"
+            style="@style/Avatar_with_text_Text"
             android:layout_width="match_parent"
+            android:textDirection="locale"
             android:text="@string/setting"
             android:textColor="@color/grey_700" />
-
-        <com.kyleduo.switchbutton.SwitchButton
-            style="@style/Icon_with_text_Icon_end"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/id_item_switch_bt" />
     </RelativeLayout>
 
     <TextView
         android:clickable="false"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
         android:id="@+id/id_item_divider_tv"
         android:background="@color/grey_300"
         android:layout_width="match_parent"
