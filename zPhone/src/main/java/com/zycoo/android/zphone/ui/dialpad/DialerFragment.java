@@ -34,6 +34,7 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.RadioGroup;
 import android.widget.SimpleAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -73,12 +74,13 @@ public class DialerFragment extends SuperAwesomeCardFragment implements OnClickL
         OnLongClickListener,
         OnDialKeyListener, TextWatcher, OnDialActionListener, OnKeyListener,
         OnAutoCompleteListVisibilityChangedListener, Observer, OnItemClickListener,
-        UpdateOnlineStatus {
+        UpdateOnlineStatus, RadioGroup.OnCheckedChangeListener {
     private static final int UNIQUE_FRAGMENT_GROUP_ID = 3;
     public static final int REQUEST_CODE_EDIT_CONTACTS = 0;
     protected static final int PICKUP_PHONE = 0;
     private final static String TEXT_MODE_KEY = "text_mode";
     private List<ContactItemInterface> historyEvents;
+    private RadioGroup mDial_call_log_segmented;
     private DigitsEditText digits;
     private Spinner mSpinner;
     private String initText = null;
@@ -189,12 +191,15 @@ public class DialerFragment extends SuperAwesomeCardFragment implements OnClickL
                              Bundle savedInstanceState) {
         View v;
         v = inflater.inflate(R.layout.fragment_dial, null);
+        mDial_call_log_segmented = (RadioGroup) v.findViewById(R.id.dial_call_log_segmented);
         mSpinner = (Spinner) v.findViewById(R.id.spinnerAdapter);
         digits = (DigitsEditText) v.findViewById(R.id.digitsText);
         dialPad = (Dialpad) v.findViewById(R.id.dialPad);
         callBar = (DialerCallBar) v.findViewById(R.id.dialerCallBar);
         dialText = (ImageButton) v.findViewById(R.id.dialTextDigitButton);
         autoCompleteList = (ListView) v.findViewById(R.id.autoCompleteList);
+        //拨号历史分类
+        mDial_call_log_segmented.setOnCheckedChangeListener(this);
         //关闭快速滚动
         autoCompleteList.setFastScrollEnabled(false);
         if (Build.VERSION.SDK_INT >= 11) {
@@ -620,7 +625,6 @@ public class DialerFragment extends SuperAwesomeCardFragment implements OnClickL
             itemAdapter.notifyDataSetChanged();
         } else {
             handler.post(new Runnable() {
-
                 @Override
                 public void run() {
                     itemAdapter.notifyDataSetChanged();
@@ -755,6 +759,45 @@ public class DialerFragment extends SuperAwesomeCardFragment implements OnClickL
         digits.setText(str);
         digits.setCursorVisible(true);
         digits.setSelection(digits.getText().length());
+    }
+
+    @Override
+    public void onCheckedChanged(RadioGroup group, int checkedId) {
+        NgnHistoryEvent.StatusType callStatusType = null;
+        switch (checkedId) {
+            case R.id.call_log_all_call:
+                break;
+            case R.id.call_log_in_call:
+                callStatusType = NgnHistoryEvent.StatusType.Incoming;
+                break;
+            case R.id.call_log_out_call:
+                callStatusType = NgnHistoryEvent.StatusType.Outgoing;
+                break;
+            case R.id.call_log_miss_call:
+                callStatusType = NgnHistoryEvent.StatusType.Missed;
+                break;
+            default:
+                break;
+
+        }
+        historyEvents.clear();
+        List<NgnHistoryEvent> listsEvents = mHistorytService.getObservableEvents().filter(
+                new HistoryEventAVFilter());
+        for (NgnHistoryEvent ngnHistoryEvent : listsEvents) {
+            if (callStatusType == null || ngnHistoryEvent.getStatus() == callStatusType) {
+                historyEvents.add(new HistoryEventItem(ngnHistoryEvent));
+            }
+        }
+        if (Thread.currentThread() == Looper.getMainLooper().getThread()) {
+            itemAdapter.notifyDataSetChanged();
+        } else {
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    itemAdapter.notifyDataSetChanged();
+                }
+            });
+        }
     }
 
     private class GetDataFromDBTask extends AsyncTask<Void, Void, Void> {

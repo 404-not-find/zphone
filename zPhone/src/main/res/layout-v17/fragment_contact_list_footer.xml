@@ -4,16 +4,17 @@
     android:layout_width="match_parent"
     android:layout_height="50dp"
     android:background="@color/grey_300"
-    android:orientation="horizontal" >
+    android:orientation="horizontal">
 
     <TextView
-        android:id="@+id/contact_head_one_tv"
+        android:textDirection="locale"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:id="@+id/contact_footer_one_tv"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        android:text="header"
+        android:text="footer"
         android:textColor="@color/grey_700"
         android:textSize="20sp" />
 

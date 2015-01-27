@@ -78,7 +78,6 @@ public class ContactsContainerFragment extends SuperAwesomeCardFragment implemen
         mRemoteTextView.setOnClickListener(this);*/
         mContacts_local_remote_segmented = (RadioGroup) view.findViewById(R.id.contacts_local_remote_segmented);
         mContacts_local_remote_segmented.setOnCheckedChangeListener(this);
-
         return view;
     }
 

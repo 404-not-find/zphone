@@ -66,12 +66,10 @@ public class HistoryEventItemAdapter
     @Override
     public Filter getFilter() {
         Filter filter = new Filter() {
-
             @SuppressWarnings("unchecked")
             @Override
             protected void publishResults(CharSequence constraint, FilterResults results) {
 
-                historyItems = (ArrayList<ContactItemInterface>) results.values;
                 notifyDataSetChanged();
             }
 
@@ -79,13 +77,13 @@ public class HistoryEventItemAdapter
             protected FilterResults performFiltering(CharSequence constraint) {
 
                 FilterResults results = new FilterResults();
-                ArrayList<ContactItemInterface> FilteredArrayNames = new ArrayList<ContactItemInterface>();
+                historyItems.clear();
                 // perform your search here using the searchConstraint String.
                 constraint = constraint.toString().toLowerCase();
                 if ("".equals(constraint.toString())) {
                     for (NgnHistoryEvent event : Engine.getInstance().getHistoryService()
                             .getEvents()) {
-                        FilteredArrayNames.add(new HistoryEventItem(event));
+                        historyItems.add(new HistoryEventItem(event));
                     }
                 } else {
                     List<NgnContact> list = Engine.getInstance().getContactService()
@@ -94,12 +92,12 @@ public class HistoryEventItemAdapter
                         if (item.getPrimaryNumber()
                                 .toLowerCase(Locale.getDefault())
                                 .contains(constraint.toString().replace(" ", "").replace("-", ""))) {
-                            FilteredArrayNames.add(new ContactItem(item));
+                            historyItems.add(new ContactItem(item));
                         }
                     }
                 }
-                results.count = FilteredArrayNames.size();
-                results.values = FilteredArrayNames;
+                results.count = historyItems.size();
+                results.values = historyItems;
                 return results;
 
             }

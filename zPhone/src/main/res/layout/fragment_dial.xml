@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
 	Copyright (C) 2010 Regis Montoya (aka r3gis - www.r3gis.fr) 
 	Copyright (C) 2008 The Android Open Source Project
 	
@@ -21,8 +20,7 @@
     along with CSipSimple.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
-<com.zycoo.android.zphone.ui.dialpad.DialerLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<com.zycoo.android.zphone.ui.dialpad.DialerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/top_digit_dialer"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
@@ -31,6 +29,58 @@
     android:paddingBottom="@dimen/right_panel_margin_vertical"
     android:paddingTop="@dimen/right_panel_margin_vertical">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:background="@color/grey_300"
+        android:gravity="center">
+
+        <info.hoang8f.android.segmented.SegmentedGroup
+            android:id="@+id/dial_call_log_segmented"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/call_log_all_call"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/all_call"
+                style="@style/RadioButton" />
+
+            <RadioButton
+                android:id="@+id/call_log_out_call"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/out_call"
+                style="@style/RadioButton" />
+
+            <RadioButton
+                android:id="@+id/call_log_in_call"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/in_call"
+                style="@style/RadioButton" />
+
+            <RadioButton
+                android:id="@+id/call_log_miss_call"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/miss_call"
+                style="@style/RadioButton" />
+        </info.hoang8f.android.segmented.SegmentedGroup>
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/white" />
     <RelativeLayout
         android:id="@+id/topField"
         android:layout_width="fill_parent"
@@ -43,16 +93,16 @@
 
         <!-- Dummy item to prevent DigitsEditText from receiving focus -->
 
-        <View
-            android:layout_width="0px"
-            android:layout_height="0px"
-            android:focusable="true"
-            android:focusableInTouchMode="true"/>
+        <!-- <View
+             android:layout_width="0dp"
+             android:layout_height="0dp"
+             android:focusable="true"
+             android:focusableInTouchMode="true" />-->
 
         <LinearLayout
             android:id="@+id/account_choose_bt"
             android:layout_width="100dp"
-            android:layout_height="72dp"
+            android:layout_height="56dp"
             android:layout_alignParentRight="true"
             android:background="@color/grey_200">
 
@@ -60,13 +110,14 @@
                 android:id="@+id/spinnerAdapter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="bottom|right"/>
+                android:layout_gravity="bottom|right" />
         </LinearLayout>
 
         <com.zycoo.android.zphone.ui.dialpad.DigitsEditText
             android:id="@+id/digitsText"
+            android:background="@color/grey_200"
             android:layout_width="match_parent"
-            android:layout_height="72dp"
+            android:layout_height="56dp"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
             android:layout_toLeftOf="@id/account_choose_bt"
@@ -75,10 +126,11 @@
             android:imeOptions="actionGo"
             android:nextFocusRight="@+id/accountChooserButton"
             android:textAppearance="@style/DialtactsDigitsTextAppearance"
-            android:textColor="@color/grey_700"/>
+            android:textColor="@color/grey_700" />
 
         <TextView
             android:id="@+id/rewriteTextInfo"
+            android:background="@color/grey_300"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
@@ -86,8 +138,7 @@
             android:gravity="center"
             android:textColor="#88FFFFFF"
             android:textSize="12sp"
-            android:textStyle="italic"
-            android:visibility="gone"/>
+            android:textStyle="italic" />
 
         <!--
              <com.csipsimple.widgets.AccountChooserButton
@@ -106,10 +157,9 @@
         android:layout_weight="@integer/dialpad_layout_weight_autocomplete_list"
         android:background="@color/grey_100"
         android:smoothScrollbar="true"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
     <!-- Keypad section -->
 
-    <include
-        layout="@layout/fragment_dialpad_compose_3x5"/>
+    <include layout="@layout/fragment_dialpad_compose_3x5" />
 </com.zycoo.android.zphone.ui.dialpad.DialerLayout>

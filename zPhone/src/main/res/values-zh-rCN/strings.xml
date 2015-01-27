@@ -95,6 +95,12 @@
     <string name="audio_call">语音拨号</string>
 
 
+    <!-- Fragment Dial -->
+    <string name="in_call">呼入</string>
+    <string name="all_call">所有</string>
+    <string name="out_call">呼出</string>
+    <string name="miss_call">未接</string>
+
     <!-- Main Activity -->
     <string name="message">消息</string>
     <string name="contacts">联系人</string>
