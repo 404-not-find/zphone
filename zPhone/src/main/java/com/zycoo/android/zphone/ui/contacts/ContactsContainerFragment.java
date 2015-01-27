@@ -7,13 +7,17 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
@@ -23,12 +27,13 @@ import com.zycoo.android.zphone.ZphoneApplication;
 import com.zycoo.android.zphone.ui.contacts.ContactsListFragment.ContactsQuery;
 import com.zycoo.android.zphone.utils.Utils;
 import com.zycoo.android.zphone.widget.SuperAwesomeCardFragment;
+import com.actionbarsherlock.app.ActionBar.LayoutParams;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class ContactsContainerFragment extends SuperAwesomeCardFragment implements
-        android.view.View.OnClickListener {
+        android.view.View.OnClickListener,   RadioGroup.OnCheckedChangeListener {
 
     private final Logger mLogger = LoggerFactory.getLogger(ContactsContainerFragment.class
             .getSimpleName());
@@ -39,8 +44,10 @@ public class ContactsContainerFragment extends SuperAwesomeCardFragment implemen
     private boolean mIsSearchResultView = false;
     private int mCurrentlyShowingFragment = 0;
     private String mSearchTerm; // Stores the current search query term
-    private TextView mLocalTextView;
-    private TextView mRemoteTextView;
+    //android-segmented-control replace LineLayout
+    /*private TextView mLocalTextView;
+    private TextView mRemoteTextView;*/
+    private RadioGroup mContacts_local_remote_segmented;
     private boolean mIsVisibleToUser;
 
     public static ContactsContainerFragment newInstance(int position) {
@@ -64,10 +71,14 @@ public class ContactsContainerFragment extends SuperAwesomeCardFragment implemen
                              ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_contacts_container, null);
         setHasOptionsMenu(true);
+        /*
         mLocalTextView = (TextView) view.findViewById(R.id.contacts_local_tv);
         mRemoteTextView = (TextView) view.findViewById(R.id.contacts_pbx_tv);
         mLocalTextView.setOnClickListener(this);
-        mRemoteTextView.setOnClickListener(this);
+        mRemoteTextView.setOnClickListener(this);*/
+        mContacts_local_remote_segmented = (RadioGroup) view.findViewById(R.id.contacts_local_remote_segmented);
+        mContacts_local_remote_segmented.setOnCheckedChangeListener(this);
+
         return view;
     }
 
@@ -271,7 +282,7 @@ public class ContactsContainerFragment extends SuperAwesomeCardFragment implemen
         FragmentTransaction fragmentTransaction = this.getChildFragmentManager()
                 .beginTransaction();
         switch (v.getId()) {
-            case R.id.contacts_local_tv:
+            /*case R.id.contacts_local_tv:
                 mLocalTextView.setClickable(false);
                 mRemoteTextView.setClickable(true);
                 mLocalTextView.setTextColor(getResources().getColor(R.color.white));
@@ -294,10 +305,33 @@ public class ContactsContainerFragment extends SuperAwesomeCardFragment implemen
                 fragmentTransaction.replace(R.id.contacts_container, contactListFragment,
                         ContactListFragment.class.getCanonicalName());
                 fragmentTransaction.commit();
-                break;
+                break;*/
             default:
                 break;
         }
 
+    }
+
+    @Override
+    public void onCheckedChanged(RadioGroup group, int checkedId) {
+        FragmentTransaction fragmentTransaction = this.getChildFragmentManager()
+                .beginTransaction();
+        switch (checkedId)
+        {
+            case R.id.contacts_local_rb:
+            mCurrentlyShowingFragment = 0;
+            ContactsListFragment contactsListFragment = ContactsListFragment.newInstance(0);
+            fragmentTransaction.replace(R.id.contacts_container, contactsListFragment,
+                    ContactsListFragment.class.getCanonicalName());
+            break;
+
+            case R.id.contacts_remote_rb:
+                mCurrentlyShowingFragment = 1;
+                ContactListFragment contactListFragment = ContactListFragment.newInstance(1);
+                fragmentTransaction.replace(R.id.contacts_container, contactListFragment,
+                        ContactListFragment.class.getCanonicalName());
+            break;
+        }
+        fragmentTransaction.commit();
     }
 }

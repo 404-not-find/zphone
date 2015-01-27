@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   Copyright (C) 2013 The Android Open Source Project
 
   Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,14 +16,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="72dp"
-    android:layout_marginLeft="16dp"
-    android:paddingTop="5dp" >
-
-    <!--
-         Use standard android.R class icon id instead of app specific id. This is just useful for
-         consistency. Use scaleType=centerCrop to give a nice full cropped image in the assigned
-         space
-    -->
+    android:layout_marginStart="16dp"
+    android:paddingTop="5dp">
 
     <QuickContactBadge
         android:id="@android:id/icon"
@@ -46,38 +39,30 @@
         android:layout_width="match_parent"
         android:layout_height="20dp"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_toRightOf="@android:id/icon"
+        android:layout_alignParentEnd="true"
+        android:layout_toEndOf="@android:id/icon"
         android:ellipsize="marquee"
         android:fontFamily="sans-serif"
-        android:paddingLeft="72dp"
-        android:paddingRight="@dimen/listview_item_padding"
+        android:paddingStart="72dp"
+        android:paddingEnd="@dimen/listview_item_padding"
         android:singleLine="true"
         android:text="Matches Other Field"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:visibility="gone" />
-
-    <!--
-         Use standard android.R class text1 id instead of app specific id. This is just useful for
-         consistency. This view also sets layout_alignWithParentIfMissing=true which lets the view
-         align with the parent view if the text2 view is not part of the view hierarchy (which is
-         its initial state).
-    -->
-
     <TextView
         android:id="@android:id/text1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@android:id/text2"
-        android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
         android:layout_alignWithParentIfMissing="true"
-        android:layout_toRightOf="@android:id/icon"
+        android:layout_toEndOf="@android:id/icon"
         android:ellipsize="marquee"
         android:fontFamily="sans-serif-light"
         android:gravity="center_vertical"
-        android:paddingLeft="@dimen/listview_item_padding"
-        android:paddingRight="@dimen/listview_item_padding"
+        android:paddingStart="@dimen/listview_item_padding"
+        android:paddingEnd="@dimen/listview_item_padding"
         android:singleLine="true"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 

@@ -39,7 +39,7 @@
     <string name="codecs">Codecs</string>
     <string name="natt">Natt</string>
     <string name="identity">Identity</string>
-    <string name="network">NetWork</string>
+    <string name="network">Network</string>
     <string name="qos_qoe">QosQoe</string>
 
     <!-- Contact demo -->
