@@ -247,7 +247,10 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
                 scrollToChild(currentPosition, 0);
                 View currentTab = tabsContainer.getChildAt(currentPosition);
                 ImageView imageView = (ImageView) currentTab.findViewById(android.R.id.icon);
-                imageView.setColorFilter(Color.rgb(3, 169, 237));
+                if (null != imageView) {
+                    //change icon color
+                    imageView.setColorFilter(Color.rgb(3, 169, 237));
+                }
             }
         });
 
@@ -439,11 +442,15 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
                 if (i == position) {
                     View currentTab = tabsContainer.getChildAt(position);
                     ImageView imageView = (ImageView) currentTab.findViewById(android.R.id.icon);
-                    imageView.setColorFilter(Color.rgb(3, 169, 237));
+                    if (null != imageView) {
+                        imageView.setColorFilter(Color.rgb(3, 169, 237));
+                    }
                 } else {
                     View tab = tabsContainer.getChildAt(i);
                     ImageView imageView = (ImageView) tab.findViewById(android.R.id.icon);
-                    imageView.setColorFilter(Color.rgb(117, 117, 117));
+                    if (null != imageView) {
+                        imageView.setColorFilter(Color.rgb(117, 117, 117));
+                    }
                 }
             }
         }
