@@ -4,7 +4,6 @@ package com.zycoo.android.zphone.ui.dialpad;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Color;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -125,7 +124,7 @@ public class DialerFragment extends SuperAwesomeCardFragment implements OnClickL
     private final INgnHistoryService mHistorytService;
     // 标识当前是否为搜索模式
     private boolean iSsearchMode = false;
-
+    private View view;
     private Logger mLogger = LoggerFactory.getLogger(DialerFragment.class.getCanonicalName());
 
     public static DialerFragment newInstance(int position) {
@@ -237,15 +236,14 @@ public class DialerFragment extends SuperAwesomeCardFragment implements OnClickL
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View v;
-        v = inflater.inflate(R.layout.fragment_dial, null);
-        mDial_call_log_segmented = (SegmentedGroup) v.findViewById(R.id.dial_call_log_segmented);
-        mSpinner = (Spinner) v.findViewById(R.id.spinnerAdapter);
-        digits = (DigitsEditText) v.findViewById(R.id.digitsText);
-        dialPad = (Dialpad) v.findViewById(R.id.dialPad);
-        callBar = (DialerCallBar) v.findViewById(R.id.dialerCallBar);
-        dialText = (ImageButton) v.findViewById(R.id.dialTextDigitButton);
-        autoCompleteList = (ListView) v.findViewById(R.id.autoCompleteList);
+        view = inflater.inflate(R.layout.fragment_dial, null);
+        mDial_call_log_segmented = (SegmentedGroup) view.findViewById(R.id.dial_call_log_segmented);
+        mSpinner = (Spinner) view.findViewById(R.id.spinnerAdapter);
+        digits = (DigitsEditText) view.findViewById(R.id.digitsText);
+        dialPad = (Dialpad) view.findViewById(R.id.dialPad);
+        callBar = (DialerCallBar) view.findViewById(R.id.dialerCallBar);
+        dialText = (ImageButton) view.findViewById(R.id.dialTextDigitButton);
+        autoCompleteList = (ListView) view.findViewById(R.id.autoCompleteList);
         //拨号历史分类
         mDial_call_log_segmented.setOnCheckedChangeListener(this);
         //关闭快速滚动
@@ -253,7 +251,7 @@ public class DialerFragment extends SuperAwesomeCardFragment implements OnClickL
         if (Build.VERSION.SDK_INT >= 11) {
             autoCompleteList.setFastScrollAlwaysVisible(false);
         }
-        rewriteTextInfo = (TextView) v.findViewById(R.id.rewriteTextInfo);
+        rewriteTextInfo = (TextView) view.findViewById(R.id.rewriteTextInfo);
 
         //声明一个SimpleAdapter独享，设置数据与对应关系
 
@@ -301,7 +299,7 @@ public class DialerFragment extends SuperAwesomeCardFragment implements OnClickL
         });
 
         // accountChooserButton =
-        // (AccountChooserButton)v.findViewById(R.id.accountChooserButton);
+        // (AccountChooserButton)view.findViewById(R.id.accountChooserButton);
 
         // accountChooserFilterItem =
         // accountChooserButton.addExtraMenuItem(R.string.apply_rewrite);
@@ -316,7 +314,7 @@ public class DialerFragment extends SuperAwesomeCardFragment implements OnClickL
         // setRewritingFeature(prefsWrapper
         // .getPreferenceBooleanValue(SipConfigManager.REWRITE_RULES_DIALER));
 
-        dialerLayout = (DialerLayout) v.findViewById(R.id.top_digit_dialer);
+        dialerLayout = (DialerLayout) view.findViewById(R.id.top_digit_dialer);
         // Digits field setup
         if (savedInstanceState != null) {
             isDigit = savedInstanceState.getBoolean(TEXT_MODE_KEY, isDigit);
@@ -349,7 +347,7 @@ public class DialerFragment extends SuperAwesomeCardFragment implements OnClickL
         callBar.setOnDialActionListener(this);
         // callBar.setVideoEnabled(prefsWrapper.getPreferenceBooleanValue(SipConfigManager.USE_VIDEO));
         // Init other buttons
-        initButtons(v);
+        initButtons(view);
         // Ensure that current mode (text/digit) is applied
         setTextDialing(!isDigit, true);
         if (initText != null) {
@@ -358,10 +356,10 @@ public class DialerFragment extends SuperAwesomeCardFragment implements OnClickL
         }
 
         // Apply third party theme if any
-        // applyTheme(v);
-        v.setOnKeyListener(this);
+        // applyTheme(view);
+        view.setOnKeyListener(this);
         // applyTextToAutoComplete();
-        return v;
+        return view;
     }
 
     @Override
@@ -395,7 +393,7 @@ public class DialerFragment extends SuperAwesomeCardFragment implements OnClickL
 
     private void initButtons(View v) {
         /*
-         * for (int buttonId : buttonsToAttach) { attachButtonListener(v,
+         * for (int buttonId : buttonsToAttach) { attachButtonListener(view,
          * buttonId, false); }
          */
         for (int buttonId : buttonsToLongAttach) {
@@ -691,7 +689,7 @@ public class DialerFragment extends SuperAwesomeCardFragment implements OnClickL
 
     @Override
     public void onPause() {
-        digits.setText("");
+        //digits.setText("");
         super.onPause();
     }
 

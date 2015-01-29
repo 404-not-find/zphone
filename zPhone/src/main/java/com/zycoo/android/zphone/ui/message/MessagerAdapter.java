@@ -31,6 +31,7 @@ public class MessagerAdapter extends BaseExpandableListAdapter {
     public static final String INBOX = "INBOX";
     public static final String OLD = "Old";
     private final Logger mLogger = LoggerFactory.getLogger(MessagerAdapter.class);
+    private  int count_new = 0;
     private final Context mContext;
     private final Resources mResources;
     private final LayoutInflater mLayoutInflater;
@@ -110,6 +111,9 @@ public class MessagerAdapter extends BaseExpandableListAdapter {
                     voiceMailBean.mName = voiceMailBean.mCallerID;
                     voiceMailBean.mExtension = voiceMailBean.mCallerID;
                 }
+                if (voiceMailBean.getType().equals(INBOX)) {
+                    count_new++;
+                }
                 mVoiceMails.add(voiceMailBean);
             } while (cursor.moveToNext());
         }
@@ -152,12 +156,6 @@ public class MessagerAdapter extends BaseExpandableListAdapter {
         groupViewHolder.expandedIv.setColorFilter(Color.rgb(3, 169, 237));
         switch (groupPosition) {
             case 0:
-                int count_new = 0;
-                //TODO ConcurrentModificationException
-                for (VoiceMailBean voiceMailBean : mVoiceMails)
-                    if (voiceMailBean.getType().equals(INBOX)) {
-                        count_new++;
-                    }
                 if (count_new > 0) {
                     groupViewHolder.badge_tv.setText(Integer.toString(count_new));
                 } else {
