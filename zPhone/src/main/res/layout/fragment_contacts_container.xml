@@ -7,7 +7,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="48dp"
+        android:layout_height="60dp"
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
         android:background="@color/grey_300"
@@ -25,15 +25,15 @@
             <RadioButton
                 android:id="@+id/contacts_local_rb"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:checked="true"
+                android:layout_height="36dp"
                 android:text="@string/contacts_local"
+                android:checked="true"
                 style="@style/RadioButton" />
 
             <RadioButton
                 android:id="@+id/contacts_remote_rb"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="36dp"
                 android:text="@string/contacts_remote"
                 style="@style/RadioButton" />
         </info.hoang8f.android.segmented.SegmentedGroup>

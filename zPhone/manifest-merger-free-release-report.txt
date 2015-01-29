@@ -2,17 +2,17 @@
 manifest
 ADDED from AndroidManifest.xml:2:1
 	package
-		ADDED from AndroidManifest.xml:4:11
+		ADDED from AndroidManifest.xml:4:5
 		INJECTED from AndroidManifest.xml:0:0
 		INJECTED from AndroidManifest.xml:0:0
 	android:versionName
-		ADDED from AndroidManifest.xml:6:11
+		ADDED from AndroidManifest.xml:6:5
 		INJECTED from AndroidManifest.xml:0:0
 		INJECTED from AndroidManifest.xml:0:0
 	xmlns:tools
-		ADDED from AndroidManifest.xml:3:11
+		ADDED from AndroidManifest.xml:3:5
 	android:versionCode
-		ADDED from AndroidManifest.xml:5:11
+		ADDED from AndroidManifest.xml:5:5
 		INJECTED from AndroidManifest.xml:0:0
 		INJECTED from AndroidManifest.xml:0:0
 	xmlns:android
@@ -49,130 +49,130 @@ MERGED from info.hoang8f:android-segmented:1.0.4:7:5
 		INJECTED from AndroidManifest.xml:0:0
 		INJECTED from AndroidManifest.xml:0:0
 uses-permission#android.permission.READ_CALL_LOG
+ADDED from AndroidManifest.xml:13:5
+	android:name
+		ADDED from AndroidManifest.xml:13:22
+uses-permission#android.permission.WRITE_CALL_LOG
 ADDED from AndroidManifest.xml:14:5
 	android:name
 		ADDED from AndroidManifest.xml:14:22
-uses-permission#android.permission.WRITE_CALL_LOG
+uses-permission#android.permission.GET_ACCOUNTS
 ADDED from AndroidManifest.xml:15:5
 	android:name
 		ADDED from AndroidManifest.xml:15:22
-uses-permission#android.permission.GET_ACCOUNTS
+uses-permission#android.permission.READ_PROFILE
 ADDED from AndroidManifest.xml:16:5
 	android:name
 		ADDED from AndroidManifest.xml:16:22
-uses-permission#android.permission.READ_PROFILE
-ADDED from AndroidManifest.xml:17:5
-	android:name
-		ADDED from AndroidManifest.xml:17:22
 uses-permission#android.permission.READ_CONTACTS
-ADDED from AndroidManifest.xml:18:5
+ADDED from AndroidManifest.xml:17:5
 MERGED from ZPhone:androidngnstack:unspecified:25:5
 	android:name
-		ADDED from AndroidManifest.xml:18:22
+		ADDED from AndroidManifest.xml:17:22
 uses-permission#android.permission.INTERNET
-ADDED from AndroidManifest.xml:19:5
+ADDED from AndroidManifest.xml:18:5
 MERGED from ZPhone:androidngnstack:unspecified:11:5
 MERGED from ZPhone:VLCLibrary:unspecified:11:5
 MERGED from ZPhone:paho:unspecified:13:5
 	android:name
-		ADDED from AndroidManifest.xml:19:22
+		ADDED from AndroidManifest.xml:18:22
 uses-permission#android.permission.ACCESS_WIFI_STATE
-ADDED from AndroidManifest.xml:20:5
+ADDED from AndroidManifest.xml:19:5
 MERGED from ZPhone:androidngnstack:unspecified:12:5
 	android:name
-		ADDED from AndroidManifest.xml:20:22
+		ADDED from AndroidManifest.xml:19:22
 uses-permission#android.permission.ACCESS_NETWORK_STATE
-ADDED from AndroidManifest.xml:21:5
+ADDED from AndroidManifest.xml:20:5
 MERGED from ZPhone:androidngnstack:unspecified:13:5
 MERGED from ZPhone:paho:unspecified:15:5
 	android:name
-		ADDED from AndroidManifest.xml:21:22
+		ADDED from AndroidManifest.xml:20:22
 uses-permission#android.permission.CHANGE_WIFI_STATE
-ADDED from AndroidManifest.xml:22:5
+ADDED from AndroidManifest.xml:21:5
 MERGED from ZPhone:androidngnstack:unspecified:14:5
 	android:name
-		ADDED from AndroidManifest.xml:22:22
+		ADDED from AndroidManifest.xml:21:22
 uses-permission#android.permission.CHANGE_NETWORK_STATE
-ADDED from AndroidManifest.xml:23:5
+ADDED from AndroidManifest.xml:22:5
 MERGED from ZPhone:androidngnstack:unspecified:15:5
 	android:name
-		ADDED from AndroidManifest.xml:23:22
+		ADDED from AndroidManifest.xml:22:22
 uses-permission#android.permission.WRITE_EXTERNAL_STORAGE
-ADDED from AndroidManifest.xml:24:5
+ADDED from AndroidManifest.xml:23:5
 MERGED from ZPhone:androidngnstack:unspecified:16:5
 MERGED from ZPhone:paho:unspecified:14:5
 	android:name
-		ADDED from AndroidManifest.xml:24:22
+		ADDED from AndroidManifest.xml:23:22
 uses-permission#android.permission.CAMERA
-ADDED from AndroidManifest.xml:25:5
+ADDED from AndroidManifest.xml:24:5
 MERGED from ZPhone:androidngnstack:unspecified:17:5
 	android:name
-		ADDED from AndroidManifest.xml:25:22
+		ADDED from AndroidManifest.xml:24:22
 uses-permission#android.permission.WAKE_LOCK
-ADDED from AndroidManifest.xml:26:5
+ADDED from AndroidManifest.xml:25:5
 MERGED from ZPhone:androidngnstack:unspecified:18:5
 MERGED from ZPhone:paho:unspecified:12:5
 	android:name
-		ADDED from AndroidManifest.xml:26:22
+		ADDED from AndroidManifest.xml:25:22
 uses-permission#android.permission.RECORD_AUDIO
-ADDED from AndroidManifest.xml:27:5
+ADDED from AndroidManifest.xml:26:5
 MERGED from ZPhone:androidngnstack:unspecified:19:5
 	android:name
-		ADDED from AndroidManifest.xml:27:22
+		ADDED from AndroidManifest.xml:26:22
 uses-permission#android.permission.MODIFY_AUDIO_SETTINGS
-ADDED from AndroidManifest.xml:28:5
+ADDED from AndroidManifest.xml:27:5
 MERGED from ZPhone:androidngnstack:unspecified:20:5
 MERGED from ZPhone:androidngnstack:unspecified:31:5
 MERGED from ZPhone:VLCLibrary:unspecified:12:5
 	android:name
-		ADDED from AndroidManifest.xml:28:22
+		ADDED from AndroidManifest.xml:27:22
 uses-permission#android.permission.VIBRATE
-ADDED from AndroidManifest.xml:29:5
+ADDED from AndroidManifest.xml:28:5
 MERGED from ZPhone:androidngnstack:unspecified:21:5
 	android:name
-		ADDED from AndroidManifest.xml:29:22
+		ADDED from AndroidManifest.xml:28:22
 uses-permission#android.permission.RECEIVE_BOOT_COMPLETED
-ADDED from AndroidManifest.xml:30:5
+ADDED from AndroidManifest.xml:29:5
 MERGED from ZPhone:androidngnstack:unspecified:22:5
 	android:name
-		ADDED from AndroidManifest.xml:30:22
+		ADDED from AndroidManifest.xml:29:22
 uses-permission#android.permission.WRITE_SETTINGS
-ADDED from AndroidManifest.xml:31:5
+ADDED from AndroidManifest.xml:30:5
 MERGED from ZPhone:androidngnstack:unspecified:23:5
 	android:name
-		ADDED from AndroidManifest.xml:31:22
+		ADDED from AndroidManifest.xml:30:22
 uses-permission#android.permission.DISABLE_KEYGUARD
-ADDED from AndroidManifest.xml:32:5
+ADDED from AndroidManifest.xml:31:5
 MERGED from ZPhone:androidngnstack:unspecified:24:5
 	android:name
-		ADDED from AndroidManifest.xml:32:22
+		ADDED from AndroidManifest.xml:31:22
 uses-permission#android.permission.WRITE_CONTACTS
-ADDED from AndroidManifest.xml:34:5
+ADDED from AndroidManifest.xml:33:5
 MERGED from ZPhone:androidngnstack:unspecified:26:5
 	android:name
-		ADDED from AndroidManifest.xml:34:22
+		ADDED from AndroidManifest.xml:33:22
 uses-permission#android.permission.READ_PHONE_STATE
-ADDED from AndroidManifest.xml:35:5
+ADDED from AndroidManifest.xml:34:5
 MERGED from ZPhone:androidngnstack:unspecified:27:5
 	android:name
-		ADDED from AndroidManifest.xml:35:22
+		ADDED from AndroidManifest.xml:34:22
 uses-permission#android.permission.PROCESS_OUTGOING_CALLS
-ADDED from AndroidManifest.xml:36:5
+ADDED from AndroidManifest.xml:35:5
 MERGED from ZPhone:androidngnstack:unspecified:28:5
 	android:name
-		ADDED from AndroidManifest.xml:36:22
+		ADDED from AndroidManifest.xml:35:22
 uses-permission#android.permission.CALL_PHONE
-ADDED from AndroidManifest.xml:37:5
+ADDED from AndroidManifest.xml:36:5
 MERGED from ZPhone:androidngnstack:unspecified:29:5
 	android:name
-		ADDED from AndroidManifest.xml:37:22
+		ADDED from AndroidManifest.xml:36:22
 uses-permission#android.permission.RAISED_THREAD_PRIORITY
-ADDED from AndroidManifest.xml:38:5
+ADDED from AndroidManifest.xml:37:5
 MERGED from ZPhone:androidngnstack:unspecified:30:5
 	android:name
-		ADDED from AndroidManifest.xml:38:22
+		ADDED from AndroidManifest.xml:37:22
 application
-ADDED from AndroidManifest.xml:41:5
+ADDED from AndroidManifest.xml:40:5
 MERGED from ZPhone:library:unspecified:11:5
 MERGED from com.android.support:support-v4:21.0.3:16:5
 MERGED from ZPhone:androidngnstack:unspecified:43:5
@@ -190,27 +190,29 @@ MERGED from com.google.android.gms:play-services:6.5.87:20:5
 MERGED from com.android.support:support-v4:21.0.3:16:5
 MERGED from com.actionbarsherlock:actionbarsherlock:4.4.0:4:3
 	android:label
-		ADDED from AndroidManifest.xml:47:9
+		ADDED from AndroidManifest.xml:46:9
 		REJECTED from ZPhone:library:unspecified:14:9
 		REJECTED from ZPhone:androidngnstack:unspecified:47:9
 		REJECTED from ZPhone:switchButton:unspecified:14:9
 		REJECTED from ZPhone:VLCLibrary:unspecified:18:9
 		REJECTED from ZPhone:paho:unspecified:24:9
+	android:supportsRtl
+		ADDED from AndroidManifest.xml:48:9
 	android:hardwareAccelerated
 		ADDED from ZPhone:androidngnstack:unspecified:45:9
 	android:allowBackup
-		ADDED from AndroidManifest.xml:45:9
-	android:anyDensity
 		ADDED from AndroidManifest.xml:44:9
+	android:anyDensity
+		ADDED from AndroidManifest.xml:43:9
 	android:icon
-		ADDED from AndroidManifest.xml:46:9
+		ADDED from AndroidManifest.xml:45:9
 		REJECTED from ZPhone:library:unspecified:13:9
 		REJECTED from ZPhone:androidngnstack:unspecified:46:9
 		REJECTED from ZPhone:switchButton:unspecified:13:9
 		REJECTED from ZPhone:VLCLibrary:unspecified:17:9
 		REJECTED from ZPhone:paho:unspecified:23:9
 	android:persistent
-		ADDED from AndroidManifest.xml:48:9
+		ADDED from AndroidManifest.xml:47:9
 	android:theme
 		ADDED from AndroidManifest.xml:49:9
 		REJECTED from ZPhone:library:unspecified:15:9
@@ -218,9 +220,9 @@ MERGED from com.actionbarsherlock:actionbarsherlock:4.4.0:4:3
 		REJECTED from ZPhone:VLCLibrary:unspecified:19:9
 		REJECTED from ZPhone:paho:unspecified:25:9
 	tools:replace
-		ADDED from AndroidManifest.xml:42:9
+		ADDED from AndroidManifest.xml:41:9
 	android:name
-		ADDED from AndroidManifest.xml:43:9
+		ADDED from AndroidManifest.xml:42:9
 		REJECTED from ZPhone:androidngnstack:unspecified:44:9
 meta-data#productFlavors
 ADDED from AndroidManifest.xml:50:9
@@ -416,17 +418,17 @@ ADDED from AndroidManifest.xml:193:9
 	android:name
 		ADDED from AndroidManifest.xml:194:13
 activity#com.zycoo.android.zphone.ui.settings.HelpActivity
-ADDED from AndroidManifest.xml:201:9
+ADDED from AndroidManifest.xml:200:9
 	android:screenOrientation
-		ADDED from AndroidManifest.xml:203:13
-	android:name
 		ADDED from AndroidManifest.xml:202:13
-instrumentation#android.test.InstrumentationTestRunner
-ADDED from AndroidManifest.xml:210:9
-	android:targetPackage
-		ADDED from AndroidManifest.xml:210:26
 	android:name
-		ADDED from AndroidManifest.xml:211:26
+		ADDED from AndroidManifest.xml:201:13
+instrumentation#android.test.InstrumentationTestRunner
+ADDED from AndroidManifest.xml:209:9
+	android:targetPackage
+		ADDED from AndroidManifest.xml:210:13
+	android:name
+		ADDED from AndroidManifest.xml:211:13
 uses-library#android.test.runner
 ADDED from AndroidManifest.xml:212:9
 	android:name
@@ -435,9 +437,9 @@ meta-data#com.google.android.gms.version
 ADDED from AndroidManifest.xml:214:9
 MERGED from com.google.android.gms:play-services:6.5.87:21:9
 	android:value
-		ADDED from AndroidManifest.xml:215:20
+		ADDED from AndroidManifest.xml:216:13
 	android:name
-		ADDED from AndroidManifest.xml:214:20
+		ADDED from AndroidManifest.xml:215:13
 uses-feature#0x00020000
 ADDED from ZPhone:androidngnstack:unspecified:33:5
 	android:glEsVersion

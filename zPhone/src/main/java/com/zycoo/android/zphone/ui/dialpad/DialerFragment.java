@@ -1,10 +1,8 @@
 
 package com.zycoo.android.zphone.ui.dialpad;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -12,6 +10,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.provider.ContactsContract;
+import android.support.annotation.Nullable;
 import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.text.Editable;
 import android.text.Selection;
@@ -70,6 +69,8 @@ import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
 
+import info.hoang8f.android.segmented.SegmentedGroup;
+
 public class DialerFragment extends SuperAwesomeCardFragment implements OnClickListener,
         OnLongClickListener,
         OnDialKeyListener, TextWatcher, OnDialActionListener, OnKeyListener,
@@ -79,9 +80,12 @@ public class DialerFragment extends SuperAwesomeCardFragment implements OnClickL
     public static final int REQUEST_CODE_EDIT_CONTACTS = 0;
     protected static final int PICKUP_PHONE = 0;
     private final static String TEXT_MODE_KEY = "text_mode";
+    private final static String CURRENT_CALL_TYPE = "current_call_type";
+    private NgnHistoryEvent.StatusType mCallStatusType = null;
     private List<ContactItemInterface> historyEvents;
-    private RadioGroup mDial_call_log_segmented;
+    private SegmentedGroup mDial_call_log_segmented;
     private DigitsEditText digits;
+    private boolean mIsVisibleToUser;
     private Spinner mSpinner;
     private String initText = null;
     private Boolean isDigit = false;
@@ -183,7 +187,51 @@ public class DialerFragment extends SuperAwesomeCardFragment implements OnClickL
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putBoolean(TEXT_MODE_KEY, isDigit);
+        int callType = -1;
+        if (null != mCallStatusType) {
+            switch (mCallStatusType) {
+                case Outgoing:
+                    callType = 0;
+                    break;
+                case Incoming:
+                    callType = 1;
+                    break;
+                case Missed:
+                    callType = 2;
+                    break;
+                case Failed:
+                    callType = -1;
+                    break;
+            }
+        } else {
+            callType = -1;
+        }
+        outState.putInt(CURRENT_CALL_TYPE, callType);
         super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        if (null != savedInstanceState) {
+            int callType = savedInstanceState.getInt(CURRENT_CALL_TYPE);
+            switch (callType) {
+                case 0:
+                    mCallStatusType = NgnHistoryEvent.StatusType.Outgoing;
+                    break;
+                case 1:
+                    mCallStatusType = NgnHistoryEvent.StatusType.Incoming;
+                    break;
+                case 2:
+                    mCallStatusType = NgnHistoryEvent.StatusType.Missed;
+                    break;
+                case -1:
+                default:
+                    mCallStatusType = null;
+                    break;
+            }
+        }
+        updateCallStatusType();
     }
 
     @Override
@@ -191,7 +239,7 @@ public class DialerFragment extends SuperAwesomeCardFragment implements OnClickL
                              Bundle savedInstanceState) {
         View v;
         v = inflater.inflate(R.layout.fragment_dial, null);
-        mDial_call_log_segmented = (RadioGroup) v.findViewById(R.id.dial_call_log_segmented);
+        mDial_call_log_segmented = (SegmentedGroup) v.findViewById(R.id.dial_call_log_segmented);
         mSpinner = (Spinner) v.findViewById(R.id.spinnerAdapter);
         digits = (DigitsEditText) v.findViewById(R.id.digitsText);
         dialPad = (Dialpad) v.findViewById(R.id.dialPad);
@@ -319,6 +367,7 @@ public class DialerFragment extends SuperAwesomeCardFragment implements OnClickL
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
+        mIsVisibleToUser = isVisibleToUser;
         if (isVisibleToUser) {
             if (dialFeedback == null) {
                 dialFeedback = new DialingFeedback(getActivity(), false);
@@ -449,6 +498,8 @@ public class DialerFragment extends SuperAwesomeCardFragment implements OnClickL
 
     }
 
+
+
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
         afterTextChanged(digits.getText());
@@ -458,7 +509,10 @@ public class DialerFragment extends SuperAwesomeCardFragment implements OnClickL
         } else {
             ((HistoryEventItemAdapter) itemAdapter).setInsearchMode(true);
         }
-        itemAdapter.getFilter().filter(newText);
+        //当未显示时，可能影响界面恢复
+        if(mIsVisibleToUser) {
+            itemAdapter.getFilter().filter(newText);
+        }
         // Allow account chooser button to automatically change again as we have
         // clear field
         // TODO 当输入字符为空时，帐号选择按钮可改变
@@ -634,10 +688,18 @@ public class DialerFragment extends SuperAwesomeCardFragment implements OnClickL
         }
     }
 
+
+    @Override
+    public void onPause() {
+        digits.setText("");
+        super.onPause();
+    }
+
     @Override
     public void onResume() {
         ((HistoryEventItemAdapter) itemAdapter).setInsearchMode(false);
-        itemAdapter.getFilter().filter("");
+        //界面恢复时通过拨号分类的OnCheckChange时间改变界面,不通过过滤
+        //itemAdapter.getFilter().filter("");
         setTextDialing(true);
         dialText.setImageResource(isDigit ? R.drawable.ic_translate_grey600
                 : R.drawable.ic_dialpad_grey600);
@@ -763,32 +825,38 @@ public class DialerFragment extends SuperAwesomeCardFragment implements OnClickL
 
     @Override
     public void onCheckedChanged(RadioGroup group, int checkedId) {
-        NgnHistoryEvent.StatusType callStatusType = null;
         switch (checkedId) {
             case R.id.call_log_all_call:
+                mCallStatusType = null;
                 break;
             case R.id.call_log_in_call:
-                callStatusType = NgnHistoryEvent.StatusType.Incoming;
+                mCallStatusType = NgnHistoryEvent.StatusType.Incoming;
                 break;
             case R.id.call_log_out_call:
-                callStatusType = NgnHistoryEvent.StatusType.Outgoing;
+                mCallStatusType = NgnHistoryEvent.StatusType.Outgoing;
                 break;
             case R.id.call_log_miss_call:
-                callStatusType = NgnHistoryEvent.StatusType.Missed;
+                mCallStatusType = NgnHistoryEvent.StatusType.Missed;
                 break;
             default:
+                mCallStatusType = null;
                 break;
 
         }
+        updateCallStatusType();
+    }
+
+    private void updateCallStatusType() {
         historyEvents.clear();
         List<NgnHistoryEvent> listsEvents = mHistorytService.getObservableEvents().filter(
                 new HistoryEventAVFilter());
         for (NgnHistoryEvent ngnHistoryEvent : listsEvents) {
-            if (callStatusType == null || ngnHistoryEvent.getStatus() == callStatusType) {
+            if (mCallStatusType == null || ngnHistoryEvent.getStatus() == mCallStatusType) {
                 historyEvents.add(new HistoryEventItem(ngnHistoryEvent));
             }
         }
         if (Thread.currentThread() == Looper.getMainLooper().getThread()) {
+            itemAdapter.notifyDataSetInvalidated();
             itemAdapter.notifyDataSetChanged();
         } else {
             handler.post(new Runnable() {
@@ -799,54 +867,4 @@ public class DialerFragment extends SuperAwesomeCardFragment implements OnClickL
             });
         }
     }
-
-    private class GetDataFromDBTask extends AsyncTask<Void, Void, Void> {
-        @Override
-        protected void onPostExecute(Void result) {
-            itemAdapter.notifyDataSetInvalidated();
-            //setLoadRlVisible(false);
-            super.onPostExecute(result);
-        }
-
-        @Override
-        protected void onPreExecute() {
-            //setLoadRlVisible(true);
-            super.onPreExecute();
-        }
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            List<NgnHistoryEvent> historys = mHistorytService.getEvents();
-            for (NgnHistoryEvent event : historys) {
-                HistoryEventItem historyEventItem = new HistoryEventItem(event);
-                historyEvents.add(historyEventItem);
-            }
-            return null;
-        }
-    }
-/*
-    @Override
-    public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
-
-    }
-
-    @Override
-    public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-        return false;
-    }
-
-    @Override
-    public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-        return false;
-    }
-
-    @Override
-    public boolean onActionItemClicked(ActionMode mode, android.view.MenuItem item) {
-        return false;
-    }
-
-    @Override
-    public void onDestroyActionMode(ActionMode mode) {
-
-    }*/
 }

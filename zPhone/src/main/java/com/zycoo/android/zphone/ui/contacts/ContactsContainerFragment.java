@@ -7,17 +7,12 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.TextView;
 
-import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
@@ -27,27 +22,30 @@ import com.zycoo.android.zphone.ZphoneApplication;
 import com.zycoo.android.zphone.ui.contacts.ContactsListFragment.ContactsQuery;
 import com.zycoo.android.zphone.utils.Utils;
 import com.zycoo.android.zphone.widget.SuperAwesomeCardFragment;
-import com.actionbarsherlock.app.ActionBar.LayoutParams;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import info.hoang8f.android.segmented.SegmentedGroup;
+
 public class ContactsContainerFragment extends SuperAwesomeCardFragment implements
-        android.view.View.OnClickListener,   RadioGroup.OnCheckedChangeListener {
+        android.view.View.OnClickListener, RadioGroup.OnCheckedChangeListener {
 
     private final Logger mLogger = LoggerFactory.getLogger(ContactsContainerFragment.class
             .getSimpleName());
     private static final String CURRENT_FRAGMENT = "CURRENT_CONTACTS_FRAGMENT";
     public static final int UNIQUE_MENU_GROUP_ID = 0;
     public static final int UNIQUE_MENU_SEARCH_ID = 0;
-    public static final int UNIQUE_MNEU_RELOAD_ID = 1;
+    public static final int UNIQUE_MENU_RELOAD_ID = 1;
     private boolean mIsSearchResultView = false;
     private int mCurrentlyShowingFragment = 0;
     private String mSearchTerm; // Stores the current search query term
     //android-segmented-control replace LineLayout
     /*private TextView mLocalTextView;
     private TextView mRemoteTextView;*/
-    private RadioGroup mContacts_local_remote_segmented;
+    private SegmentedGroup mContacts_local_remote_segmented;
+    ContactsListFragment contactsListFragment = ContactsListFragment.newInstance(0);
+    ContactListFragment contactListFragment = ContactListFragment.newInstance(1);
     private boolean mIsVisibleToUser;
 
     public static ContactsContainerFragment newInstance(int position) {
@@ -65,6 +63,16 @@ public class ContactsContainerFragment extends SuperAwesomeCardFragment implemen
 
     }
 
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        if(savedInstanceState == null)
+        {
+            mCurrentlyShowingFragment=0;
+        }
+        super.onCreate(savedInstanceState);
+    }
+
     @SuppressLint("InflateParams")
     @Override
     public View onCreateView(LayoutInflater inflater,
@@ -76,25 +84,18 @@ public class ContactsContainerFragment extends SuperAwesomeCardFragment implemen
         mRemoteTextView = (TextView) view.findViewById(R.id.contacts_pbx_tv);
         mLocalTextView.setOnClickListener(this);
         mRemoteTextView.setOnClickListener(this);*/
-        mContacts_local_remote_segmented = (RadioGroup) view.findViewById(R.id.contacts_local_remote_segmented);
+        mContacts_local_remote_segmented = (SegmentedGroup) view.findViewById(R.id.contacts_local_remote_segmented);
         mContacts_local_remote_segmented.setOnCheckedChangeListener(this);
+        //mContacts_local_remote_segmented.clearCheck();
         return view;
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-
-        if (savedInstanceState == null) {
-            ContactsListFragment contactsListFragment = ContactsListFragment.newInstance(0);
-            FragmentTransaction fragmentTransaction = this.getChildFragmentManager()
-                    .beginTransaction();
-            fragmentTransaction.replace(R.id.contacts_container, contactsListFragment,
-                    ContactsListFragment.class.getCanonicalName());
-            fragmentTransaction.commit();
-            mCurrentlyShowingFragment = 0;
-        } else {
+        if (null != savedInstanceState) {
             mCurrentlyShowingFragment = savedInstanceState.getInt(CURRENT_FRAGMENT);
         }
+        switchLocalRemoteFragment();
         super.onViewCreated(view, savedInstanceState);
     }
 
@@ -117,7 +118,7 @@ public class ContactsContainerFragment extends SuperAwesomeCardFragment implemen
                 sv.setQueryHint(ZphoneApplication.getAppResources().getString(
                         R.string.contacts_search_remote));
                 sv.setVisibility(View.INVISIBLE);
-                menu.add(UNIQUE_MENU_GROUP_ID, UNIQUE_MNEU_RELOAD_ID, 1,
+                menu.add(UNIQUE_MENU_GROUP_ID, UNIQUE_MENU_RELOAD_ID, 1,
                         ZphoneApplication.getAppResources().getString(R.string.contacts_pbx_reload))
                         .setIcon(R.drawable.ic_replay_white)
                         .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
@@ -313,23 +314,41 @@ public class ContactsContainerFragment extends SuperAwesomeCardFragment implemen
 
     @Override
     public void onCheckedChanged(RadioGroup group, int checkedId) {
-        FragmentTransaction fragmentTransaction = this.getChildFragmentManager()
-                .beginTransaction();
-        switch (checkedId)
-        {
+        switch (checkedId) {
             case R.id.contacts_local_rb:
-            mCurrentlyShowingFragment = 0;
-            ContactsListFragment contactsListFragment = ContactsListFragment.newInstance(0);
-            fragmentTransaction.replace(R.id.contacts_container, contactsListFragment,
-                    ContactsListFragment.class.getCanonicalName());
-            break;
-
+                mCurrentlyShowingFragment = 0;
+                break;
             case R.id.contacts_remote_rb:
                 mCurrentlyShowingFragment = 1;
-                ContactListFragment contactListFragment = ContactListFragment.newInstance(1);
-                fragmentTransaction.replace(R.id.contacts_container, contactListFragment,
-                        ContactListFragment.class.getCanonicalName());
-            break;
+                break;
+            default:
+                break;
+        }
+        switchLocalRemoteFragment();
+    }
+
+    private void switchLocalRemoteFragment() {
+        FragmentTransaction fragmentTransaction = this.getChildFragmentManager()
+                .beginTransaction();
+        switch (mCurrentlyShowingFragment) {
+            case 0:
+                if (contactsListFragment.isAdded()) {
+                    fragmentTransaction.hide(contactListFragment).show(contactsListFragment);
+                } else {
+                    fragmentTransaction.hide(contactListFragment).add(R.id.contacts_container, contactsListFragment,
+                            ContactsListFragment.class.getCanonicalName());
+                }
+                break;
+            case 1:
+                if (contactListFragment.isAdded()) {
+                    fragmentTransaction.hide(contactsListFragment).show(contactListFragment);
+                } else {
+                    fragmentTransaction.hide(contactsListFragment).add(R.id.contacts_container, contactListFragment,
+                            ContactListFragment.class.getCanonicalName()).show(contactListFragment);
+                }
+                break;
+            default:
+                break;
         }
         fragmentTransaction.commit();
     }

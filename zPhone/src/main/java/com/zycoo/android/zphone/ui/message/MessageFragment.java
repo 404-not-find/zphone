@@ -376,7 +376,7 @@ public class MessageFragment extends SuperAwesomeCardFragment implements OnChild
     private class GetDataFromDBTask extends AsyncTask<Void, Void, Void> {
         @Override
         protected void onPostExecute(Void result) {
-            messagerAdapter.notifyDataSetInvalidated();
+            messagerAdapter.notifyDataSetChanged();
             //setLoadRlVisible(false);
             super.onPostExecute(result);
         }

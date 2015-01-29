@@ -43,7 +43,7 @@ public class HistoryEventItemAdapter
                                    int resId) {
         super(context, resId);
         this.context = context;
-        Collections.sort(contactsList, new ContactItemComparator());
+        //Collections.sort(contactsList, new ContactItemComparator());
         //indexer = new ContactsSectionIndexer(contactsList);
         historyItems = contactsList;
     }
@@ -65,18 +65,15 @@ public class HistoryEventItemAdapter
 
     @Override
     public Filter getFilter() {
-        Filter filter = new Filter() {
+        return new Filter() {
             @SuppressWarnings("unchecked")
             @Override
             protected void publishResults(CharSequence constraint, FilterResults results) {
-
                 notifyDataSetChanged();
             }
-
             @Override
             protected FilterResults performFiltering(CharSequence constraint) {
-
-                FilterResults results = new FilterResults();
+                //FilterResults results = new FilterResults();
                 historyItems.clear();
                 // perform your search here using the searchConstraint String.
                 constraint = constraint.toString().toLowerCase();
@@ -96,14 +93,12 @@ public class HistoryEventItemAdapter
                         }
                     }
                 }
-                results.count = historyItems.size();
-                results.values = historyItems;
-                return results;
-
+                //results.count = historyItems.size();
+                //results.values = historyItems;
+                //return results;
+                return null;
             }
         };
-
-        return filter;
     }
 
     @Override

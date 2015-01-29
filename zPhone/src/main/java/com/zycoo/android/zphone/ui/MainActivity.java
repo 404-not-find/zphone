@@ -332,12 +332,8 @@ public class MainActivity extends SherlockFragmentActivity implements
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
+        //super.onSaveInstanceState(outState);
         outState.putInt("currentColor", currentColor);
-        /*if (Utils.hasJellyBean18())
-        {
-            outState.putBinder("native_binder", mNativeServiceBinder);
-        }*/
     }
 
     @Override
@@ -345,10 +341,6 @@ public class MainActivity extends SherlockFragmentActivity implements
         super.onRestoreInstanceState(savedInstanceState);
         currentColor = savedInstanceState.getInt("currentColor");
         changeColor(currentColor);
-        /* if (Utils.hasJellyBean18())
-         {
-             mNativeServiceBinder = savedInstanceState.getBinder("native_binder");
-         }*/
     }
 
     public class MyPagerAdapter extends FragmentPagerAdapter implements TitleIconTabProvider {

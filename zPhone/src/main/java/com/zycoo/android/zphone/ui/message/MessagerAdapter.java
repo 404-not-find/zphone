@@ -153,6 +153,7 @@ public class MessagerAdapter extends BaseExpandableListAdapter {
         switch (groupPosition) {
             case 0:
                 int count_new = 0;
+                //TODO ConcurrentModificationException
                 for (VoiceMailBean voiceMailBean : mVoiceMails)
                     if (voiceMailBean.getType().equals(INBOX)) {
                         count_new++;

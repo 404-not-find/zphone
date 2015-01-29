@@ -50,6 +50,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="36dp"
                 android:layout_weight="1"
+                android:checked="true"
                 android:text="@string/all_call"
                 style="@style/RadioButton" />
 
@@ -103,25 +104,25 @@
         <LinearLayout
             android:id="@+id/account_choose_bt"
             android:layout_width="100dp"
-            android:layout_height="56dp"
-            android:layout_alignParentRight="true"
+            android:layout_height="60dp"
+            android:layout_alignParentEnd="true"
             android:background="@color/grey_200">
 
             <Spinner
                 android:id="@+id/spinnerAdapter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="bottom|right" />
+                android:layout_gravity="bottom|end" />
         </LinearLayout>
 
         <com.zycoo.android.zphone.ui.dialpad.DigitsEditText
             android:id="@+id/digitsText"
             android:background="@color/grey_200"
             android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:layout_alignParentLeft="true"
+            android:layout_height="60dp"
+            android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:layout_toLeftOf="@id/account_choose_bt"
+            android:layout_toStartOf="@id/account_choose_bt"
             android:gravity="center"
             android:imeActionLabel="call"
             android:imeOptions="actionGo"
@@ -135,7 +136,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
             android:gravity="center"
             android:textColor="#88FFFFFF"
             android:textSize="12sp"
