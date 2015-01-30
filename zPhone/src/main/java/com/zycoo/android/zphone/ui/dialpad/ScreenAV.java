@@ -366,6 +366,14 @@ public class ScreenAV extends SherlockFragmentActivity implements OnClickListene
         if (mWakeLock != null && mWakeLock.isHeld()) {
             mWakeLock.release();
         }
+        if (mProxSensor != null) {
+            mProxSensor.stop();
+        }
+
+        if(mProSensorWakeLock != null && mProSensorWakeLock.isHeld())
+        {
+            mProSensorWakeLock.release();
+        }
         mWakeLock = null;
         if (mAVSession != null) {
             mAVSession.setContext(null);

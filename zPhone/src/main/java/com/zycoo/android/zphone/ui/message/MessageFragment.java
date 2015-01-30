@@ -37,7 +37,7 @@ import com.zycoo.android.zphone.NativeService;
 import com.zycoo.android.zphone.R;
 import com.zycoo.android.zphone.ZphoneApplication;
 import com.zycoo.android.zphone.ui.dialpad.ScreenAV;
-import com.zycoo.android.zphone.ui.message.MessagerAdapter.VoiceMailBean;
+import com.zycoo.android.zphone.ui.message.MessageAdapter.VoiceMailBean;
 import com.zycoo.android.zphone.utils.Utils;
 import com.zycoo.android.zphone.widget.SuperAwesomeCardFragment;
 import com.zycoo.android.zphonelib.PullToRefreshExpandableListView;
@@ -47,6 +47,12 @@ import org.doubango.ngn.utils.NgnConfigurationEntry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ *
+ *
+ *
+ *TODO VoiceMail count new can't display on some time
+ */
 public class MessageFragment extends SuperAwesomeCardFragment implements OnChildClickListener,
         OnCreateContextMenuListener {
     public static final int HANDLE_WHAT = 99;
@@ -55,7 +61,7 @@ public class MessageFragment extends SuperAwesomeCardFragment implements OnChild
             + ".UPDATE_MESSAGE_FRAGMENT";
     private Logger mLogger = LoggerFactory.getLogger(MessageFragment.class);
     private PullToRefreshExpandableListView mPullToRefreshExpandableListView;
-    private MessagerAdapter messagerAdapter;
+    private MessageAdapter messageAdapter;
     private WrapperExpandableListAdapter wrapperAdapter;
     private MainActivity mMainActivity;
     private RelativeLayout loadRl;
@@ -130,9 +136,9 @@ public class MessageFragment extends SuperAwesomeCardFragment implements OnChild
         // This prevents a bug where the background turns to the color of the
         // child divider when the list is expanded
         //fglv.setChildDivider(new ColorDrawable(Color.BLUE)); 
-        messagerAdapter = new MessagerAdapter(getActivity());
+        messageAdapter = new MessageAdapter(getActivity());
         new GetDataFromDBTask().execute();
-        wrapperAdapter = new WrapperExpandableListAdapter(messagerAdapter);
+        wrapperAdapter = new WrapperExpandableListAdapter(messageAdapter);
         fglv.setAdapter(wrapperAdapter);
         for (int i = 0; i < wrapperAdapter.getGroupCount(); i++) {
             fglv.expandGroup(i);
@@ -176,8 +182,8 @@ public class MessageFragment extends SuperAwesomeCardFragment implements OnChild
     }
 
 
-    public MessagerAdapter getMessagerAdapter() {
-        return messagerAdapter;
+    public MessageAdapter getMessageAdapter() {
+        return messageAdapter;
     }
 
     public WrapperExpandableListAdapter getWrapperAdapter() {
@@ -206,7 +212,7 @@ public class MessageFragment extends SuperAwesomeCardFragment implements OnChild
      */
     public String[] getVoiceMailFileNameAndWd(int childPosition) {
         //voiceMail
-        VoiceMailBean voiceMailBean = messagerAdapter.getVoiceMails().get(childPosition);
+        VoiceMailBean voiceMailBean = messageAdapter.getVoiceMails().get(childPosition);
         int wd = 0;
         String file_name = null;
         String inbox_or_old = null;
@@ -376,7 +382,8 @@ public class MessageFragment extends SuperAwesomeCardFragment implements OnChild
     private class GetDataFromDBTask extends AsyncTask<Void, Void, Void> {
         @Override
         protected void onPostExecute(Void result) {
-            messagerAdapter.notifyDataSetInvalidated();
+            messageAdapter.notifyDataSetChanged();
+            wrapperAdapter.notifyDataSetChanged();
             //setLoadRlVisible(false);
             super.onPostExecute(result);
         }
@@ -389,8 +396,8 @@ public class MessageFragment extends SuperAwesomeCardFragment implements OnChild
 
         @Override
         protected Void doInBackground(Void... params) {
-            messagerAdapter.getVoiceMailsFromDB();
-            messagerAdapter.getMonitorsFromDB();
+            messageAdapter.getVoiceMailsFromDB();
+            messageAdapter.getMonitorsFromDB();
             return null;
         }
     }
@@ -398,14 +405,14 @@ public class MessageFragment extends SuperAwesomeCardFragment implements OnChild
     private class RecordMenuTask extends AsyncTask<Integer, Void, Boolean> {
         @Override
         protected void onPostExecute(Boolean aBoolean) {
-            messagerAdapter.notifyDataSetInvalidated();
+            messageAdapter.notifyDataSetInvalidated();
             super.onPostExecute(aBoolean);
         }
 
         @Override
         protected Boolean doInBackground(Integer... params) {
             //monitor
-            MonitorBean monitorBean = messagerAdapter.getMonitors().get(params[0]);
+            MonitorBean monitorBean = messageAdapter.getMonitors().get(params[0]);
             switch (params[1]) {
                 //play
                 case 1:
@@ -440,7 +447,7 @@ public class MessageFragment extends SuperAwesomeCardFragment implements OnChild
                                     ZphoneApplication.getUserName(),
                                     monitorBean.getFile_name()
                             );
-                    messagerAdapter.getMonitors().remove(params[0].intValue());
+                    messageAdapter.getMonitors().remove(params[0].intValue());
                     HttpRequest request = HttpRequest.get(deleteUrl);
                     try {
                         request.ok();
@@ -456,7 +463,7 @@ public class MessageFragment extends SuperAwesomeCardFragment implements OnChild
     private class VoiceMailMenuTask extends AsyncTask<Integer, Void, Boolean> {
         @Override
         protected void onPostExecute(Boolean result) {
-            messagerAdapter.notifyDataSetInvalidated();
+            messageAdapter.notifyDataSetInvalidated();
             if (!result) {
                 //Toast.makeText(getActivity(), R.string.operation_failure, Toast.LENGTH_SHORT).show();
             } else {
@@ -532,7 +539,7 @@ public class MessageFragment extends SuperAwesomeCardFragment implements OnChild
                         break;
 
                     case 5:
-                        messagerAdapter.getVoiceMails().remove(params[0].intValue());
+                        messageAdapter.getVoiceMails().remove(params[0].intValue());
                         requestUrl = "http://" + server + ":4242/delete_voicemail_file?wd="
                                 + wd + "&file_name="
                                 + file_name.substring(0, file_name.length() - 4);
@@ -555,8 +562,8 @@ public class MessageFragment extends SuperAwesomeCardFragment implements OnChild
 
                         switch (params[1]) {
                             case 5:
-                                messagerAdapter.getVoiceMails().remove(params[0]);
-                                messagerAdapter.notifyDataSetInvalidated();
+                                messageAdapter.getVoiceMails().remove(params[0]);
+                                messageAdapter.notifyDataSetInvalidated();
                                 break;
                             default:
                                 break;

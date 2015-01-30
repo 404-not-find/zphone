@@ -38,7 +38,7 @@ public class SuperAwesomeCardFragment extends SherlockFragment {
     protected static final String ARG_POSITION = "position";
     protected INgnSipService mSipService;
     private NgnEngine mEngine;
-    private int position;
+    public  int position;
 
     public static SuperAwesomeCardFragment newInstance(int position) {
         SuperAwesomeCardFragment f = new SuperAwesomeCardFragment();

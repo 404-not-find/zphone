@@ -7,7 +7,6 @@
 
     <RelativeLayout
         android:id="@+id/dial_contact_item_rv"
-        style="@style/listViewActivatedStyle"
         android:layout_height="match_parent"
         android:layout_width="match_parent"
         android:background="?attr/actionBarItemBackground"

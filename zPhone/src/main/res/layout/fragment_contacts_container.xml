@@ -3,16 +3,56 @@
     style="@style/FragmentStyle"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
     <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:background="@color/grey_300"
+        android:gravity="center">
+
+        <info.hoang8f.android.segmented.SegmentedGroup
+            android:layoutDirection="ltr"
+            android:id="@+id/contacts_local_remote_segmented"
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/contacts_local_rb"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:text="@string/contacts_local"
+                android:checked="true"
+                style="@style/RadioButton" />
+
+            <RadioButton
+                android:id="@+id/contacts_remote_rb"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:text="@string/contacts_remote"
+                style="@style/RadioButton" />
+        </info.hoang8f.android.segmented.SegmentedGroup>
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/white" />
+
+    <LinearLayout
+        android:visibility="gone"
         android:layout_width="200dp"
         android:layout_height="50dp"
         android:layout_gravity="center_horizontal"
         android:background="@color/dark_grey"
         android:orientation="horizontal"
         android:padding="5dp"
-        android:weightSum="2" >
+        android:weightSum="2">
 
         <TextView
             android:id="@+id/contacts_local_tv"
@@ -42,7 +82,6 @@
     <FrameLayout
         android:id="@+id/contacts_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
-    </FrameLayout>
+        android:layout_height="match_parent"></FrameLayout>
 
 </LinearLayout>

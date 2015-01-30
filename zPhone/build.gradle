@@ -89,6 +89,7 @@ dependencies {
     }
     //--------------------multidex----------------------
     //https://developer.android.com/tools/building/multidex.html
+    //对dex进行拆分
     compile 'com.android.support:multidex:1.0.0'
     //--------------------simple-xml----------------------
     compile('org.simpleframework:simple-xml:2.3.4') {
@@ -107,6 +108,7 @@ dependencies {
     //compile 'org.asteriskjava:asterisk-java:1.0.0.M3'
 
     //---------------android-segmented-control------------------
+    //https://github.com/hoang8f/android-segmented-control
     compile 'info.hoang8f:android-segmented:1.0.4'
 }
 

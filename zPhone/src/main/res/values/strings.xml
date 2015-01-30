@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools"
-           tools:ignore="MissingTranslation">
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
 
     <!--<string name="app_name" translatable="false">ZPhone</string>-->
     <string name="app_name" translatable="false">CooCall</string>
@@ -35,11 +34,11 @@
     <string name="spinner_pcscf_discovery">Select PCSCF Discovery Mode</string>
     <string name="spinner_transport">Select Network Transport</string>
     <string name="general">General</string>
-    <string name="secuity">Secuity</string>
+    <string name="security">Secuity</string>
     <string name="codecs">Codecs</string>
     <string name="natt">Natt</string>
     <string name="identity">Identity</string>
-    <string name="network">NetWork</string>
+    <string name="network">Network</string>
     <string name="qos_qoe">QosQoe</string>
 
     <!-- Contact demo -->
@@ -55,8 +54,6 @@
     <string name="no_contact_selected">No Contact Selected</string>
     <string name="search_contacts_hint">Find contacts …</string>
     <string name="search_hint">Search …</string>
-
-
 
 
     <!--
@@ -100,11 +97,24 @@
     <string name="video_call">Video Call</string>
     <string name="audio_call">Audio Call</string>
 
+    <!-- Fragment Dial -->
+    <string name="in_call">Incoming</string>
+    <string name="all_call">All</string>
+    <string name="out_call">Outgoing</string>
+    <string name="miss_call">Missed</string>
+
+
     <!-- Main Activity -->
     <string name="message">Message</string>
     <string name="contacts">Contacts</string>
     <string name="dialer">Dialer</string>
     <string name="me">Me</string>
+
+    <!-- Contacts Detail Activity -->
+    <string name="contacts_history">History</string>
+    <string name="contacts_detail">Detail</string>
+    <string name="contacts_voice">Voice</string>
+
 
     <!-- Account -->
     <string name="pref_header_identity_acount">Acount</string>
@@ -176,7 +186,7 @@
     <string name="endLogging">Disable Logging</string>
     <string name="missingOptions">ClientID, server address or Port number is missing. Please correct or press back arrow cancel.</string>
     <string name="dateFormat" translatable="false">dd/MM/yy \'at\' HH:mm:ss</string>
-    <string name="unkown_error">Unknown Error</string>
+    <string name="unknown_error">Unknown Error</string>
     <string name="delete_connection">Delete Connection</string>
     <string name="disconnectClient">Disconnect Client?</string>
     <string name="deleteDialog">The selected client is currently connected or connecting, deleting this connection will cause it to be disconnected.</string>
@@ -286,7 +296,7 @@
     <string name="udp" translatable="false">UDP</string>
     <string name="tcp" translatable="false">TCP</string>
 
-    <!-- setting secuity -->
+    <!-- setting security -->
     <string name="srtp_mode">SRTP Mode</string>
     <string name="srtp_type">SRTP Type</string>
 
@@ -314,7 +324,7 @@
     <string name="title_activity_about">AboutActivity</string>
 
     <!-- setting about -->
-   <!-- <string name="rate_zphone">Rate ZPhone</string>-->
+    <!-- <string name="rate_zphone">Rate ZPhone</string>-->
     <string name="features">Features</string>
     <string name="faq">FAQ</string>
     <string name="feedback">FeedBack</string>

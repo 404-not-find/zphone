@@ -99,14 +99,6 @@ public class ContactListFragment extends SuperAwesomeCardFragment implements OnC
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        if(isVisibleToUser)
-        {
-            new GetDataFromDBTask().execute(false);
-        }
-        else
-        {
-
-        }
     }
 
     class SimpleAdapter extends SeparatedListAdapter implements PinnedSectionListAdapter,
@@ -370,16 +362,14 @@ public class ContactListFragment extends SuperAwesomeCardFragment implements OnC
         inflater = LayoutInflater.from(getActivity());
         mListView = (ListView) view.findViewById(R.id.contact_list);
         mLoadingRL = (RelativeLayout) view.findViewById(R.id.loading_rl);
-        mLoadingRL.setVisibility(View.VISIBLE);
         mAdapter = new SimpleAdapter(getActivity());
-        new GetDataFromDBTask().execute(false);
-        mLoadingRL.setVisibility(View.INVISIBLE);
         addHeader();
         mListView.setAdapter(mAdapter);
         addFooter();
         initializePadding();
         mListView.setOnCreateContextMenuListener(this);
         mListView.setOnItemClickListener(this);
+        new GetDataFromDBTask().execute(false);
         return view;
     }
 
@@ -467,7 +457,7 @@ public class ContactListFragment extends SuperAwesomeCardFragment implements OnC
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
 
-            case ContactsContainerFragment.UNIQUE_MNEU_RELOAD_ID:
+            case ContactsContainerFragment.UNIQUE_MENU_RELOAD_ID:
                 new GetDataFromDBTask().execute(true);
                 break;
             default:
@@ -523,7 +513,6 @@ public class ContactListFragment extends SuperAwesomeCardFragment implements OnC
                         + " " + ZphoneApplication.getAppResources().getString(R.string.contacts_pbx_footer));
             }
             mAdapter.notifyDataSetInvalidated();
-            mAdapter.notifyDataSetChanged();
             super.onPostExecute(result);
         }
 

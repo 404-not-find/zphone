@@ -3,7 +3,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="72dp"
-    android:layout_marginLeft="16dp"
+    android:layout_marginStart="16dp"
     android:paddingTop="5dp">
 
 
@@ -23,16 +23,17 @@
     <TextView
         android:id="@+id/screen_tab_contacts_item_textView_displayname"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_centerVertical="true"
-        android:layout_alignWithParentIfMissing="true"
-        android:layout_toRightOf="@id/screen_tab_contacts_item_imageView_avatar"
+        android:layout_toEndOf="@id/screen_tab_contacts_item_imageView_avatar"
         android:ellipsize="marquee"
         android:fontFamily="sans-serif-light"
         android:gravity="center_vertical"
-        android:layout_marginLeft="72dp"
+        android:textDirection="locale"
+        android:layout_marginStart="72dp"
         android:paddingLeft="@dimen/listview_item_padding"
         android:paddingRight="@dimen/listview_item_padding"
         android:singleLine="true"
+        android:text="John Done"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 </RelativeLayout>

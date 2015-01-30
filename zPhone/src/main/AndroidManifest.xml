@@ -159,7 +159,7 @@
                 android:value=".ui.settings.ScreenSettingsActivity" />
         </activity>
         <activity
-            android:label="@string/secuity"
+            android:label="@string/security"
             android:name=".ui.settings.ScreenSecurityActivity"
             android:screenOrientation="portrait">
             <meta-data

@@ -7,12 +7,13 @@
     android:orientation="horizontal" >
 
     <TextView
-         android:paddingLeft="16dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
         android:id="@+id/contact_footer_one_tv"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:text="@string/contacts_local"
+        android:text="footer"
         android:textColor="@color/grey_700"
         android:textSize="20sp" />
 

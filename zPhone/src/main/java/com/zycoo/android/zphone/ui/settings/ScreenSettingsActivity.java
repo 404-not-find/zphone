@@ -52,7 +52,7 @@ public class ScreenSettingsActivity extends BaseScreen implements OnItemClickLis
         items[0] = new ListViewItemWhite(20);
         items[1] = new ListViewItemAvatarWithText(R.string.general, R.drawable.ic_settings_input_composite_white, true);
         items[2] = new ListViewItemAvatarWithText(R.string.network, R.drawable.ic_settings_input_antenna_white, true);
-        items[3] = new ListViewItemAvatarWithText(R.string.secuity, R.drawable.ic_lock_white, false);
+        items[3] = new ListViewItemAvatarWithText(R.string.security, R.drawable.ic_lock_white, false);
         items[4] = new ListViewItemWhite(40);
         items[5] = new ListViewItemTextOnly(R.string.codecs, true);
         items[6] = new ListViewItemTextOnly(R.string.qos_qoe, true);

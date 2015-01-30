@@ -32,7 +32,7 @@
     </style>
     <style name="Three_line_list_Avatar_with_text_icon_Text_base">
         <item name="android:layout_marginStart">
-            @dimen/three_list_avatar_with_text_icon_text_padding_left_104
+            @dimen/three_list_avatar_with_text_icon_text_padding_left
         </item>
     </style>
 </resources>

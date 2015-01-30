@@ -224,8 +224,11 @@ public class ContactsListFragment extends SuperAwesomeCardFragment implements
         // Inflate the list fragment layout
         v = inflater.inflate(R.layout.fragment_contacts_list, container, false);
         mListView = (ListView) v.findViewById(R.id.contact_list);
-        mListView.addHeaderView(inflater.inflate(R.layout.fragment_contact_list_header, mListView,
-                false));
+        View headView = inflater.inflate(R.layout.fragment_contact_list_header, mListView, false);
+        TextView contact_head_one = (TextView) headView.findViewById(R.id.contact_head_one_tv);
+        contact_head_one.setText(ZphoneApplication.getAppResources().getString(
+                R.string.contacts_local));
+        mListView.addHeaderView(headView);
 
         // Set up ListView, assign adapter and set some listeners. The adapter was previously
         // created in onCreate().

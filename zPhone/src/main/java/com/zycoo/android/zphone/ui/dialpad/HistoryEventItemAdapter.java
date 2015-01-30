@@ -43,7 +43,7 @@ public class HistoryEventItemAdapter
                                    int resId) {
         super(context, resId);
         this.context = context;
-        Collections.sort(contactsList, new ContactItemComparator());
+        //Collections.sort(contactsList, new ContactItemComparator());
         //indexer = new ContactsSectionIndexer(contactsList);
         historyItems = contactsList;
     }
@@ -65,27 +65,22 @@ public class HistoryEventItemAdapter
 
     @Override
     public Filter getFilter() {
-        Filter filter = new Filter() {
-
+        return new Filter() {
             @SuppressWarnings("unchecked")
             @Override
             protected void publishResults(CharSequence constraint, FilterResults results) {
-
-                historyItems = (ArrayList<ContactItemInterface>) results.values;
                 notifyDataSetChanged();
             }
-
             @Override
             protected FilterResults performFiltering(CharSequence constraint) {
-
-                FilterResults results = new FilterResults();
-                ArrayList<ContactItemInterface> FilteredArrayNames = new ArrayList<ContactItemInterface>();
+                //FilterResults results = new FilterResults();
+                historyItems.clear();
                 // perform your search here using the searchConstraint String.
                 constraint = constraint.toString().toLowerCase();
                 if ("".equals(constraint.toString())) {
                     for (NgnHistoryEvent event : Engine.getInstance().getHistoryService()
                             .getEvents()) {
-                        FilteredArrayNames.add(new HistoryEventItem(event));
+                        historyItems.add(new HistoryEventItem(event));
                     }
                 } else {
                     List<NgnContact> list = Engine.getInstance().getContactService()
@@ -94,18 +89,16 @@ public class HistoryEventItemAdapter
                         if (item.getPrimaryNumber()
                                 .toLowerCase(Locale.getDefault())
                                 .contains(constraint.toString().replace(" ", "").replace("-", ""))) {
-                            FilteredArrayNames.add(new ContactItem(item));
+                            historyItems.add(new ContactItem(item));
                         }
                     }
                 }
-                results.count = FilteredArrayNames.size();
-                results.values = FilteredArrayNames;
-                return results;
-
+                //results.count = historyItems.size();
+                //results.values = historyItems;
+                //return results;
+                return null;
             }
         };
-
-        return filter;
     }
 
     @Override

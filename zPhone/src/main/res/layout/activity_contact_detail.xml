@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:weightSum="100">
+
+        <ImageView
+            android:id="@+id/contact_image"
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            android:contentDescription="@string/imageview_description"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_contact_picture_180_holo_light" />
+
+        <com.hp.views.PagerSlidingTabStrip
+            android:id="@+id/tabs"
+            android:layout_width="match_parent"
+            android:layout_height="68dip"
+            android:layout_below="@id/contact_image"
+            android:background="@color/grey_100"
+            android:fillViewport="false"
+            app:pstsShouldExpand="true" />
+
+        <com.zycoo.android.zphone.widget.CustomViewPager
+            android:layout_below="@id/tabs"
+            android:id="@+id/pager"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/tabs"
+            android:layout_alignParentBottom="true"
+            tools:context=".MainActivity" />
+    </RelativeLayout>
+</FrameLayout>

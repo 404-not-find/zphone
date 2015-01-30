@@ -9,9 +9,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/grey_300"
-        android:gravity="left"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
+        android:gravity="start"
+        android:textDirection="locale"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
         android:textColor="@color/grey_700"
         android:textSize="20sp"
         tools:text="Two Toasters" />
