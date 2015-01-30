@@ -34,7 +34,7 @@
     <string name="spinner_pcscf_discovery">Select PCSCF Discovery Mode</string>
     <string name="spinner_transport">Select Network Transport</string>
     <string name="general">General</string>
-    <string name="secuity">Secuity</string>
+    <string name="security">Secuity</string>
     <string name="codecs">Codecs</string>
     <string name="natt">Natt</string>
     <string name="identity">Identity</string>
@@ -186,7 +186,7 @@
     <string name="endLogging">Disable Logging</string>
     <string name="missingOptions">ClientID, server address or Port number is missing. Please correct or press back arrow cancel.</string>
     <string name="dateFormat" translatable="false">dd/MM/yy \'at\' HH:mm:ss</string>
-    <string name="unkown_error">Unknown Error</string>
+    <string name="unknown_error">Unknown Error</string>
     <string name="delete_connection">Delete Connection</string>
     <string name="disconnectClient">Disconnect Client?</string>
     <string name="deleteDialog">The selected client is currently connected or connecting, deleting this connection will cause it to be disconnected.</string>
@@ -296,7 +296,7 @@
     <string name="udp" translatable="false">UDP</string>
     <string name="tcp" translatable="false">TCP</string>
 
-    <!-- setting secuity -->
+    <!-- setting security -->
     <string name="srtp_mode">SRTP Mode</string>
     <string name="srtp_type">SRTP Type</string>
 

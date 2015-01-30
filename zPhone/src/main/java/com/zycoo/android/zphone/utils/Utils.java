@@ -22,12 +22,18 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
+import android.graphics.Color;
+import android.graphics.ColorFilter;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
 import android.os.Build;
 import android.os.StrictMode;
 import android.util.DisplayMetrics;
 import android.view.View;
+import android.widget.ImageView;
 
 import com.nineoldandroids.view.ViewHelper;
+import com.zycoo.android.zphone.ZphoneApplication;
 import com.zycoo.android.zphone.ui.LaunchActivity;
 import com.zycoo.android.zphone.ui.MainActivity;
 
@@ -275,6 +281,13 @@ public class Utils {
             // Nine Old Androids version
             ViewHelper.setTranslationX(view, x);
         }
+    }
+
+    public static void setImageViewFilter(ImageView view, int colorId)
+    {
+        int  color = ZphoneApplication.getAppResources().getColor(colorId);
+        ColorFilter filter = new PorterDuffColorFilter(color, PorterDuff.Mode.MULTIPLY);
+        view.setColorFilter(filter);
     }
 
 }

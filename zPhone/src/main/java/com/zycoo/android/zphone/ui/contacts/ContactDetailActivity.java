@@ -23,6 +23,7 @@ import android.support.v4.content.Loader;
 import android.support.v4.view.ViewPager;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -50,6 +51,9 @@ import java.io.IOException;
 
 public class ContactDetailActivity extends SherlockFragmentActivity implements
         LoaderManager.LoaderCallbacks<Cursor> {
+
+    public static final String EXTRA_CONTACT_URI =
+            "com.zycoo.android.zphone.ui.contacts.EXTRA_CONTACT_URI";
     private static final String TAG_DETAIL = ContactDetailFragment.class.getCanonicalName();
     private static final String TAG_HISTORY = ContactHistoryFragment.class.getCanonicalName();
     private static final String TAG_VOICE = ContactVoiceFragment.class.getCanonicalName();
@@ -61,6 +65,7 @@ public class ContactDetailActivity extends SherlockFragmentActivity implements
     private ContactsDetailAdapter adapter;
     private ImageView mImageView;
     private MenuItem mEditContactMenuItem;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +79,7 @@ public class ContactDetailActivity extends SherlockFragmentActivity implements
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             // Fetch the data Uri from the intent provided to this activity
             final Uri uri = getIntent().getData();
+
             /*// Checks to see if fragment has already been added, otherwise adds a new
             // ContactDetailFragment with the Uri provided in the intent
             if (getSupportFragmentManager().findFragmentByTag(TAG) == null) {
@@ -84,14 +90,14 @@ public class ContactDetailActivity extends SherlockFragmentActivity implements
                 ft.commit();
             }*/
             setContentView(R.layout.activity_contact_detail);
+            mImageView = (ImageView) findViewById(R.id.contact_image);
             tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
             pager = (ViewPager) findViewById(R.id.pager);
             adapter = new ContactsDetailAdapter(getSupportFragmentManager());
             pager.setAdapter(adapter);
             pager.setCurrentItem(1);
             tabs.setViewPager(pager);
-            // Let this activity contribute menu items
-            //setHasOptionsMenu(true);
+
 
         /*
          * The ImageLoader takes care of loading and resizing images asynchronously into the
@@ -115,11 +121,18 @@ public class ContactDetailActivity extends SherlockFragmentActivity implements
             // Tell the image loader to set the image directly when it's finished loading
             // rather than fading in
             mImageLoader.setImageFadeIn(false);
-
+            //setContact((Uri) savedInstanceState.getParcelable(EXTRA_CONTACT_URI));
+            setContact(uri);
         } else {
             // No intent provided, nothing to do so finish()
             finish();
         }
+    }
+
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
     }
 
     @Override
@@ -155,20 +168,6 @@ public class ContactDetailActivity extends SherlockFragmentActivity implements
                 return new CursorLoader(this, mContactUri,
                         ContactDetailQuery.PROJECTION,
                         null, null, null);
-            case ContactAddressQuery.QUERY_ID:
-                // This query loads contact address details, see
-                // ContactAddressQuery for more information.
-                final Uri uri = Uri.withAppendedPath(mContactUri, ContactsContract.Contacts.Data.CONTENT_DIRECTORY);
-                return new CursorLoader(this, uri,
-                        ContactAddressQuery.PROJECTION,
-                        ContactAddressQuery.SELECTION,
-                        null, null);
-
-            case ContactCallLogQuery.QUERY_ID:
-                String str = args.getString("contactName");
-                return new CursorLoader(this, Uri.parse("content://call_log/calls"),
-                        ContactCallLogQuery.PROJECTION,
-                        CallLog.Calls.CACHED_NAME + "='" + str + "'", null, null);
         }
         return null;
     }
@@ -182,7 +181,6 @@ public class ContactDetailActivity extends SherlockFragmentActivity implements
         if (mContactUri == null) {
             return;
         }
-
         switch (loader.getId()) {
             case ContactDetailQuery.QUERY_ID:
                 // Moves to the first row in the Cursor
@@ -191,82 +189,13 @@ public class ContactDetailActivity extends SherlockFragmentActivity implements
                     // ContactDetailQuery.DISPLAY_NAME maps to the appropriate display
                     // name field based on OS version.
                     final String contactName = data.getString(ContactDetailQuery.DISPLAY_NAME);
-                    getActionBar().setTitle(contactName);
-                    Bundle bundle = new Bundle();
-                    bundle.putString("contactName", contactName);
-                    getSupportLoaderManager().restartLoader(ContactCallLogQuery.QUERY_ID, bundle, this);
+                    getSupportActionBar().setTitle(contactName);
+                    ContactHistoryFragment fragment = (ContactHistoryFragment) getSupportFragmentManager()
+                            .findFragmentByTag(
+                                    "android:switcher:" + R.id.pager + ":0");
+                    fragment.setContact(contactName);
                 }
                 break;
-            case ContactAddressQuery.QUERY_ID:
-                // This query loads the contact address details. More than
-                // one contact address is possible, so move each one to a
-                // LinearLayout in a Scrollview so multiple addresses can
-                // be scrolled by the user.
-
-                // Each LinearLayout has the same LayoutParams so this can
-                // be created once and used for each address.
-                final LinearLayout.LayoutParams layoutParams =
-                        new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                                ViewGroup.LayoutParams.WRAP_CONTENT);
-
-                // Clears out the details layout first in case the details
-                // layout has addresses from a previous data load still
-                // added as children.
-                //TODO
-                //mDetailsLayout.removeAllViews();
-
-                // Loops through all the rows in the Cursor
-                if (data.moveToFirst()) {
-                    do {
-                        //TODO
-                        /*// Builds the address layout
-                        final LinearLayout layout = buildAddressLayout(
-                                data.getInt(ContactAddressQuery.TYPE),
-                                data.getString(ContactAddressQuery.LABEL),
-                                data.getString(ContactAddressQuery.ADDRESS));
-                        // Adds the new address layout to the details layout
-                        mDetailsLayout.addView(layout, layoutParams);*/
-
-
-                    } while (data.moveToNext());
-                } else {
-                    // If nothing found, adds an empty address layout
-                    Log.e("nothing", " adds an empty address layout");
-                    //mDetailsLayout.addView(buildEmptyAddressLayout(), layoutParams);
-                }
-                break;
-            case ContactCallLogQuery.QUERY_ID:
-                // Each LinearLayout has the same LayoutParams so this can
-                // be created once and used for each address.
-                final LinearLayout.LayoutParams callLogLayoutParams =
-                        new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                                ViewGroup.LayoutParams.WRAP_CONTENT);
-                //TODO 移动到HISTORY
-               /* mCallLogLayout.removeAllViews();
-                if (data.moveToFirst()) {
-                    int i = 0;
-                    do {
-                        i++;
-                        //Builds the address layout
-                        final LinearLayout layout = buildCallLogLayout(
-                                data.getInt(data.getColumnIndex(CallLog.Calls.TYPE)),
-                                data.getString(data.getColumnIndex(CallLog.Calls.NUMBER)),
-                                data.getInt(data.getColumnIndex(CallLog.Calls.DURATION)),
-                                data.getLong(data.getColumnIndex(CallLog.Calls.DATE)));
-                        if (i % 2 == 0) {
-                            layout.setBackgroundColor(ZphoneApplication.color_grey_200);
-                        } else {
-                            layout.setBackgroundColor(ZphoneApplication.color_grey_100);
-                        }
-
-                        mCallLogLayout.addView(layout, callLogLayoutParams);
-
-                    } while (data.moveToNext());
-                } else {
-                    Log.d("nothing", " no call log in the item");
-                }*/
-                break;
-
         }
     }
 
@@ -340,7 +269,7 @@ public class ContactDetailActivity extends SherlockFragmentActivity implements
             // restartLoader() is used instead of initLoader() as this method may be called
             // multiple times.
             getSupportLoaderManager().restartLoader(ContactDetailQuery.QUERY_ID, null, this);
-            getSupportLoaderManager().restartLoader(ContactAddressQuery.QUERY_ID, null, this);
+
 
         } else {
             // If contactLookupUri is null, then the method was called when no contact was selected
@@ -473,7 +402,6 @@ public class ContactDetailActivity extends SherlockFragmentActivity implements
         return null;
     }
 
-
     public class ContactsDetailAdapter extends FragmentPagerAdapter {
 
         private final String[] TITLES = {
@@ -502,7 +430,7 @@ public class ContactDetailActivity extends SherlockFragmentActivity implements
                 case 0:
                     return ContactHistoryFragment.newInstance(position);
                 case 1:
-                    return ContactDetailFragment.newInstance(position);
+                    return ContactDetailFragment.newInstance(position, mContactUri);
                 case 2:
                     return ContactVoiceFragment.newInstance(position);
                 default:
@@ -511,25 +439,6 @@ public class ContactDetailActivity extends SherlockFragmentActivity implements
         }
     }
 
-    /**
-     * This interface defines constants used by contact retrieval queries.
-     */
-    public interface ContactDetailQuery {
-        // A unique query ID to distinguish queries being run by the
-        // LoaderManager.
-        final static int QUERY_ID = 1;
-
-        // The query projection (columns to fetch from the provider)
-        @SuppressLint("InlinedApi")
-        final static String[] PROJECTION = {
-                ContactsContract.Contacts._ID,
-                Utils.hasHoneycomb() ? ContactsContract.Contacts.DISPLAY_NAME_PRIMARY : ContactsContract.Contacts.DISPLAY_NAME,
-        };
-
-        // The query column numbers which map to each value in the projection
-        final static int ID = 0;
-        final static int DISPLAY_NAME = 1;
-    }
 
     /**
      * This interface defines constants used by address retrieval queries.
@@ -563,15 +472,7 @@ public class ContactDetailActivity extends SherlockFragmentActivity implements
         final static int QUERY_ID = 3;
     }
 
-    public interface ContactCallLogQuery {
-        final static int QUERY_ID = 4;
-        final static String[] PROJECTION = {
-                CallLog.Calls.NUMBER,
-                CallLog.Calls.DURATION,
-                CallLog.Calls.TYPE,
-                CallLog.Calls.DATE,
-        };
-    }
+
     /**
      * Fetches the width or height of the screen in pixels, whichever is larger.
      * This is used to set a maximum size limit on the contact photo that is
@@ -594,4 +495,68 @@ public class ContactDetailActivity extends SherlockFragmentActivity implements
         // Returns the larger of the two values
         return height > width ? height : width;
     }
+
+    /**
+     * This interface defines constants used by contact retrieval queries.
+     */
+    public interface ContactDetailQuery {
+        // A unique query ID to distinguish queries being run by the
+        // LoaderManager.
+        final static int QUERY_ID = 1;
+
+        // The query projection (columns to fetch from the provider)
+        @SuppressLint("InlinedApi")
+        final static String[] PROJECTION = {
+                ContactsContract.Contacts._ID,
+                Utils.hasHoneycomb() ? ContactsContract.Contacts.DISPLAY_NAME_PRIMARY : ContactsContract.Contacts.DISPLAY_NAME,
+        };
+
+        // The query column numbers which map to each value in the projection
+        final static int ID = 0;
+        final static int DISPLAY_NAME = 1;
+    }
+
+    //TODO 移动到Activity
+    /*@Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.homeAsUp:
+                Intent upIntent = new Intent(getActivity(), MainActivity.class);
+                upIntent.putExtra(EXTRA_TAB_POSITION, 1);
+                if (NavUtils.shouldUpRecreateTask(getActivity(), upIntent)) {
+                    // This activity is not part of the application's task, so
+                    // create a new task
+                    // with a synthesized back stack.
+                    TaskStackBuilder
+                            .from(getActivity())
+                            .addNextIntent(new Intent(getActivity(), MainActivity.class))
+                            .addNextIntent(upIntent).startActivities();
+                    getActivity().finish();
+                } else {
+                    // This activity is part of the application's task, so simply
+                    // navigate up to the hierarchical parent activity.
+                    NavUtils.navigateUpTo(getActivity(), upIntent);
+                }
+                return true;
+
+            // When "edit" menu option selected
+            case R.id.menu_edit_contact:
+                // Standard system edit contact intent
+                Intent intent = new Intent(Intent.ACTION_EDIT, mContactUri);
+
+                // Because of an issue in Android 4.0 (API level 14), clicking Done or Back in the
+                // People app doesn't return the user to your app; instead, it displays the People
+                // app's contact list. A workaround, introduced in Android 4.0.3 (API level 15) is
+                // to set a special flag in the extended data for the Intent you send to the People
+                // app. The issue is does not appear in versions prior to Android 4.0. You can use
+                // the flag with any version of the People app; if the workaround isn't needed,
+                // the flag is ignored.
+                intent.putExtra("finishActivityOnSaveCompleted", true);
+
+                // Start the edit activity
+                startActivity(intent);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }*/
 }

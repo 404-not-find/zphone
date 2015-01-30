@@ -35,7 +35,7 @@
     <string name="general">基本设置</string>
     <string name="identity">帐号</string>
     <string name="network">网络</string>
-    <string name="secuity">安全</string>
+    <string name="security">安全</string>
     <string name="codecs">编码</string>
     <string name="qos_qoe">通话质量</string>
 

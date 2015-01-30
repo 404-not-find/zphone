@@ -38,7 +38,6 @@ import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.diegocarloslima.fgelv.bak.WrapperExpandableListAdapter;
-import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.hp.views.PagerSlidingTabStrip;
@@ -53,7 +52,7 @@ import com.zycoo.android.zphone.ui.contacts.ContactsContainerFragment;
 import com.zycoo.android.zphone.ui.contacts.ContactsListFragment;
 import com.zycoo.android.zphone.ui.dialpad.DialerFragment;
 import com.zycoo.android.zphone.ui.message.MessageFragment;
-import com.zycoo.android.zphone.ui.message.MessagerAdapter;
+import com.zycoo.android.zphone.ui.message.MessageAdapter;
 import com.zycoo.android.zphone.utils.Theme;
 import com.zycoo.android.zphone.utils.Utils;
 import com.zycoo.android.zphone.utils.ZycooConfigurationEntry;
@@ -95,13 +94,13 @@ public class MainActivity extends SherlockFragmentActivity implements
                             .findFragmentByTag(
                                     "android:switcher:" + R.id.pager + ":0");
                     if (null != messageFragment) {
-                        MessagerAdapter messagerAdapter = messageFragment.getMessagerAdapter();
+                        MessageAdapter messageAdapter = messageFragment.getMessageAdapter();
                         WrapperExpandableListAdapter wrapperAdapter = messageFragment
                                 .getWrapperAdapter();
-                        if (null != messagerAdapter && null != messagerAdapter) {
-                            messagerAdapter.getVoiceMailsFromDB();
-                            messagerAdapter.getMonitorsFromDB();
-                            messagerAdapter.notifyDataSetChanged();
+                        if (null != messageAdapter && null != messageAdapter) {
+                            messageAdapter.getVoiceMailsFromDB();
+                            messageAdapter.getMonitorsFromDB();
+                            messageAdapter.notifyDataSetChanged();
                             wrapperAdapter.notifyDataSetChanged();
                         }
                     }

@@ -95,6 +95,7 @@
         <item name="android:background">@color/grey_200</item>
     </style>
 
+
     <!-- Single-line list Text only-->
     <style name="Text_only">
         <item name="android:layout_height">@dimen/avatar_with_text_height</item>
@@ -103,6 +104,7 @@
     <style name="Text_only_Text_base">
         <item name="android:layout_marginLeft">@dimen/text_only_padding_left</item>
     </style>
+
     <style name="Text_only_Text" parent="Text_only_Text_base">
         <item name="android:layout_height">match_parent</item>
         <item name="android:textSize">@dimen/text_only_text_size</item>
@@ -160,9 +162,82 @@
     </style>
 
 
+    <!-- two-lines Avatar with text -->
+    <style name="Two_line_list_Avatar_with_text" parent="List_item_background">
+        <item name="android:layout_height">@dimen/avatar_with_text_height</item>
+    </style>
+
+    <style name="Two_line_list_Avatar_with_text_Text_base">
+        <item name="android:layout_marginLeft">@dimen/avatar_with_text_text_padding_left</item>
+    </style>
+
+    <style name="Two_line_list_Avatar_with_text_Text" parent="Two_line_list_Avatar_with_text_Text_base">
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:textSize">@dimen/avatar_with_text_text_size</item>
+        <item name="android:layout_marginLeft">@dimen/avatar_with_text_text_padding_left</item>
+        <item name="android:gravity">center_vertical</item>
+    </style>
+
+    <style name="Two_line_list_Avatar_with_text_Avatar_base">
+        <item name="android:layout_marginLeft">@dimen/avatar_with_text_avatar_padding_left</item>
+    </style>
+
+    <style name="Two_line_list_Avatar_with_text_Avatar" parent="Avatar_with_text_Avatar_base">
+        <item name="android:layout_height">match_parent</item>
+    </style>
+
+    <!-- two-line list Avatar with text and icon-->
+    <style name="two_line_list_Avatar_with_text_icon_base">
+        <item name="android:layout_marginRight">
+            @dimen/three_list_avatar_with_text_icon_avatar_padding
+        </item>
+        <item name="android:layout_alignParentRight">true</item>
+    </style>
+
+    <style name="two_line_list_Avatar_with_text_icon" parent="two_line_list_Avatar_with_text_icon_base">
+        <item name="android:layout_height">@dimen/three_list_avatar_with_text_icon_height</item>
+        <!-- <item name="android:paddingBottom">@dimen/three_list_avatar_with_text_icon_padding_bottom
+         </item>
+         <item name="android:paddingTop">@dimen/three_list_avatar_with_text_icon_padding_top</item>
+         -->
+    </style>
+
+    <style name="two_line_list_Avatar_with_text_icon_Avatar_base">
+        <item name="android:layout_marginLeft">
+            @dimen/three_list_avatar_with_text_icon_avatar_padding
+        </item>
+    </style>
+
+    <style name="two_line_list_Avatar_with_text_icon_Avatar" parent="two_line_list_Avatar_with_text_icon_Avatar_base">
+        <item name="android:layout_height">match_parent</item>
+    </style>
+
+    <style name="two_line_list_Avatar_with_text_icon_Icon">
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_marginRight">
+            @dimen/three_list_avatar_with_text_icon_icon_padding_right
+        </item>
+    </style>
+
+    <style name="two_line_list_Avatar_with_text_icon_Text_base">
+        <item name="android:layout_marginLeft">
+            @dimen/three_list_avatar_with_text_icon_text_padding_left
+        </item>
+
+    </style>
+
+    <style name="two_line_list_Avatar_with_text_icon_Text" parent="two_line_list_Avatar_with_text_icon_Text_base">
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:gravity">center_vertical</item>
+        <!--<item name="android:layout_marginBottom">
+            @dimen/three_list_avatar_with_text_icon_text_padding_bottom
+        </item>-->
+    </style>
+
+
     <!-- Three-line list Avatar with text -->
     <style name="Three_line_list_Avatar_with_text">
-    <item name="android:layout_height">@dimen/three_list_avatar_with_text_height</item>
+        <item name="android:layout_height">@dimen/three_list_avatar_with_text_height</item>
     </style>
 
     <style name="Three_line_list_Avatar_with_text_Avatar">
@@ -188,9 +263,9 @@
     <!-- Three-line list Avatar with text and icon-->
     <style name="Three_line_list_Avatar_with_text_icon">
         <item name="android:layout_height">@dimen/three_list_avatar_with_text_icon_height</item>
-        <item name="android:paddingBottom">@dimen/three_list_avatar_with_text_icon_padding_bottom
+        <!--<item name="android:paddingBottom">@dimen/three_list_avatar_with_text_icon_padding_bottom
         </item>
-        <item name="android:paddingTop">@dimen/three_list_avatar_with_text_icon_padding_top</item>
+        <item name="android:paddingTop">@dimen/three_list_avatar_with_text_icon_padding_top</item>-->
     </style>
 
     <style name="Three_line_list_Avatar_with_text_icon_Avatar_base">
@@ -198,27 +273,35 @@
             @dimen/three_list_avatar_with_text_icon_avatar_padding
         </item>
     </style>
+
     <style name="Three_line_list_Avatar_with_text_icon_Avatar" parent="Three_line_list_Avatar_with_text_icon_Avatar_base">
         <item name="android:layout_height">match_parent</item>
     </style>
 
-    <style name="Three_line_list_Avatar_with_text_icon_Icon">
-        <item name="android:layout_height">match_parent</item>
+    <style name="three_line_list_Avatar_with_text_icon_base">
         <item name="android:layout_marginRight">
             @dimen/three_list_avatar_with_text_icon_icon_padding_right
         </item>
+        <item name="android:layout_alignParentRight">true</item>
+    </style>
+
+    <style name="Three_line_list_Avatar_with_text_icon_Icon" parent="three_line_list_Avatar_with_text_icon_base">
+        <item name="android:layout_height">match_parent</item>
     </style>
 
     <style name="Three_line_list_Avatar_with_text_icon_Text_base">
         <item name="android:layout_marginLeft">
-            @dimen/three_list_avatar_with_text_icon_text_padding_left_104
+            @dimen/three_list_avatar_with_text_icon_text_padding_left
         </item>
+        <item name="android:layout_alignParentLeft">true</item>
     </style>
+
     <style name="Three_line_list_Avatar_with_text_icon_Text" parent="Three_line_list_Avatar_with_text_icon_Text_base">
         <item name="android:layout_height">match_parent</item>
-        <item name="android:layout_marginBottom">
+        <item name="android:gravity">center_vertical</item>
+        <!--<item name="android:layout_marginBottom">
             @dimen/three_list_avatar_with_text_icon_text_padding_bottom
-        </item>
+        </item>-->
     </style>
     <!--https://github.com/hoang8f/android-segmented-control
         不支持rtl

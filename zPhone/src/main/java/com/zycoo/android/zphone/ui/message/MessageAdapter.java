@@ -26,11 +26,11 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MessagerAdapter extends BaseExpandableListAdapter {
+public class MessageAdapter extends BaseExpandableListAdapter {
 
     public static final String INBOX = "INBOX";
     public static final String OLD = "Old";
-    private final Logger mLogger = LoggerFactory.getLogger(MessagerAdapter.class);
+    private final Logger mLogger = LoggerFactory.getLogger(MessageAdapter.class);
     private  int count_new = 0;
     private final Context mContext;
     private final Resources mResources;
@@ -44,7 +44,7 @@ public class MessagerAdapter extends BaseExpandableListAdapter {
     private List<VoiceMailBean> mVoiceMails;
     private List<MonitorBean> mMonitors;
 
-    public MessagerAdapter(Context context) {
+    public MessageAdapter(Context context) {
         mContext = context;
         mLayoutInflater = (LayoutInflater) mContext
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -95,6 +95,7 @@ public class MessagerAdapter extends BaseExpandableListAdapter {
                         "select callerid, duration, origtime, type from INFOS  order by origtime desc",
                         null);
         mVoiceMails.clear();
+        count_new = 0;
         if (cursor.moveToFirst()) {
             do {
                 VoiceMailBean voiceMailBean = new VoiceMailBean();
@@ -119,6 +120,7 @@ public class MessagerAdapter extends BaseExpandableListAdapter {
         }
         cursor.close();
         rSQLiteDatabase.close();
+        mLogger.debug("count_new " + count_new);
     }
 
     @Override
