@@ -22,6 +22,8 @@ ADDED from AndroidManifest.xml:8:5
 MERGED from com.android.support:multidex:1.0.0:18:5
 MERGED from ZPhone:library:unspecified:7:5
 MERGED from com.android.support:support-v4:21.0.3:15:5
+MERGED from ZPhone:swipeMenuListView:unspecified:7:5
+MERGED from com.android.support:support-v4:21.0.3:15:5
 MERGED from ZPhone:androidngnstack:unspecified:7:5
 MERGED from com.android.support:multidex:1.0.0:18:5
 MERGED from ZPhone:switchButton:unspecified:7:5
@@ -38,6 +40,8 @@ MERGED from com.google.android.gms:play-services:6.5.87:18:5
 MERGED from com.android.support:support-v4:21.0.3:15:5
 MERGED from com.actionbarsherlock:actionbarsherlock:4.4.0:3:3
 MERGED from info.hoang8f:android-segmented:1.0.4:7:5
+MERGED from ZPhone:swipeMenuListView:unspecified:7:5
+MERGED from com.android.support:support-v4:21.0.3:15:5
 	tools:overrideLibrary
 		ADDED from AndroidManifest.xml:11:9
 	android:targetSdkVersion
@@ -175,6 +179,8 @@ application
 ADDED from AndroidManifest.xml:40:5
 MERGED from ZPhone:library:unspecified:11:5
 MERGED from com.android.support:support-v4:21.0.3:16:5
+MERGED from ZPhone:swipeMenuListView:unspecified:11:5
+MERGED from com.android.support:support-v4:21.0.3:16:5
 MERGED from ZPhone:androidngnstack:unspecified:43:5
 MERGED from ZPhone:switchButton:unspecified:11:5
 MERGED from ZPhone:VLCLibrary:unspecified:15:5
@@ -189,13 +195,17 @@ MERGED from com.android.support:support-v4:21.0.3:16:5
 MERGED from com.google.android.gms:play-services:6.5.87:20:5
 MERGED from com.android.support:support-v4:21.0.3:16:5
 MERGED from com.actionbarsherlock:actionbarsherlock:4.4.0:4:3
+MERGED from ZPhone:swipeMenuListView:unspecified:11:5
+MERGED from com.android.support:support-v4:21.0.3:16:5
 	android:label
 		ADDED from AndroidManifest.xml:46:9
 		REJECTED from ZPhone:library:unspecified:14:9
+		REJECTED from ZPhone:swipeMenuListView:unspecified:14:9
 		REJECTED from ZPhone:androidngnstack:unspecified:47:9
 		REJECTED from ZPhone:switchButton:unspecified:14:9
 		REJECTED from ZPhone:VLCLibrary:unspecified:18:9
 		REJECTED from ZPhone:paho:unspecified:24:9
+		REJECTED from ZPhone:swipeMenuListView:unspecified:14:9
 	android:supportsRtl
 		ADDED from AndroidManifest.xml:48:9
 	android:hardwareAccelerated
@@ -207,18 +217,22 @@ MERGED from com.actionbarsherlock:actionbarsherlock:4.4.0:4:3
 	android:icon
 		ADDED from AndroidManifest.xml:45:9
 		REJECTED from ZPhone:library:unspecified:13:9
+		REJECTED from ZPhone:swipeMenuListView:unspecified:13:9
 		REJECTED from ZPhone:androidngnstack:unspecified:46:9
 		REJECTED from ZPhone:switchButton:unspecified:13:9
 		REJECTED from ZPhone:VLCLibrary:unspecified:17:9
 		REJECTED from ZPhone:paho:unspecified:23:9
+		REJECTED from ZPhone:swipeMenuListView:unspecified:13:9
 	android:persistent
 		ADDED from AndroidManifest.xml:47:9
 	android:theme
 		ADDED from AndroidManifest.xml:49:9
 		REJECTED from ZPhone:library:unspecified:15:9
+		REJECTED from ZPhone:swipeMenuListView:unspecified:15:9
 		REJECTED from ZPhone:switchButton:unspecified:15:9
 		REJECTED from ZPhone:VLCLibrary:unspecified:19:9
 		REJECTED from ZPhone:paho:unspecified:25:9
+		REJECTED from ZPhone:swipeMenuListView:unspecified:15:9
 	tools:replace
 		ADDED from AndroidManifest.xml:41:9
 	android:name

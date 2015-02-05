@@ -14,7 +14,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshAdapterViewBase;
 import com.handmark.pulltorefresh.library.internal.EmptyViewMethodAccessor;
 
 public class PullToRefreshExpandableListView extends
-        PullToRefreshAdapterViewBase<FloatingGroupExpandableListView> {
+        PullToRefreshAdapterViewBase<SwipeMenuFloatingGroupExpandableListView> {
 
     public PullToRefreshExpandableListView(Context context) {
         super(context);
@@ -38,8 +38,8 @@ public class PullToRefreshExpandableListView extends
     }
 
     @Override
-    protected FloatingGroupExpandableListView createRefreshableView(Context context, AttributeSet attrs) {
-        final FloatingGroupExpandableListView lv;
+    protected SwipeMenuFloatingGroupExpandableListView createRefreshableView(Context context, AttributeSet attrs) {
+        final SwipeMenuFloatingGroupExpandableListView lv;
         if (VERSION.SDK_INT >= VERSION_CODES.GINGERBREAD) {
             lv = new InternalExpandableListViewSDK9(context, attrs);
         } else {
@@ -50,7 +50,7 @@ public class PullToRefreshExpandableListView extends
         return lv;
     }
 
-    class InternalExpandableListView extends FloatingGroupExpandableListView implements
+    class InternalExpandableListView extends SwipeMenuFloatingGroupExpandableListView implements
             EmptyViewMethodAccessor {
 
         public InternalExpandableListView(Context context, AttributeSet attrs) {
@@ -69,7 +69,7 @@ public class PullToRefreshExpandableListView extends
     }
 
     @TargetApi(9)
-    final class InternalExpandableListViewSDK9 extends FloatingGroupExpandableListView {
+    final class InternalExpandableListViewSDK9 extends SwipeMenuFloatingGroupExpandableListView {
 
         public InternalExpandableListViewSDK9(Context context, AttributeSet attrs) {
             super(context, attrs);

@@ -1,30 +1,21 @@
 package com.zycoo.android.zphone.ui.settings;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
-import android.widget.CheckBox;
-import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.RadioButton;
-import android.widget.Spinner;
 
-import com.actionbarsherlock.view.MenuItem;
 import com.zycoo.android.zphone.Engine;
 import com.zycoo.android.zphone.R;
 import com.zycoo.android.zphone.ui.me.ListViewItem;
 import com.zycoo.android.zphone.ui.me.ListViewItemSpinnerWithText;
 import com.zycoo.android.zphone.ui.me.ListViewItemSwitchIconWithText;
 import com.zycoo.android.zphone.ui.me.ListViewItemSwitchIconWithTextViewHolder;
-import com.zycoo.android.zphone.ui.me.ListViewItemWhite;
+import com.zycoo.android.zphone.ui.me.ListViewItemGrey;
 
 import org.doubango.ngn.services.INgnConfigurationService;
 import org.doubango.ngn.utils.NgnConfigurationEntry;
-import org.doubango.ngn.utils.NgnStringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -56,21 +47,21 @@ public class ScreenNetworkActivity
 
     public void initData() {
         items = new ListViewItem[7];
-        items[0] = new ListViewItemWhite(20);
+        items[0] = new ListViewItemGrey(20);
         items[1] = new ListViewItemSwitchIconWithText(R.string.enable_wifi, true, mConfigurationService.getBoolean(
                 NgnConfigurationEntry.NETWORK_USE_WIFI,
                 NgnConfigurationEntry.DEFAULT_NETWORK_USE_WIFI));
         items[2] = new ListViewItemSwitchIconWithText(R.string.enable_mobile_network, false, mConfigurationService.getBoolean(
                 NgnConfigurationEntry.NETWORK_USE_3G,
                 NgnConfigurationEntry.DEFAULT_NETWORK_USE_3G));
-        items[3] = new ListViewItemWhite(40);
+        items[3] = new ListViewItemGrey(40);
 
         items[4] = new ListViewItemSwitchIconWithText(R.string.enable_ipv6, false, mConfigurationService.getString(
                 NgnConfigurationEntry.NETWORK_IP_VERSION,
                 NgnConfigurationEntry.DEFAULT_NETWORK_IP_VERSION).equalsIgnoreCase(
                 "ipv6"));
 
-        items[5] = new ListViewItemWhite(40);
+        items[5] = new ListViewItemGrey(40);
         items[6] = new ListViewItemSpinnerWithText(R.string.transport, R.layout.list_item_setting_spinner, false, super.getSpinnerIndex(mConfigurationService
                 .getString(NgnConfigurationEntry.NETWORK_TRANSPORT,
                         sSpinnerTransportItems[0]), sSpinnerTransportItems));
@@ -81,7 +72,7 @@ public class ScreenNetworkActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.listview);
+        setContentView(R.layout.settings_listview);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         mListView = (ListView) findViewById(android.R.id.list);
         initData();

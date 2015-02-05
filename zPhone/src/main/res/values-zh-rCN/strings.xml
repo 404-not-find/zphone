@@ -136,11 +136,11 @@
     <string name="record">录音</string>
     <string name="conference">会议</string>
     <string name="choice">选择</string>
-    <string name="voicemail_play">播放</string>
-    <string name="voicemail_call">语音回拨</string>
-    <string name="voicemail_make_as_new">标记未读</string>
-    <string name="voicemail_make_as_read">标记已读</string>
-    <string name="voicemail_delete">删除</string>
+    <string name="voice_mail_play">播放</string>
+    <string name="voice_mail_call">语音回拨</string>
+    <string name="voice_mail_make_as_new">标记未读</string>
+    <string name="voice_mail_make_as_read">标记已读</string>
+    <string name="voice_mail_delete">删除</string>
     <string name="visit_the_official_website">访问官网</string>
 
 

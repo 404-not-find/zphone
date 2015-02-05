@@ -3,3 +3,4 @@ include ':library'
 include ':zPhone'
 include ':switchButton'
 project(':paho').projectDir = new File('pahoAndroidService')
+include ':swipeMenuListView'

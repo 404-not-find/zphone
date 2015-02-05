@@ -1,15 +1,15 @@
 package com.zycoo.android.zphone.ui.message;
+
 import android.content.Context;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.github.curioustechizen.ago.RelativeTimeTextView;
@@ -31,7 +31,7 @@ public class MessageAdapter extends BaseExpandableListAdapter {
     public static final String INBOX = "INBOX";
     public static final String OLD = "Old";
     private final Logger mLogger = LoggerFactory.getLogger(MessageAdapter.class);
-    private  int count_new = 0;
+    private int count_new = 0;
     private final Context mContext;
     private final Resources mResources;
     private final LayoutInflater mLayoutInflater;
@@ -155,7 +155,6 @@ public class MessageAdapter extends BaseExpandableListAdapter {
         groupViewHolder.nameTv.setText(mGroups[groupPosition]);
         final int resId = isExpanded ? R.drawable.ic_keyboard_arrow_down_white : R.drawable.ic_keyboard_arrow_right_white;
         groupViewHolder.expandedIv.setImageResource(resId);
-        groupViewHolder.expandedIv.setColorFilter(Color.rgb(3, 169, 237));
         switch (groupPosition) {
             case 0:
                 if (count_new > 0) {
@@ -223,7 +222,6 @@ public class MessageAdapter extends BaseExpandableListAdapter {
                     } else {
                         voicemailItemViewHolder.nameTv.setText(selectVoiceMailBean.mName);
                     }
-                    voicemailItemViewHolder.extensionTv.setText(selectVoiceMailBean.mExtension);
                     if (selectVoiceMailBean.mType.equals(INBOX)) {
                         voicemailItemViewHolder.nameTv.setTextColor(mContext.getResources()
                                 .getColor(
@@ -233,13 +231,13 @@ public class MessageAdapter extends BaseExpandableListAdapter {
                                 .getColor(
                                         com.zycoo.android.zphone.R.color.dark_grey));
                     }
-                    if (childPosition % 2 == 0) {
-                        voicemailItemViewHolder.mVoicemailItemLv
+                  /*  if (childPosition % 2 == 0) {
+                        voicemailItemViewHolder.mVoicemailItemRv
                                 .setBackgroundColor(ZphoneApplication.color_grey_100);
                     } else {
-                        voicemailItemViewHolder.mVoicemailItemLv
+                        voicemailItemViewHolder.mVoicemailItemRv
                                 .setBackgroundColor(ZphoneApplication.color_grey_200);
-                    }
+                    }*/
                 }
                 break;
             case 1:
@@ -264,13 +262,14 @@ public class MessageAdapter extends BaseExpandableListAdapter {
                     monitorViewHolder.mTypeTv.setText(selectRecordBean.getType());
                     monitorViewHolder.mNameTv.setText(selectRecordBean.getFrom() + "--"
                             + selectRecordBean.getTo());
-                    if (childPosition % 2 == 0) {
-                        monitorViewHolder.mMonitorItemLv
+
+                    /*if (childPosition % 2 == 0) {
+                        monitorViewHolder.mMonitorItemRv
                                 .setBackgroundColor(ZphoneApplication.color_grey_100);
                     } else {
-                        monitorViewHolder.mMonitorItemLv
+                        monitorViewHolder.mMonitorItemRv
                                 .setBackgroundColor(ZphoneApplication.color_grey_200);
-                    }
+                    }*/
                 }
                 break;
             default:
@@ -309,7 +308,7 @@ public class MessageAdapter extends BaseExpandableListAdapter {
     }
 
     class MonitorViewHolder {
-        LinearLayout mMonitorItemLv;
+        RelativeLayout mMonitorItemRv;
         ImageView mPhotoIv;
         TextView mNameTv;
         TextView mTypeTv;
@@ -322,26 +321,22 @@ public class MessageAdapter extends BaseExpandableListAdapter {
             mTypeTv = (TextView) v.findViewById(R.id.monitor_type);
             mDurationTv = (TextView) v.findViewById(R.id.monitor_duration);
             mDateTv = (RelativeTimeTextView) v.findViewById(R.id.monitor_date);
-            mMonitorItemLv = (LinearLayout) v.findViewById(R.id.monitor_item_lv);
+            mMonitorItemRv = (RelativeLayout) v.findViewById(R.id.monitor_item_rv);
         }
     }
 
     class VoiceMailViewHolder {
-        LinearLayout mVoicemailItemLv;
-        ImageView imageView;
+        RelativeLayout mVoicemailItemRv;
         TextView nameTv;
-        TextView extensionTv;
         RelativeTimeTextView dateTv;
         TextView durationTv;
 
         public VoiceMailViewHolder(View v) {
             v.setTag(R.layout.fragment_message_list_child_voicemail_item, this);
-            imageView = (ImageView) v.findViewById(R.id.voicemail_iv);
             dateTv = (RelativeTimeTextView) v.findViewById(R.id.voicemail_date);
             durationTv = (TextView) v.findViewById(R.id.voicemail_duration);
             nameTv = (TextView) v.findViewById(R.id.voicemail_name);
-            extensionTv = (TextView) v.findViewById(R.id.voicemail_extension);
-            mVoicemailItemLv = (LinearLayout) v.findViewById(R.id.voicemail_item_lv);
+            mVoicemailItemRv = (RelativeLayout) v.findViewById(R.id.voicemail_item_rv);
         }
     }
 

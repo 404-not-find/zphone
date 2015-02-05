@@ -1,14 +1,21 @@
 package com.zycoo.android.zphone.ui.message;
 
 import android.app.Activity;
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.SystemClock;
+import android.support.v4.app.NotificationCompat;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
@@ -24,11 +31,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.actionbarsherlock.view.Menu;
+import com.baoyz.swipemenulistview.SwipeMenu;
+import com.baoyz.swipemenulistview.SwipeMenuCreator;
+import com.baoyz.swipemenulistview.SwipeMenuItem;
 import com.diegocarloslima.fgelv.bak.FloatingGroupExpandableListView;
 import com.diegocarloslima.fgelv.bak.WrapperExpandableListAdapter;
 import com.github.kevinsawicki.http.HttpRequest;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
+import com.jensdriller.libs.undobar.UndoBar;
+import com.koushikdutta.async.http.AsyncHttpClient;
+import com.koushikdutta.async.http.AsyncHttpRequest;
+import com.koushikdutta.async.http.AsyncHttpResponse;
 import com.tqcenglish.vlcdemo.AudioPlayActivity;
 import com.zycoo.android.zphone.DatabaseHelper;
 import com.zycoo.android.zphone.Engine;
@@ -41,17 +55,18 @@ import com.zycoo.android.zphone.ui.message.MessageAdapter.VoiceMailBean;
 import com.zycoo.android.zphone.utils.Utils;
 import com.zycoo.android.zphone.widget.SuperAwesomeCardFragment;
 import com.zycoo.android.zphonelib.PullToRefreshExpandableListView;
+import com.zycoo.android.zphonelib.SwipeMenuFloatingGroupExpandableListView;
 
 import org.doubango.ngn.media.NgnMediaType;
 import org.doubango.ngn.utils.NgnConfigurationEntry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
+import java.io.IOException;
+
 /**
- *
- *
- *
- *TODO VoiceMail count new can't display on some time
+ * TODO VoiceMail count new can't display on some time
  */
 public class MessageFragment extends SuperAwesomeCardFragment implements OnChildClickListener,
         OnCreateContextMenuListener {
@@ -99,22 +114,77 @@ public class MessageFragment extends SuperAwesomeCardFragment implements OnChild
         rootView = inflater.inflate(R.layout.fragment_message, null);
         loadRl = (RelativeLayout) rootView.findViewById(R.id.loading_rl);
         mPullToRefreshExpandableListView = (PullToRefreshExpandableListView) rootView
-                .findViewById(R.id.id_messager_lv);
+                .findViewById(R.id.id_message_lv);
         mPullToRefreshExpandableListView
-                .setOnRefreshListener(new OnRefreshListener<FloatingGroupExpandableListView>() {
+                .setOnRefreshListener(new OnRefreshListener<SwipeMenuFloatingGroupExpandableListView>() {
                     @Override
                     public void onRefresh(
-                            PullToRefreshBase<FloatingGroupExpandableListView> refreshView) {
+                            PullToRefreshBase<SwipeMenuFloatingGroupExpandableListView> refreshView) {
                         // Do work to refresh the list here.
                         new PullRefreshTask().execute();
                     }
                 });
 
-        FloatingGroupExpandableListView fglv = (FloatingGroupExpandableListView) mPullToRefreshExpandableListView
+        SwipeMenuFloatingGroupExpandableListView fglv = (SwipeMenuFloatingGroupExpandableListView) mPullToRefreshExpandableListView
                 .getRefreshableView();
         fglv.setOnChildClickListener(this);
         fglv.setOnCreateContextMenuListener(this);
         fglv.setOnChildClickListener(this);
+
+        SwipeMenuCreator creator = new SwipeMenuCreator() {
+
+            @Override
+            public void create(SwipeMenu menu) {
+                // create "open" item
+                SwipeMenuItem openItem = new SwipeMenuItem(
+                        ZphoneApplication.getContext());
+                // set item background
+                openItem.setBackground(new ColorDrawable(Color.rgb(0xC9, 0xC9,
+                        0xCE)));
+                // set item width
+                //openItem.setWidth(dp2px(90));
+                openItem.setWidth(90);
+                // set item title
+                openItem.setTitle("Open");
+                // set item title fontsize
+                openItem.setTitleSize(18);
+                // set item title font color
+                openItem.setTitleColor(Color.WHITE);
+                // add to menu
+                menu.addMenuItem(openItem);
+
+                // create "delete" item
+                SwipeMenuItem deleteItem = new SwipeMenuItem(
+                        ZphoneApplication.getContext());
+                // set item background
+                deleteItem.setBackground(new ColorDrawable(Color.rgb(0xF9,
+                        0x3F, 0x25)));
+                // set item width
+                //deleteItem.setWidth(dp2px(90));
+                deleteItem.setWidth(90);
+                // set a icon
+                deleteItem.setIcon(R.drawable.ic_delete_black);
+                // add to menu
+                menu.addMenuItem(deleteItem);
+            }
+        };
+
+        // set creator
+        fglv.setMenuCreator(creator);
+        fglv.setOnSwipeListener(new SwipeMenuFloatingGroupExpandableListView.OnSwipeListener() {
+
+            @Override
+            public void onSwipeStart(int position) {
+                Log.d("xxx", "" + position);
+                // swipe start
+            }
+
+            @Override
+            public void onSwipeEnd(int position) {
+                Log.d("xxx", "" + position);
+                // swipe end
+            }
+        });
         final View header = inflater.inflate(R.layout.fragment_message_list_header, fglv, false);
         mPullToRefreshExpandableListView.getRefreshableView().addHeaderView(header);
 
@@ -135,7 +205,8 @@ public class MessageFragment extends SuperAwesomeCardFragment implements OnChild
         // file, we have to set it again here
         // This prevents a bug where the background turns to the color of the
         // child divider when the list is expanded
-        //fglv.setChildDivider(new ColorDrawable(Color.BLUE)); 
+        /*fglv.setDivider(new ColorDrawable(getResources().getColor(R.color.light_blue)));
+        fglv.setDividerHeight(2);*/
         messageAdapter = new MessageAdapter(getActivity());
         new GetDataFromDBTask().execute();
         wrapperAdapter = new WrapperExpandableListAdapter(messageAdapter);
@@ -234,11 +305,12 @@ public class MessageFragment extends SuperAwesomeCardFragment implements OnChild
             inbox_or_old = cursor.getString(2);
         }
         cursor.close();
-        String[] result = new String[4];
+        String[] result = new String[5];
         result[0] = file_name;
         result[1] = Integer.toString(wd);
         result[2] = inbox_or_old;
         result[3] = voiceMailBean.getExtension();
+        result[4] = voiceMailBean.getDate();
         return result;
     }
 
@@ -259,20 +331,21 @@ public class MessageFragment extends SuperAwesomeCardFragment implements OnChild
                 case 0:
                     //添加菜单项  
                     menu.add(UNIQUE_FRAGMENT_GROUP_ID, 1, 0,
-                            getResources().getString(R.string.voicemail_play));
+                            getResources().getString(R.string.voice_mail_play));
                     menu.add(UNIQUE_FRAGMENT_GROUP_ID, 2, 0,
-                            getResources().getString(R.string.voicemail_call));
+                            getResources().getString(R.string.voice_mail_call));
                     menu.add(UNIQUE_FRAGMENT_GROUP_ID, 3, 0,
-                            getResources().getString(R.string.voicemail_make_as_new));
+                            getResources().getString(R.string.voice_mail_make_as_new));
                     menu.add(UNIQUE_FRAGMENT_GROUP_ID, 4, 0,
-                            getResources().getString(R.string.voicemail_make_as_read));
+                            getResources().getString(R.string.voice_mail_make_as_read));
                     menu.add(UNIQUE_FRAGMENT_GROUP_ID, 5, 0,
-                            getResources().getString(R.string.voicemail_delete));
+                            getResources().getString(R.string.voice_mail_delete));
+                    menu.add(UNIQUE_FRAGMENT_GROUP_ID, 6, 0, getResources().getString(R.string.voice_mail_Download));
                     break;
                 case 1:
                     //添加菜单项  
                     menu.add(UNIQUE_FRAGMENT_GROUP_ID, 1, 0,
-                            getResources().getString(R.string.voicemail_play));
+                            getResources().getString(R.string.voice_mail_play));
                     //TODO 删除需要管理员权限
                     //menu.add(UNIQUE_FRAGMENT_GROUP_ID, 2, 0,
                     //      getResources().getString(R.string.voicemail_delete));
@@ -489,17 +562,39 @@ public class MessageFragment extends SuperAwesomeCardFragment implements OnChild
                 String file_name = strs[0];
                 String requestUrl = null;
                 switch (params[1]) {
+                    //play and download
                     case 1:
-                        //Intent it = new Intent(Intent.ACTION_VIEW);
-                        Intent it = new Intent(getActivity(), AudioPlayActivity.class);
+                    case 6:
+                        //TODO 修改服务端，对邮件文件类型进行分类。现在只考虑wav，当为其他类型时会出错
                         String wav_file_name = file_name.substring(0, file_name.length() - 3)
                                 + "wav";
+                        //调用系统播放器
+                        //Intent it = new Intent(Intent.ACTION_VIEW);
                         /*it.setDataAndType(
                                 Uri.parse("http://" + server + ":4242/download_voicemail?wd="
                                         + wd + "&file_name=" + wav_file_name), "audio/MP3");*/
                         String download_url = String.format("http://%s:4242/download_voicemail?wd=%s&file_name=%s", server, wd, wav_file_name);
-                        it.putExtra("path", download_url);
-                        startActivity(it);
+                        //play
+                        if (1 == params[1]) {
+                            Intent it = new Intent(getActivity(), AudioPlayActivity.class);
+                            it.putExtra("path", download_url);
+                            startActivity(it);
+                        }
+                        //download
+                        else if (6 == params[1]) {
+                            String filePath = Environment.getExternalStorageDirectory().getPath() + "/zycoo/voice_mail/" + server + "/" + strs[3] + "/" + strs[4] + ".wav";
+                            new HttpDownloadTask().execute(download_url, filePath);
+                            /*AsyncHttpClient.getDefaultInstance().executeFile(AsyncHttpRequest.create(new HttpRequest) download_url, filePath, new AsyncHttpClient.FileCallback() {
+                                @Override
+                                public void onCompleted(Exception e, AsyncHttpResponse response, File result) {
+                                    if (e != null) {
+                                        e.printStackTrace();
+                                        return;
+                                    }
+                                    System.out.println("my file is available at: " + result.getAbsolutePath());
+                                }
+                            });*/
+                        }
                         break;
                     case 2:
                         //voiceMail
@@ -575,6 +670,105 @@ public class MessageFragment extends SuperAwesomeCardFragment implements OnChild
                 }
             }
             return result;
+        }
+    }
+
+    /**
+     * Created by tqcenglish on 15-2-4.
+     * <p/>
+     * //https://github.com/kevinsawicki/http-request
+     * //new DownloadTask().execute("http://google.com");
+     */
+    public class HttpDownloadTask extends AsyncTask<String, Long, File> {
+        private Logger mLogger = LoggerFactory.getLogger(HttpDownloadTask.class);
+        public final String TAG = HttpDownloadTask.class.getCanonicalName();
+        private NotificationManager mNotifyManager;
+        private NotificationCompat.Builder mBuilder;
+        private boolean result = true;
+        private int totalFileLength = 0;
+        private File file = null;
+
+        public HttpDownloadTask() {
+            mNotifyManager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
+            mBuilder = new NotificationCompat.Builder(getActivity());
+        }
+
+        protected File doInBackground(String... urls) {
+            if (2 != urls.length) {
+                mLogger.debug(TAG, "arg numbers  error");
+                return null;
+            }
+            try {
+                HttpRequest request = HttpRequest.get(urls[0]);
+
+                if (request.ok()) {
+                    totalFileLength = request.getConnection().getContentLength();
+                    file = new File(urls[1]);
+                    if (!file.exists()) {
+                        file.getParentFile().mkdirs();
+                        file.createNewFile();
+                    }
+                    new Thread() {
+                        @Override
+                        public void run() {
+                            while (result && totalFileLength != file.length()) {
+                                publishProgress(file.length());
+                                SystemClock.sleep(800);
+                            }
+                        }
+                    }.start();
+                    request.receive(file);
+                    //mLogger.debug("total " + totalFileLength + "" + file.length());
+
+                }
+                return file;
+            } catch (HttpRequest.HttpRequestException exception) {
+                mLogger.debug("HttpRequestException " + exception.getStackTrace());
+                result = false;
+                return null;
+            } catch (IOException exception) {
+                mLogger.debug("IOException " + exception.getStackTrace());
+                result = false;
+                return null;
+            }
+        }
+
+        protected void onProgressUpdate(Long... progress) {
+
+            updateDownloadNotification((int) (progress[0].longValue()), totalFileLength);
+        }
+
+        protected void onPostExecute(File file) {
+            if (file != null) {
+                mLogger.debug(TAG, "Downloaded file to: " + file.getAbsolutePath());
+                updateDownloadNotification(totalFileLength, totalFileLength);
+            } else {
+                mLogger.debug(TAG, "Download failed");
+                //notification
+                mBuilder.setContentTitle("Download failure");
+                // Displays the progress bar for the first time.
+                mNotifyManager.notify(0, mBuilder.build());
+            }
+            //cancel notification
+        }
+
+        public void updateDownloadNotification(int current, int max) {
+            //notification
+            mBuilder.setProgress(max, current, false);
+            if (current == max) {
+                mBuilder.setContentTitle("Downloaded Successful");
+                mBuilder.setContentText("Downloaded file to: " + file.getAbsolutePath());
+            }
+            // Displays the progress bar for the first time.
+            mNotifyManager.notify(0, mBuilder.build());
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            mBuilder.setContentTitle("Audio Download")
+                    .setContentText("Download in progress")
+                    .setSmallIcon(R.drawable.ic_cloud_download_grey600);
         }
     }
 }

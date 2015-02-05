@@ -286,7 +286,7 @@ public class ContactListFragment extends SuperAwesomeCardFragment implements OnC
             View view = convertView;
 
             if (view == null) {
-                view = mInflater.inflate(R.layout.fragment_contact_remote_list_item, null);
+                view = mInflater.inflate(R.layout.fragment_contact_remote_list_item, parent, false);
             }
             final PBXPhoneBookBean contact = (PBXPhoneBookBean) getItem(position);
 

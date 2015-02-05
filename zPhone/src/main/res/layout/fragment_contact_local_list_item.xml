@@ -1,39 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-  Copyright (C) 2013 The Android Open Source Project
-
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
-
-       http://www.apache.org/licenses/LICENSE-2.0
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
--->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="72dp"
-    android:layout_marginLeft="16dp"
-    android:paddingTop="5dp" >
-
-    <!--
-         Use standard android.R class icon id instead of app specific id. This is just useful for
-         consistency. Use scaleType=centerCrop to give a nice full cropped image in the assigned
-         space
-    -->
+    android:layout_height="56dp">
 
     <QuickContactBadge
         android:id="@android:id/icon"
         style="@style/quickContactBadgeStyle"
-        android:layout_width="?android:attr/listPreferredItemHeight"
-        android:layout_height="?android:attr/listPreferredItemHeight"
-        android:scaleType="centerCrop"
+        android:layout_centerVertical="true"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:scaleType="fitCenter"
         android:layout_marginStart="16dp"
-        android:padding="3dp"
         android:src="@drawable/ic_contact_picture_holo_light" />
 
     <!--
@@ -48,11 +25,9 @@
         android:layout_height="20dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:layout_toRightOf="@android:id/icon"
         android:ellipsize="marquee"
         android:fontFamily="sans-serif"
         android:paddingLeft="72dp"
-        android:paddingRight="@dimen/listview_item_padding"
         android:singleLine="true"
         android:text="Matches Other Field"
         android:textAppearance="?android:attr/textAppearanceSmall"
@@ -73,11 +48,11 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
         android:layout_alignWithParentIfMissing="true"
-        android:layout_toRightOf="@android:id/icon"
         android:ellipsize="marquee"
         android:fontFamily="sans-serif-light"
         android:gravity="center_vertical"
         android:layout_marginLeft="72dp"
+        android:textSize="16sp"
         android:singleLine="true"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 

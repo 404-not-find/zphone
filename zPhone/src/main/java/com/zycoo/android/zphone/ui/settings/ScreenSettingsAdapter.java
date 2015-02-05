@@ -18,8 +18,8 @@ import com.zycoo.android.zphone.ui.me.ListViewItemSwitchIconWithText;
 import com.zycoo.android.zphone.ui.me.ListViewItemSwitchIconWithTextViewHolder;
 import com.zycoo.android.zphone.ui.me.ListViewItemTextOnly;
 import com.zycoo.android.zphone.ui.me.ListViewItemTextOnlyViewHolder;
-import com.zycoo.android.zphone.ui.me.ListViewItemWhite;
-import com.zycoo.android.zphone.ui.me.ListViewItemWhiteViewHolder;
+import com.zycoo.android.zphone.ui.me.ListViewItemGrey;
+import com.zycoo.android.zphone.ui.me.ListViewItemGreyViewHolder;
 import com.zycoo.android.zphone.utils.Utils;
 
 import org.slf4j.Logger;
@@ -74,7 +74,7 @@ public class ScreenSettingsAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        ListViewItemWhiteViewHolder whiteViewHolder = null;
+        ListViewItemGreyViewHolder whiteViewHolder = null;
         ListViewItemAvatarWithTextViewHolder avatarWithTextViewHolder = null;
         ListViewItemTextOnlyViewHolder textOnlyViewHolder = null;
         ListViewItemSwitchIconWithTextViewHolder switchIconWithTextViewHolder = null;
@@ -82,14 +82,14 @@ public class ScreenSettingsAdapter extends BaseAdapter {
         ListViewItem listViewItem = objects[position];
         int listViewItemType = getItemViewType(position);
         switch (listViewItemType) {
-            case ListViewItem.TYPE_WHITE:
-                if (convertView == null || null == (ListViewItemWhiteViewHolder) convertView.getTag(ListViewItemWhiteViewHolder.white_divider_id)) {
-                    convertView = LayoutInflater.from(context).inflate(ListViewItemWhiteViewHolder.white_divider_id, null);
-                    whiteViewHolder = new ListViewItemWhiteViewHolder(convertView);
+            case ListViewItem.TYPE_GREY:
+                if (convertView == null || null == (ListViewItemGreyViewHolder) convertView.getTag(ListViewItemGreyViewHolder.grey_divider_id)) {
+                    convertView = LayoutInflater.from(context).inflate(ListViewItemGreyViewHolder.grey_divider_id, null);
+                    whiteViewHolder = new ListViewItemGreyViewHolder(convertView);
                 } else {
-                    whiteViewHolder = (ListViewItemWhiteViewHolder) convertView.getTag(ListViewItemWhiteViewHolder.white_divider_id);
+                    whiteViewHolder = (ListViewItemGreyViewHolder) convertView.getTag(ListViewItemGreyViewHolder.grey_divider_id);
                 }
-                int height_dp = ((ListViewItemWhite) listViewItem).getItemHeight();
+                int height_dp = ((ListViewItemGrey) listViewItem).getItemHeight();
                 whiteViewHolder.setWhiteDividerHeight((int) Utils.convertDpToPixel(height_dp, context));
                 break;
             case ListViewItem.TYPE_AVATAR_WITH_TEXT:

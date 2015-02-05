@@ -83,19 +83,21 @@
         -->
     </style>
 
-
-    <style name="addressButton" />
-
-
     <style name="List_item_background">
-        <item name="android:background">@drawable/list_item_selector</item>
+        <item name="android:selectableItemBackground">@drawable/list_item_selector</item>
     </style>
 
     <style name="List_item_white_background">
-        <item name="android:background">@color/grey_200</item>
+        <item name="android:background">@color/white</item>
     </style>
 
-
+    <style name="List_item_grey_background">
+        <item name="android:background">@color/grey_200</item>
+    </style>
+    <!--
+         Lists
+        http://www.google.com/design/spec/components/lists.html
+    -->
     <!-- Single-line list Text only-->
     <style name="Text_only">
         <item name="android:layout_height">@dimen/avatar_with_text_height</item>
@@ -161,6 +163,60 @@
         <item name="android:layout_height">match_parent</item>
     </style>
 
+    <!-- Single-line Avatar with text and Icon -->
+    <style name="Avatar_with_text_icon" parent="List_item_background">
+        <item name="android:layout_height">@dimen/avatar_with_text_and_icon_height</item>
+        <item name="android:textSize">@dimen/avatar_with_text_and_icon_text_size</item>
+    </style>
+
+    <style name="Avatar_with_text_and_icon_Text_base">
+        <item name="android:layout_marginLeft">@dimen/avatar_with_text_and_icon_text_padding_left
+        </item>
+    </style>
+
+    <style name="Avatar_with_text_and_icon_Text" parent="Avatar_with_text_and_icon_Text_base">
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:textSize">@dimen/avatar_with_text_and_icon_text_size</item>
+        <item name="android:layout_marginLeft">@dimen/avatar_with_text_and_icon_text_padding_left
+        </item>
+        <item name="android:paddingTop">@dimen/avatar_with_text_and_icon_text_padding_top</item>
+    </style>
+
+    <style name="Avatar_with_text_and_icon_Avatar_base">
+        <item name="android:layout_marginLeft">
+            @dimen/avatar_with_text_and_icon_avatar_padding_left
+        </item>
+    </style>
+
+    <style name="Avatar_with_text_and_icon_Avatar" parent="Avatar_with_text_and_icon_Avatar_base">
+        <item name="android:layout_height">match_parent</item>
+    </style>
+
+    <style name="Avatar_with_text_and_icon_Icon_base">
+        <item name="android:layout_marginRight">
+            @dimen/avatar_with_text_and_icon_icon_padding_right
+        </item>
+    </style>
+
+    <style name="Avatar_with_text_and_icon_Icon" parent="Avatar_with_text_and_icon_Icon_base">
+        <item name="android:layout_height">match_parent</item>
+    </style>
+
+    <!--Two lines-->
+    <!--two-lines only text -->
+    <style name="Two_line_list_Text_only" parent="List_item_background">
+        <item name="android:layout_height">@dimen/Two_lines_list_text_only_height</item>
+    </style>
+
+    <style name="Two_line_list_Text_only_Text_base">
+        <item name="android:layout_marginLeft">@dimen/Two_lines_list_text_only_padding_left</item>
+        <item name="android:layout_marginRight">@dimen/Two_lines_list_text_only_padding_right</item>
+    </style>
+
+    <style name="Two_line_list_Text_only_Text" parent="Two_line_list_Text_only_Text_base">
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:gravity">center_vertical</item>
+    </style>
 
     <!-- two-lines Avatar with text -->
     <style name="Two_line_list_Avatar_with_text" parent="List_item_background">
@@ -313,7 +369,6 @@
         <item name="android:button">@null</item>
         <item name="android:paddingLeft">5dp</item>
         <item name="android:paddingRight">5dp</item>
-
     </style>
 
 </resources>

@@ -1,17 +1,13 @@
 package com.zycoo.android.zphone.ui.me;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.ColorFilter;
 import android.graphics.ColorMatrixColorFilter;
-import android.graphics.PorterDuff;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.kyleduo.switchbutton.SwitchButton;
@@ -27,8 +23,6 @@ import org.doubango.ngn.services.INgnSipService;
 import org.doubango.ngn.utils.NgnConfigurationEntry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import android.os.Handler;
 
 
 /**
@@ -136,7 +130,6 @@ public class MeListAdapter extends BaseAdapter {
                     @Override
                     public void statusChange(NgnRegistrationEventTypes type) {
                         accountViewHolder.getExtension().setText(ZphoneApplication.getUserName());
-                        accountViewHolder.getExtension().setText(ZphoneApplication.getUserName());
                         switch (type) {
                             case REGISTRATION_OK:
 
@@ -186,6 +179,7 @@ public class MeListAdapter extends BaseAdapter {
                             default:
                                 break;
                         }
+                        notifyDataSetChanged();
                     }
                 });
 
@@ -208,10 +202,10 @@ public class MeListAdapter extends BaseAdapter {
                     itemViewHolder.setDividerInVisible();
                 }
                 break;
-            case ListViewItem.TYPE_WHITE:
-                convertView = LayoutInflater.from(context).inflate(R.layout.list_item_white_divider, null);
-                TextView whiteTv = (TextView) convertView.findViewById(R.id.id_item_white_divider_tv);
-                int height_dp = ((ListViewItemWhite) objects[position]).getItemHeight();
+            case ListViewItem.TYPE_GREY:
+                convertView = LayoutInflater.from(context).inflate(R.layout.list_item_grey_divider, null);
+                TextView whiteTv = (TextView) convertView.findViewById(R.id.id_item_grey_divider_tv);
+                int height_dp = ((ListViewItemGrey) objects[position]).getItemHeight();
                 whiteTv.setHeight((int) Utils.convertDpToPixel(height_dp, context));
                 break;
             case ListViewItem.TYPE_EXIT:

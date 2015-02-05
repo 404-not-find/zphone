@@ -11,25 +11,27 @@ import com.zycoo.android.zphone.R;
 public class ListViewItemTextOnlyViewHolder {
     public final static int text_only_id = R.layout.list_item_text_only;
     private TextView name;
-    private TextView divider;
+    private View divider;
 
     public ListViewItemTextOnlyViewHolder(View v) {
         name = (TextView) v.findViewById(R.id.id_item_name_tv);
-        divider = (TextView) v.findViewById(R.id.id_item_divider_tv);
+        divider = v.findViewById(R.id.id_item_divider_lv);
         v.setTag(text_only_id, this);
     }
+
     public TextView getName() {
         return name;
     }
+
     public void setName(TextView name) {
         this.name = name;
     }
-    public void setDividerVisible()
-    {
+
+    public void setDividerVisible() {
         divider.setVisibility(View.VISIBLE);
     }
-    public void setDividerInVisible()
-    {
+
+    public void setDividerInVisible() {
         divider.setVisibility(View.INVISIBLE);
     }
 }
