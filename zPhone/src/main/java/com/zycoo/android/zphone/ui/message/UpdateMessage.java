@@ -10,7 +10,7 @@ import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 import com.zycoo.android.zphone.DatabaseHelper;
 import com.zycoo.android.zphone.ZphoneApplication;
-import com.zycoo.android.zphone.utils.ZycooConfigurationEntry;
+import com.zycoo.android.zphone.ZycooConfigurationEntry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

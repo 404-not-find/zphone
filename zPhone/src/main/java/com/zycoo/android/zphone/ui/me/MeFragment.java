@@ -7,7 +7,6 @@ import android.content.BroadcastReceiver;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,9 +15,9 @@ import android.widget.ListView;
 
 import com.zycoo.android.zphone.ui.settings.HelpActivity;
 import com.zycoo.android.zphone.Engine;
-import com.zycoo.android.zphone.IdentitySettingsActivity;
+import com.zycoo.android.zphone.ui.IdentitySettingsActivity;
 import com.zycoo.android.zphone.R;
-import com.zycoo.android.zphone.UpdateOnlineStatus;
+import com.zycoo.android.zphone.task.UpdateOnlineStatus;
 import com.zycoo.android.zphone.ZphoneApplication;
 import com.zycoo.android.zphone.ui.settings.AboutActivity;
 import com.zycoo.android.zphone.ui.settings.ScreenSettingsActivity;
@@ -75,17 +74,17 @@ public class MeFragment extends SuperAwesomeCardFragment implements AdapterView.
 
     public void initData() {
         items = new ListViewItem[11];
-        items[0] = new ListViewItemWhite(20);
+        items[0] = new ListViewItemGrey(20);
         items[1] = new MeListViewItemAccount();
-        items[2] = new ListViewItemWhite(40);
+        items[2] = new ListViewItemGrey(40);
         items[3] = new ListViewItemAvatarWithText(R.string.setting, R.drawable.ic_settings_white, true);
         items[4] = new ListViewItemAvatarWithText(R.string.account, R.drawable.ic_perm_identity_white, false);
-        items[5] = new ListViewItemWhite(40);
+        items[5] = new ListViewItemGrey(40);
         items[6] = new ListViewItemAvatarWithText(R.string.help, R.drawable.ic_help_white, true);
         items[7] = new ListViewItemAvatarWithText(R.string.about, R.drawable.ic_info_white, false);
-        items[8] = new ListViewItemWhite(40);
+        items[8] = new ListViewItemGrey(40);
         items[9] = new MeListViewItemExit();
-        items[10] = new ListViewItemWhite(60);
+        items[10] = new ListViewItemGrey(60);
     }
 
     @Override
@@ -120,7 +119,7 @@ public class MeFragment extends SuperAwesomeCardFragment implements AdapterView.
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
 
-                                for (Activity activity : ZphoneApplication.getActivitys()) {
+                                for (Activity activity : ZphoneApplication.getActivityLists()) {
                                     if (!activity.isFinishing()) {
 
                                         activity.finish();

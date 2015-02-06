@@ -1,75 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:id="@+id/voicemail_item_lv"
-              android:layout_width="match_parent"
-              android:layout_height="72dp"
-    >
-    <LinearLayout
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/Two_line_list_Text_only"
+    android:id="@+id/voicemail_item_rv"
+    android:layout_width="match_parent">
+
+    <TextView
+        style="@style/Two_line_list_Text_only_Text"
+        android:layout_marginTop="@dimen/Two_lines_list_text_only_padding_top"
+        android:layout_marginRight="@dimen/Two_lines_list_text_only_padding_right"
+        android:layout_alignParentRight="true"
+        android:id="@+id/time_duration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/grey_500"
+        android:text="@string/voice_mail"
+        android:textSize="@dimen/Two_lines_list_text_only_text_sec_size" />
+
+    <TextView
+        android:id="@+id/item_name"
+        android:layout_toLeftOf="@id/time_duration"
+        android:layout_marginTop="@dimen/Two_lines_list_text_only_padding_top"
+        android:textColor="@color/dark_grey"
+        style="@style/Two_line_list_Text_only_Text"
+        android:text="@string/voice_mail"
         android:layout_width="match_parent"
-        android:layout_height="72dp"
-        android:background="?attr/actionBarItemBackground"
-        android:orientation="horizontal"
-        android:paddingBottom="5dp"
-        android:paddingLeft="16dp"
-        android:paddingRight="10dp"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/Two_lines_list_text_only_text_pri_size" />
+
+    <com.github.curioustechizen.ago.RelativeTimeTextView
+        style="@style/Two_line_list_Text_only_Text"
         android:paddingTop="5dp"
-        android:weightSum="2"
-        >
-
-        <ImageView
-            android:id="@+id/voicemail_iv"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:contentDescription="@null"
-            android:gravity="center_vertical"
-            android:src="@drawable/ic_markunread_grey600"/>
-
-        <LinearLayout
-            android:id="@+id/id_message_child_item_lv"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:paddingBottom="20dp"
-            android:paddingLeft="72dp">
-
-            <TextView
-                android:id="@+id/voicemail_name"
-                style="@style/textViewStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="20dp"
-                android:textSize="16sp"/>
-
-            <TextView
-                android:id="@+id/voicemail_extension"
-                android:layout_width="wrap_content"
-                android:layout_height="20dp"
-                android:textColor="@color/grey_700"
-                android:textSize="14sp"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:paddingBottom="20dp">
-
-            <com.github.curioustechizen.ago.RelativeTimeTextView
-                android:id="@+id/voicemail_date"
-                android:layout_width="wrap_content"
-                android:layout_height="20dp"
-                android:layout_gravity="right|top"
-                android:textColor="@color/grey_500"
-                android:textSize="14sp"/>
-
-            <TextView
-                android:id="@+id/voicemail_duration"
-                android:layout_width="wrap_content"
-                android:layout_height="20dp"
-                android:layout_gravity="right"
-                android:textColor="@color/dark_grey"
-                android:textSize="14sp"/>
-        </LinearLayout>
-    </LinearLayout>
-</LinearLayout>
+        android:id="@+id/time_date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/item_name"
+        android:text="@string/voice_mail"
+        android:textColor="@color/grey_500"
+        android:textSize="@dimen/Two_lines_list_text_only_text_sec_size" />
+</RelativeLayout>

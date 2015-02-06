@@ -10,7 +10,7 @@ import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 
 import com.zycoo.android.zphone.R;
-import com.zycoo.android.zphone.utils.ZycooConfigurationEntry;
+import com.zycoo.android.zphone.ZycooConfigurationEntry;
 
 import org.doubango.ngn.services.INgnConfigurationService;
 

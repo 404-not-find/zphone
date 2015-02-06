@@ -14,6 +14,7 @@ import android.widget.Filterable;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.github.curioustechizen.ago.RelativeTimeTextView;
@@ -26,8 +27,6 @@ import org.doubango.ngn.media.NgnMediaType;
 import org.doubango.ngn.model.NgnContact;
 import org.doubango.ngn.model.NgnHistoryEvent;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
@@ -71,6 +70,7 @@ public class HistoryEventItemAdapter
             protected void publishResults(CharSequence constraint, FilterResults results) {
                 notifyDataSetChanged();
             }
+
             @Override
             protected FilterResults performFiltering(CharSequence constraint) {
                 //FilterResults results = new FilterResults();
@@ -111,7 +111,7 @@ public class HistoryEventItemAdapter
                     || null == convertView.getTag(R.layout.fragment_dial_contacts_item)) {
                 convertView =
                         LayoutInflater.from(context)
-                                .inflate(R.layout.fragment_dial_contacts_item, null);
+                                .inflate(R.layout.fragment_dial_contacts_item, parent, false);
                 contactViewHolder = new ContactViewHolder(convertView);
                 convertView.setTag(R.layout.fragment_dial_contacts_item, contactViewHolder);
             } else {
@@ -143,9 +143,9 @@ public class HistoryEventItemAdapter
                 }
             }.execute(contactViewHolder);
             if (position % 2 == 0) {
-                contactViewHolder.mItemll.setBackgroundColor(ZphoneApplication.color_grey_100);
+                contactViewHolder.mItemRv.setBackgroundColor(ZphoneApplication.color_grey_100);
             } else {
-                contactViewHolder.mItemll.setBackgroundColor(ZphoneApplication.color_grey_200);
+                contactViewHolder.mItemRv.setBackgroundColor(ZphoneApplication.color_grey_200);
             }
         } else if (historyItems.get(position) instanceof HistoryEventItem) {
             NgnHistoryEvent event = ((HistoryEventItem) historyItems.get(position)).getEvent();
@@ -153,7 +153,7 @@ public class HistoryEventItemAdapter
                     || null == convertView.getTag(R.layout.fragment_dialer_call_log_list_item)) {
                 convertView =
                         LayoutInflater.from(context).inflate(
-                                R.layout.fragment_dialer_call_log_list_item, null);
+                                R.layout.fragment_dialer_call_log_list_item, parent, false);
 
                 callLogHolderView = new CallLogHolderView(convertView);
 
@@ -203,9 +203,9 @@ public class HistoryEventItemAdapter
                     - event.getStartTime()) / 1000));
 
             if (position % 2 == 0) {
-                callLogHolderView.mItemLv.setBackgroundColor(ZphoneApplication.color_grey_100);
+                callLogHolderView.mItemRv.setBackgroundColor(ZphoneApplication.color_grey_100);
             } else {
-                callLogHolderView.mItemLv.setBackgroundColor(ZphoneApplication.color_grey_200);
+                callLogHolderView.mItemRv.setBackgroundColor(ZphoneApplication.color_grey_200);
             }
             //TODO 需要根据呼叫号码查询数据库获取头像
         }
@@ -232,7 +232,7 @@ public class HistoryEventItemAdapter
         ImageView photoBitmapView;
         TextView nameTextView;
         TextView numberTextView;
-        LinearLayout mItemll;
+        RelativeLayout mItemRv;
 
         public ContactViewHolder(View v) {
             v.setTag(this);
@@ -241,38 +241,33 @@ public class HistoryEventItemAdapter
                     .findViewById(R.id.contact_number_tv);
             photoBitmapView = (ImageView) v
                     .findViewById(R.id.conference_item_iv);
-            mItemll = (LinearLayout) v.findViewById(R.id.dial_contact_item_ll);
+            mItemRv = (RelativeLayout) v.findViewById(R.id.dial_contact_item_rv);
         }
     }
 
     class CallLogHolderView {
-        ImageView photoImageView;
-        ImageButton callImageView;
+        ImageView callImageView;
         TextView nameTextView;
         TextView numberTextView;
-        TextView dateTextView;
-        //CallTypeIconsView callTypeIconsView;
-        LinearLayout mItemLv;
+        RelativeLayout mItemRv;
         ImageView callTypeIconsView;
         RelativeTimeTextView callTimeTextView;
         TextView callDurationTextView;
 
         public CallLogHolderView(View v) {
             v.setTag(this);
-            callImageView = (ImageButton) v
+            callImageView = (ImageView) v
                     .findViewById(R.id.secondary_action_icon);
-            photoImageView = (ImageView) v
-                    .findViewById(R.id.quick_contact_photo);
+
             nameTextView = (TextView) v.findViewById(R.id.name);
             numberTextView = (TextView) v.findViewById(R.id.number);
-            dateTextView = (TextView) v.findViewById(R.id.call_count_and_date);
             callTypeIconsView = (ImageView) v
                     .findViewById(R.id.call_type_icons);
             callTimeTextView = (RelativeTimeTextView) v
                     .findViewById(R.id.call_history_time_tv);
             callDurationTextView = (TextView) v
                     .findViewById(R.id.call_history_duration_tv);
-            mItemLv = (LinearLayout) v.findViewById(R.id.call_histroy_itme_lv);
+            mItemRv = (RelativeLayout) v.findViewById(R.id.call_history_item_rv);
         }
     }
 }

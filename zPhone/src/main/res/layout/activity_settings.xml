@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ListView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/setting_listView"
-    android:divider="@null"
-    android:dividerHeight="0dp"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"></ListView>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@color/grey_200"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent">
+
+    <ListView
+        android:id="@+id/setting_listView"
+        android:divider="@null"
+        android:dividerHeight="0dp"
+        android:background="@color/white"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent" />
+</FrameLayout>

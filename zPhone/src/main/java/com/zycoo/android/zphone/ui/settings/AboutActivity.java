@@ -10,28 +10,18 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.github.snowdream.android.app.AbstractUpdateListener;
-import com.github.snowdream.android.app.DownloadTask;
 import com.github.snowdream.android.app.UpdateFormat;
-import com.github.snowdream.android.app.UpdateInfo;
 import com.github.snowdream.android.app.UpdateManager;
 import com.github.snowdream.android.app.UpdateOptions;
 import com.github.snowdream.android.app.UpdatePeriod;
-import com.kyleduo.switchbutton.BuildConfig;
-import com.zycoo.android.zphone.Engine;
 import com.zycoo.android.zphone.R;
-import com.zycoo.android.zphone.ZphoneApplication;
 import com.zycoo.android.zphone.ui.me.ListViewItem;
-import com.zycoo.android.zphone.ui.me.ListViewItemSwitchIconWithText;
 import com.zycoo.android.zphone.ui.me.ListViewItemTextOnly;
-import com.zycoo.android.zphone.ui.me.ListViewItemWhite;
+import com.zycoo.android.zphone.ui.me.ListViewItemGrey;
 import com.zycoo.android.zphone.utils.Utils;
 
-import org.doubango.ngn.services.INgnConfigurationService;
-import org.doubango.ngn.utils.NgnConfigurationEntry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.slf4j.helpers.Util;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -67,7 +57,7 @@ public class AboutActivity extends BaseScreen implements AdapterView.OnItemClick
 
     private void initData() {
         items = new ListViewItem[3];
-        items[0] = new ListViewItemWhite(20);
+        items[0] = new ListViewItemGrey(20);
         items[1] = new ListViewItemTextOnly(R.string.feedback, true);
         items[2] = new ListViewItemTextOnly(R.string.check_for_updates, false);
 

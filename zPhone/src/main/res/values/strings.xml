@@ -237,11 +237,12 @@
     <string name="record">Record</string>
     <string name="conference">Conference</string>
     <string name="choice">Choice</string>
-    <string name="voicemail_play">Play</string>
-    <string name="voicemail_call">Call</string>
-    <string name="voicemail_make_as_new">Make as new</string>
-    <string name="voicemail_make_as_read">Make as read</string>
-    <string name="voicemail_delete">Delete</string>
+    <string name="voice_mail_play">Play</string>
+    <string name="voice_mail_call">Call</string>
+    <string name="voice_mail_make_as_new">Make as new</string>
+    <string name="voice_mail_make_as_read">Make as read</string>
+    <string name="voice_mail_delete">Delete</string>
+    <string name="voice_mail_Download">Download</string>
     <string name="visit_the_official_website">Visit the official website</string>
 
     <!-- AV -->
@@ -338,4 +339,9 @@
     <string name="operation_successful">operation successful</string>
     <string name="not_register">not register</string>
     <string name="not_empty">Not empty</string>
+    <string name="voice_download">Voice Download</string>
+    <string name="download_in_progress">Download in progress</string>
+    <string name="downloaded_successful">Downloaded Successful</string>
+    <string name="downloaded_file_to">Downloaded file to</string>
+    <string name="download_failure">Download failure</string>
 </resources>

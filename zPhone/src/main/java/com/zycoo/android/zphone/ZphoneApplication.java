@@ -21,7 +21,7 @@ import java.util.List;
 
 public class ZphoneApplication extends NgnApplication {
     private final static String PROPERTY_ID = "UA-47275396-3";
-    private static List<Activity> mActivitys = new ArrayList<Activity>();
+    private static List<Activity> mActivityList = new ArrayList<Activity>();
     protected INgnConfigurationService mConfigurationService;
     private INgnSipService mSipService;
     public static int color_grey_100;
@@ -33,7 +33,6 @@ public class ZphoneApplication extends NgnApplication {
     }
 
     public static Resources getAppResources() {
-
         return getContext().getResources();
     }
 
@@ -48,21 +47,21 @@ public class ZphoneApplication extends NgnApplication {
     }
 
     public static void addActivity(Activity activity) {
-        mActivitys.add(activity);
+        mActivityList.add(activity);
     }
 
-    public static List<Activity> getActivitys() {
-        return mActivitys;
+    public static List<Activity> getActivityLists() {
+        return mActivityList;
     }
 
     public static String getHost() {
         return sInstance.mConfigurationService.getString(NgnConfigurationEntry.NETWORK_REALM,
-                com.zycoo.android.zphone.utils.ZycooConfigurationEntry.DEFAULT_NETWORK_HTTP_HOST);
+                ZycooConfigurationEntry.DEFAULT_NETWORK_HTTP_HOST);
     }
 
     public static String getSIPPort() {
         return sInstance.mConfigurationService.getString(NgnConfigurationEntry.NETWORK_PCSCF_PORT,
-                com.zycoo.android.zphone.utils.ZycooConfigurationEntry.DEFAULT_NETWORK_HTTP_PORT);
+                ZycooConfigurationEntry.DEFAULT_NETWORK_HTTP_PORT);
     }
 
     public static String getHttpPort() {
@@ -109,11 +108,9 @@ public class ZphoneApplication extends NgnApplication {
         }
         return mTrackers.get(trackerId);
     }
-
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
-        Log.d("TAG", "attachBaseContext");
         MultiDex.install(this);
     }
 }

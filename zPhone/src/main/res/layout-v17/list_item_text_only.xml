@@ -19,12 +19,23 @@
             android:textColor="@color/grey_700" />
     </RelativeLayout>
 
-    <TextView
+    <LinearLayout
+        android:id="@+id/id_item_divider_lv"
         android:clickable="false"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:id="@+id/id_item_divider_tv"
-        android:background="@color/grey_300"
+        android:layout_gravity="bottom"
         android:layout_width="match_parent"
-        android:layout_height="1dp" />
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <View
+            android:background="@color/white"
+            android:layout_width="16dp"
+            android:layout_height="1dp" />
+
+        <TextView
+            android:id="@+id/id_item_divider_tv"
+            android:background="@color/grey_300"
+            android:layout_width="match_parent"
+            android:layout_height="1dp" />
+    </LinearLayout>
 </LinearLayout>

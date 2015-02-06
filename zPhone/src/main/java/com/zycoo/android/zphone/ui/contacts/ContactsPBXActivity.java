@@ -39,8 +39,7 @@ import com.zycoo.android.zphone.R;
 import com.zycoo.android.zphone.ZphoneApplication;
 import com.zycoo.android.zphone.ui.dialpad.ScreenAV;
 import com.zycoo.android.zphone.utils.Theme;
-import com.zycoo.android.zphone.utils.Utils;
-import com.zycoo.android.zphone.utils.ZycooConfigurationEntry;
+import com.zycoo.android.zphone.ZycooConfigurationEntry;
 
 import org.asteriskjava.manager.AuthenticationFailedException;
 import org.asteriskjava.manager.ManagerConnection;

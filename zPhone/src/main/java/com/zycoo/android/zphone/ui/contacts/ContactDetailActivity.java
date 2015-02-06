@@ -10,14 +10,11 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.provider.CallLog;
 import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.LoaderManager;
-import android.support.v4.app.NavUtils;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.view.ViewPager;
@@ -25,25 +22,16 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.hp.views.PagerSlidingTabStrip;
 import com.zycoo.android.zphone.BuildConfig;
 import com.zycoo.android.zphone.R;
-import com.zycoo.android.zphone.ZphoneApplication;
-import com.zycoo.android.zphone.ui.dialpad.DialerFragment;
-import com.zycoo.android.zphone.ui.me.MeFragment;
-import com.zycoo.android.zphone.ui.message.MessageFragment;
 import com.zycoo.android.zphone.utils.ImageLoader;
-import com.zycoo.android.zphone.utils.Theme;
 import com.zycoo.android.zphone.utils.Utils;
-import com.zycoo.android.zphone.utils.ZycooConfigurationEntry;
 import com.zycoo.android.zphone.widget.SuperAwesomeCardFragment;
 
 import java.io.FileNotFoundException;
@@ -194,6 +182,10 @@ public class ContactDetailActivity extends SherlockFragmentActivity implements
                             .findFragmentByTag(
                                     "android:switcher:" + R.id.pager + ":0");
                     fragment.setContact(contactName);
+                    ContactVoiceFragment voiceFragment = (ContactVoiceFragment) getSupportFragmentManager()
+                            .findFragmentByTag(
+                                    "android:switcher:" + R.id.pager + ":2");
+                    voiceFragment.setContact(contactName);
                 }
                 break;
         }
@@ -508,7 +500,7 @@ public class ContactDetailActivity extends SherlockFragmentActivity implements
         @SuppressLint("InlinedApi")
         final static String[] PROJECTION = {
                 ContactsContract.Contacts._ID,
-                Utils.hasHoneycomb() ? ContactsContract.Contacts.DISPLAY_NAME_PRIMARY : ContactsContract.Contacts.DISPLAY_NAME,
+                Utils.hasHoneycomb() ? ContactsContract.Contacts.DISPLAY_NAME_PRIMARY : ContactsContract.Contacts.DISPLAY_NAME
         };
 
         // The query column numbers which map to each value in the projection

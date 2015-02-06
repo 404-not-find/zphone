@@ -103,12 +103,15 @@ dependencies {
     compile 'com.github.tony19:logback-android-classic:1.1.1-3'
     compile 'org.slf4j:slf4j-api:1.7.6'
     //----------------------asterisk---------------------------
-    compile files('libs/asterisk-java.jar')
     //http://mvnrepository.com/artifact/org.asteriskjava/asterisk-java/1.0.0.M3
     //compile 'org.asteriskjava:asterisk-java:1.0.0.M3'
-
+    compile files('libs/asterisk-java.jar')
     //---------------android-segmented-control------------------
-    //https://github.com/hoang8f/android-segmented-control
     compile 'info.hoang8f:android-segmented:1.0.4'
+    compile project(':swipeMenuListView')
+    //https://github.com/hoang8f/android-segmented-control
+
+    //---------------https://github.com/koush/AndroidAsync -------
+        compile 'com.koushikdutta.async:androidasync:2.+'
 }
 

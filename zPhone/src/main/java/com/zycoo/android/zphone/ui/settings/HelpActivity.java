@@ -1,12 +1,10 @@
 package com.zycoo.android.zphone.ui.settings;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 
 import com.zycoo.android.zphone.R;
@@ -22,7 +20,7 @@ public class HelpActivity extends BaseScreen
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_about_help);
+		setContentView(R.layout.activity_help);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		mProgressBar = (ProgressBar) findViewById(R.id.web_view_pb);
         mWebView = (WebView) findViewById(R.id.id_about_htlp_wv);

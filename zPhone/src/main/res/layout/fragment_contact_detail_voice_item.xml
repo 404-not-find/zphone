@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/Two_line_list_Text_only"
+    android:layoutDirection="locale"
+    android:id="@+id/voicemail_item_rv"
+    android:layout_width="match_parent">
+
+    <ImageView
+        android:layout_marginEnd="16dp"
+        android:id="@+id/voice_delete"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_centerVertical="true"
+        android:layout_alignParentEnd="true"
+        android:src="@drawable/ic_delete_grey600" />
+
+    <TextView
+        android:id="@+id/time_duration"
+        android:visibility="invisible"
+        style="@style/Two_line_list_Text_only_Text"
+        android:layout_marginTop="@dimen/Two_lines_list_text_only_padding_top"
+        android:layout_marginEnd="@dimen/Two_lines_list_text_only_padding_right"
+        android:layout_toStartOf="@id/voice_delete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/grey_500"
+        android:text="@string/voice_mail"
+        android:textSize="@dimen/Two_lines_list_text_only_text_sec_size" />
+
+    <TextView
+        android:id="@+id/voice_type"
+        style="@style/Two_line_list_Text_only_Text"
+        android:layout_marginEnd="@dimen/Two_lines_list_text_only_padding_right"
+        android:layout_below="@id/time_duration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/grey_500"
+        android:layout_toStartOf="@id/voice_delete"
+        android:text="@string/voice_mail"
+        android:textSize="@dimen/Two_lines_list_text_only_text_sec_size" />
+
+    <TextView
+        android:id="@+id/item_name"
+        android:textDirection="locale"
+        android:textColor="@color/dark_grey"
+        android:layout_toStartOf="@id/time_duration"
+        android:layout_marginTop="@dimen/Two_lines_list_text_only_padding_top"
+        style="@style/Two_line_list_Text_only_Text"
+        android:text="@string/voice_mail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/Two_lines_list_text_only_text_pri_size" />
+
+    <com.github.curioustechizen.ago.RelativeTimeTextView
+        android:textDirection="locale"
+        style="@style/Two_line_list_Text_only_Text"
+        android:id="@+id/time_date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/item_name"
+        android:layout_toStartOf="@id/voice_type"
+        android:text="@string/voice_mail"
+        android:textColor="@color/grey_500"
+        android:textSize="@dimen/Two_lines_list_text_only_text_sec_size" />
+</RelativeLayout>

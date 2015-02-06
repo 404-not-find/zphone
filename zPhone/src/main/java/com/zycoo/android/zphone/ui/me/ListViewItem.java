@@ -7,7 +7,7 @@ public abstract class ListViewItem {
     public static final int TYPE_AVATAR_WITH_TEXT = 0;
     public static final int TYPE_TEXT_ONLY = 1;
     public static final int TYPE_ACCOUNT = 2;
-    public static final int TYPE_WHITE = 3;
+    public static final int TYPE_GREY = 3;
     public static final int TYPE_EXIT = 4;
     public static final int TYPE_SWITCH_ICON_WITH_TEXT = 5;
     public static final int TYPE_SPINNER_WITH_TEXT = 6;

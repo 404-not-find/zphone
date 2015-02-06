@@ -34,7 +34,6 @@ import org.slf4j.LoggerFactory;
  * Created by tqcenglish on 15-1-29.
  */
 public class ContactHistoryFragment extends SuperAwesomeCardFragment implements LoaderManager.LoaderCallbacks<Cursor> {
-
     public final Logger logger;
     private String mContactDisplayName;
     // Defines a tag for identifying log entries

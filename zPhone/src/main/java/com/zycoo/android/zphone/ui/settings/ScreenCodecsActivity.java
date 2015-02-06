@@ -20,26 +20,18 @@
 package com.zycoo.android.zphone.ui.settings;
 
 import android.os.Bundle;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
-import android.widget.GridView;
-import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.zycoo.android.zphone.Engine;
 import com.zycoo.android.zphone.R;
 import com.zycoo.android.zphone.ui.me.ListViewItem;
-import com.zycoo.android.zphone.ui.me.ListViewItemSpinnerWithText;
-import com.zycoo.android.zphone.ui.me.ListViewItemSwitchIconWithText;
 import com.zycoo.android.zphone.ui.me.ListViewItemSwitchIconWithTextCodecs;
 import com.zycoo.android.zphone.ui.me.ListViewItemSwitchIconWithTextViewHolder;
-import com.zycoo.android.zphone.ui.me.ListViewItemWhite;
+import com.zycoo.android.zphone.ui.me.ListViewItemGrey;
 import com.zycoo.android.zphone.utils.Utils;
 
 import org.doubango.ngn.services.INgnConfigurationService;
@@ -64,7 +56,7 @@ public class ScreenCodecsActivity extends BaseScreen implements OnItemClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mCodecs = mConfigurationService.getInt(NgnConfigurationEntry.MEDIA_CODECS, NgnConfigurationEntry.DEFAULT_MEDIA_CODECS);
-        setContentView(R.layout.listview);
+        setContentView(R.layout.settings_listview);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         mListView = (ListView) findViewById(android.R.id.list);
         initData();
@@ -75,7 +67,7 @@ public class ScreenCodecsActivity extends BaseScreen implements OnItemClickListe
     }
     public void initData() {
         List<ListViewItem> arrayItems = new ArrayList<ListViewItem>();
-        arrayItems.add(new ListViewItemWhite(20));
+        arrayItems.add(new ListViewItemGrey(20));
         arrayItems.add(new ListViewItemSwitchIconWithTextCodecs(R.string.pcma, true, codeIsCheck(tdav_codec_id_t.tdav_codec_id_pcma), tdav_codec_id_t.tdav_codec_id_pcma.swigValue()));
         arrayItems.add(new ListViewItemSwitchIconWithTextCodecs(R.string.pcmu, true, codeIsCheck(tdav_codec_id_t.tdav_codec_id_pcmu), tdav_codec_id_t.tdav_codec_id_pcmu.swigValue()));
         if (SipStack.isCodecSupported(tdav_codec_id_t.tdav_codec_id_gsm)) {
@@ -117,7 +109,7 @@ public class ScreenCodecsActivity extends BaseScreen implements OnItemClickListe
                 arrayItems.add(new ListViewItemSwitchIconWithTextCodecs(R.string.opus, true, codeIsCheck(tdav_codec_id_t.tdav_codec_id_opus), tdav_codec_id_t.tdav_codec_id_opus.swigValue()));
 
 
-            arrayItems.add(new ListViewItemWhite(40));
+            arrayItems.add(new ListViewItemGrey(40));
             if (SipStack.isCodecSupported(tdav_codec_id_t.tdav_codec_id_vp8)) {
                 arrayItems.add(new ListViewItemSwitchIconWithTextCodecs(R.string.vp8, true, codeIsCheck(tdav_codec_id_t.tdav_codec_id_vp8), tdav_codec_id_t.tdav_codec_id_vp8.swigValue()));
             }
