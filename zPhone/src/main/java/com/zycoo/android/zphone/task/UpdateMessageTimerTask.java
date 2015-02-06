@@ -1,5 +1,5 @@
 
-package com.zycoo.android.zphone;
+package com.zycoo.android.zphone.task;
 
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Handler;
@@ -8,10 +8,13 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
+import com.zycoo.android.zphone.DatabaseHelper;
+import com.zycoo.android.zphone.HttpConnectBase;
+import com.zycoo.android.zphone.ZphoneApplication;
+import com.zycoo.android.zphone.ZycooConfigurationEntry;
 import com.zycoo.android.zphone.ui.message.MessageFragment;
 import com.zycoo.android.zphone.ui.message.MonitorBean;
 import com.zycoo.android.zphone.ui.message.VoiceMailBean;
-import com.zycoo.android.zphone.utils.ZycooConfigurationEntry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

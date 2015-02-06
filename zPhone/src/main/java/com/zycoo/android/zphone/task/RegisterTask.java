@@ -1,14 +1,16 @@
 
-package com.zycoo.android.zphone;
+package com.zycoo.android.zphone.task;
 
 import android.content.Context;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
 import com.kyleduo.switchbutton.SwitchButton;
+import com.zycoo.android.zphone.Engine;
+import com.zycoo.android.zphone.R;
+import com.zycoo.android.zphone.ZphoneApplication;
 
 import org.doubango.ngn.services.INgnSipService;
-import org.doubango.ngn.sip.NgnSubscriptionSession;
 
 import android.os.Handler;
 

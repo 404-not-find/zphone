@@ -333,9 +333,9 @@ public class MessageAdapter extends BaseExpandableListAdapter {
 
         public VoiceMailViewHolder(View v) {
             v.setTag(R.layout.fragment_message_list_child_voicemail_item, this);
-            dateTv = (RelativeTimeTextView) v.findViewById(R.id.voicemail_date);
-            durationTv = (TextView) v.findViewById(R.id.voicemail_duration);
-            nameTv = (TextView) v.findViewById(R.id.voicemail_name);
+            dateTv = (RelativeTimeTextView) v.findViewById(R.id.time_date);
+            durationTv = (TextView) v.findViewById(R.id.time_duration);
+            nameTv = (TextView) v.findViewById(R.id.item_name);
             mVoicemailItemRv = (RelativeLayout) v.findViewById(R.id.voicemail_item_rv);
         }
     }

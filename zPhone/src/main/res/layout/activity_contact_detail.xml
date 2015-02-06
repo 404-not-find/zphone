@@ -20,9 +20,10 @@
             android:src="@drawable/ic_contact_picture_180_holo_light" />
 
         <com.hp.views.PagerSlidingTabStrip
+            android:textAllCaps="false"
             android:id="@+id/tabs"
             android:layout_width="match_parent"
-            android:layout_height="68dip"
+            android:layout_height="48dp"
             android:layout_below="@id/contact_image"
             android:background="@color/grey_100"
             android:fillViewport="false"

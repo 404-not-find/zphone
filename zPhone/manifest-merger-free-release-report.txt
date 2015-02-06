@@ -309,7 +309,7 @@ ADDED from AndroidManifest.xml:86:9
 		ADDED from AndroidManifest.xml:88:13
 	android:name
 		ADDED from AndroidManifest.xml:87:13
-activity#com.zycoo.android.zphone.AccountSettingsActivity
+activity#com.zycoo.android.zphone.ui.AccountSettingsActivity
 ADDED from AndroidManifest.xml:89:9
 	android:screenOrientation
 		ADDED from AndroidManifest.xml:92:13
@@ -335,7 +335,7 @@ ADDED from AndroidManifest.xml:102:13
 		ADDED from AndroidManifest.xml:104:17
 	android:name
 		ADDED from AndroidManifest.xml:103:17
-activity#com.zycoo.android.zphone.IdentitySettingsActivity
+activity#com.zycoo.android.zphone.ui.IdentitySettingsActivity
 ADDED from AndroidManifest.xml:106:9
 	android:screenOrientation
 		ADDED from AndroidManifest.xml:109:13

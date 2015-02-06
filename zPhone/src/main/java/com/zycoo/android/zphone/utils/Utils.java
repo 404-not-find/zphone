@@ -22,7 +22,6 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
-import android.graphics.Color;
 import android.graphics.ColorFilter;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
@@ -34,6 +33,7 @@ import android.widget.ImageView;
 
 import com.nineoldandroids.view.ViewHelper;
 import com.zycoo.android.zphone.ZphoneApplication;
+import com.zycoo.android.zphone.ZycooConfigurationEntry;
 import com.zycoo.android.zphone.ui.LaunchActivity;
 import com.zycoo.android.zphone.ui.MainActivity;
 

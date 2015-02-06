@@ -43,7 +43,7 @@ import com.actionbarsherlock.view.MenuItem;
 import com.zycoo.android.zphone.Engine;
 import com.zycoo.android.zphone.ui.MainActivity;
 import com.zycoo.android.zphone.R;
-import com.zycoo.android.zphone.UpdateOnlineStatus;
+import com.zycoo.android.zphone.task.UpdateOnlineStatus;
 import com.zycoo.android.zphone.ZphoneApplication;
 import com.zycoo.android.zphone.ui.dialpad.DialerCallBar.OnDialActionListener;
 import com.zycoo.android.zphone.ui.dialpad.DialerLayout.OnAutoCompleteListVisibilityChangedListener;

@@ -66,7 +66,7 @@ import com.zycoo.android.zphone.R;
 import com.zycoo.android.zphone.ZphoneApplication;
 import com.zycoo.android.zphone.ui.dialpad.DtmfDialogFragment.OnDtmfListener;
 import com.zycoo.android.zphone.utils.AndroidUtils;
-import com.zycoo.android.zphone.utils.ZycooConfigurationEntry;
+import com.zycoo.android.zphone.ZycooConfigurationEntry;
 
 import org.doubango.ngn.events.NgnInviteEventArgs;
 import org.doubango.ngn.events.NgnInviteEventTypes;

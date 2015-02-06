@@ -1,4 +1,4 @@
-package com.zycoo.android.zphone.utils;
+package com.zycoo.android.zphone;
 
 public class ZycooConfigurationEntry {
     private static final String TAG = ZycooConfigurationEntry.class.getCanonicalName();
@@ -53,5 +53,7 @@ public class ZycooConfigurationEntry {
     public static final boolean DEFAULT_GENERAL_KEYPAD_TONES = true;
     public static final boolean DEFAULT_GENERAL_PROXIMITY_SENSOR = true;
 
-
+    //first login
+    public static final boolean DEFAULT_FIRST_LOGIN = true;
+    public static final String FIRST_LOGIN = "first_login" + TAG;
 }

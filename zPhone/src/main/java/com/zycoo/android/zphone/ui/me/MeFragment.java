@@ -15,9 +15,9 @@ import android.widget.ListView;
 
 import com.zycoo.android.zphone.ui.settings.HelpActivity;
 import com.zycoo.android.zphone.Engine;
-import com.zycoo.android.zphone.IdentitySettingsActivity;
+import com.zycoo.android.zphone.ui.IdentitySettingsActivity;
 import com.zycoo.android.zphone.R;
-import com.zycoo.android.zphone.UpdateOnlineStatus;
+import com.zycoo.android.zphone.task.UpdateOnlineStatus;
 import com.zycoo.android.zphone.ZphoneApplication;
 import com.zycoo.android.zphone.ui.settings.AboutActivity;
 import com.zycoo.android.zphone.ui.settings.ScreenSettingsActivity;
@@ -119,7 +119,7 @@ public class MeFragment extends SuperAwesomeCardFragment implements AdapterView.
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
 
-                                for (Activity activity : ZphoneApplication.getActivitys()) {
+                                for (Activity activity : ZphoneApplication.getActivityLists()) {
                                     if (!activity.isFinishing()) {
 
                                         activity.finish();

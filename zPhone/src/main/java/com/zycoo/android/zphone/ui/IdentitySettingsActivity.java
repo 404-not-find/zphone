@@ -1,5 +1,5 @@
 
-package com.zycoo.android.zphone;
+package com.zycoo.android.zphone.ui;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -14,7 +14,9 @@ import android.preference.PreferenceFragment;
 
 import com.actionbarsherlock.app.SherlockPreferenceActivity;
 import com.actionbarsherlock.view.MenuItem;
-import com.zycoo.android.zphone.ui.MainActivity;
+import com.zycoo.android.zphone.Engine;
+import com.zycoo.android.zphone.R;
+import com.zycoo.android.zphone.task.RegisterTask;
 
 import org.doubango.ngn.NgnApplication;
 import org.doubango.ngn.services.INgnConfigurationService;

@@ -23,7 +23,6 @@ package com.zycoo.android.zphone.ui.dialpad;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.ColorFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -44,8 +43,7 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.zycoo.android.zphone.R;
 import com.zycoo.android.zphone.ui.settings.BaseScreen;
-import com.zycoo.android.zphone.utils.AndroidUtils;
-import com.zycoo.android.zphone.utils.ZycooConfigurationEntry;
+import com.zycoo.android.zphone.ZycooConfigurationEntry;
 
 import org.doubango.ngn.sip.NgnAVSession;
 import org.doubango.ngn.utils.NgnObservableHashMap;

@@ -38,7 +38,6 @@ import android.graphics.drawable.LayerDrawable;
 import android.graphics.drawable.StateListDrawable;
 import android.graphics.drawable.TransitionDrawable;
 import android.os.Build;
-import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
@@ -51,6 +50,7 @@ import android.widget.TextView;
 //import com.actionbarsherlock.internal.utils.UtilityWrapper;
 import com.zycoo.android.zphone.R;
 import com.zycoo.android.zphone.ZphoneApplication;
+import com.zycoo.android.zphone.ZycooConfigurationEntry;
 
 import java.util.HashMap;
 import java.util.List;

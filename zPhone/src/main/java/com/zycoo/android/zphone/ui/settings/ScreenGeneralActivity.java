@@ -16,7 +16,7 @@ import com.zycoo.android.zphone.ui.me.ListViewItemSwitchIconWithText;
 import com.zycoo.android.zphone.ui.me.ListViewItemSwitchIconWithTextViewHolder;
 import com.zycoo.android.zphone.ui.me.ListViewItemGrey;
 import com.zycoo.android.zphone.utils.Utils;
-import com.zycoo.android.zphone.utils.ZycooConfigurationEntry;
+import com.zycoo.android.zphone.ZycooConfigurationEntry;
 
 import org.doubango.ngn.services.INgnConfigurationService;
 import org.doubango.ngn.utils.NgnConfigurationEntry;

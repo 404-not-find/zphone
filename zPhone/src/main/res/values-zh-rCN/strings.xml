@@ -210,4 +210,14 @@
     <string name="enable_keypad_tones">开启按键拨号音</string>
     <string name="enable_keypad_vibration">开启拨号震动</string>
     <string name="enable_proximity_sensor">开启距离感应传感器</string>
+    <string name="voice_mail_Download">下载语音邮件</string>
+    <string name="voice_download">音频下载</string>
+    <string name="download_in_progress">下载中</string>
+    <string name="downloaded_successful">下载成功</string>
+    <string name="downloaded_file_to">文件存储位置</string>
+    <string name="download_failure">下载文件失败</string>
+    <string name="history">历史记录</string>
+    <string name="contacts_detail">详细</string>
+    <string name="contacts_history">历史</string>
+    <string name="contacts_voice">语音</string>
 </resources>

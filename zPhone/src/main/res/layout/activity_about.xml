@@ -47,7 +47,7 @@
     <TextView
         android:id="@+id/zycoo_copyright"
         android:layout_width="match_parent"
-        android:text="Copyright @ 2006-2015 \n ZYCOO ALL RIGHTS RESERVED"
+        android:text="Copyright © 2006-2015 \n ZYCOO ALL RIGHTS RESERVED"
         android:textSize="14sp"
         android:gravity="center_horizontal|bottom"
         android:paddingBottom="48dp"

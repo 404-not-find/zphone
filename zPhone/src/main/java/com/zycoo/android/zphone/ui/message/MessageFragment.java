@@ -305,6 +305,7 @@ public class MessageFragment extends SuperAwesomeCardFragment implements OnChild
             inbox_or_old = cursor.getString(2);
         }
         cursor.close();
+        rSQLiteDatabase.close();
         String[] result = new String[5];
         result[0] = file_name;
         result[1] = Integer.toString(wd);
@@ -743,9 +744,9 @@ public class MessageFragment extends SuperAwesomeCardFragment implements OnChild
                 mLogger.debug(TAG, "Downloaded file to: " + file.getAbsolutePath());
                 updateDownloadNotification(totalFileLength, totalFileLength);
             } else {
-                mLogger.debug(TAG, "Download failed");
+                mLogger.debug(TAG, "Download failure");
                 //notification
-                mBuilder.setContentTitle("Download failure");
+                mBuilder.setContentTitle(getResources().getString(R.string.download_failure));
                 // Displays the progress bar for the first time.
                 mNotifyManager.notify(0, mBuilder.build());
             }
@@ -756,8 +757,8 @@ public class MessageFragment extends SuperAwesomeCardFragment implements OnChild
             //notification
             mBuilder.setProgress(max, current, false);
             if (current == max) {
-                mBuilder.setContentTitle("Downloaded Successful");
-                mBuilder.setContentText("Downloaded file to: " + file.getAbsolutePath());
+                mBuilder.setContentTitle(getResources().getString(R.string.downloaded_successful));
+                mBuilder.setContentText(getResources().getString(R.string.downloaded_file_to) + " :" + file.getAbsolutePath());
             }
             // Displays the progress bar for the first time.
             mNotifyManager.notify(0, mBuilder.build());
@@ -766,8 +767,8 @@ public class MessageFragment extends SuperAwesomeCardFragment implements OnChild
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            mBuilder.setContentTitle("Audio Download")
-                    .setContentText("Download in progress")
+            mBuilder.setContentTitle(getResources().getString(R.string.voice_download))
+                    .setContentText(getResources().getString(R.string.download_in_progress))
                     .setSmallIcon(R.drawable.ic_cloud_download_grey600);
         }
     }

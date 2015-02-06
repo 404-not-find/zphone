@@ -1,5 +1,5 @@
 
-package com.zycoo.android.zphone;
+package com.zycoo.android.zphone.ui;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -17,6 +17,8 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.RingtonePreference;
 import android.text.TextUtils;
+
+import com.zycoo.android.zphone.R;
 
 import java.util.List;
 

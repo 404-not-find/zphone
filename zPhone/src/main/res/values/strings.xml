@@ -339,4 +339,9 @@
     <string name="operation_successful">operation successful</string>
     <string name="not_register">not register</string>
     <string name="not_empty">Not empty</string>
+    <string name="voice_download">Voice Download</string>
+    <string name="download_in_progress">Download in progress</string>
+    <string name="downloaded_successful">Downloaded Successful</string>
+    <string name="downloaded_file_to">Downloaded file to</string>
+    <string name="download_failure">Download failure</string>
 </resources>

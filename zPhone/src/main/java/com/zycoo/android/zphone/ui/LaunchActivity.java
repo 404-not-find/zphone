@@ -1,4 +1,3 @@
-
 package com.zycoo.android.zphone.ui;
 
 import android.app.Activity;
@@ -14,15 +13,13 @@ import com.zycoo.android.zphone.ZphoneApplication;
 import com.zycoo.android.zphone.ui.settings.BaseScreen.SCREEN_TYPE;
 import com.zycoo.android.zphone.ui.dialpad.ScreenAV;
 import com.zycoo.android.zphone.ui.dialpad.ScreenAVQueue;
-import com.zycoo.android.zphone.utils.Utils;
-import com.zycoo.android.zphone.utils.ZycooConfigurationEntry;
+import com.zycoo.android.zphone.ZycooConfigurationEntry;
 
 import org.doubango.ngn.sip.NgnAVSession;
 import org.doubango.ngn.utils.NgnPredicate;
 import org.doubango.ngn.utils.NgnStringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.slf4j.helpers.Util;
 
 public class LaunchActivity extends Activity {
     private static final String LOG_TAG = LaunchActivity.class.getSimpleName();
@@ -31,12 +28,13 @@ public class LaunchActivity extends Activity {
     public static final int ACTION_NONE = 0;
     public static final int ACTION_RESTORE_LAST_STATE = 1;
     public static final int ACTION_SHOW_AVSCREEN = 2;
-    public static final int ACTION_SHOW_CONTSHARE_SCREEN = 3;
+
+    // remove some funcation
+   /* public static final int ACTION_SHOW_CONTSHARE_SCREEN = 3;
     public static final int ACTION_SHOW_SMS = 4;
-    public static final int ACTION_SHOW_CHAT_SCREEN = 5;
+    public static final int ACTION_SHOW_CHAT_SCREEN = 5;*/
 
     public LaunchActivity() {
-        mLogger.debug("time: " + Utils.getTime());
         mEngine = (Engine) Engine.getInstance();
         mEngine.setMainActivity(this);
     }
@@ -44,37 +42,26 @@ public class LaunchActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mLogger.debug("time: " + Utils.getTime());
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.activity_launch);
+        //setContentView(R.layout.activity_launch);
         setVolumeControlStream(AudioManager.STREAM_VOICE_CALL);
 
-        // Engine未启动时，注册广播接受器，跳转到主界面
         if (!Engine.getInstance().isStarted()) {
-            mLogger.debug("start splashactivity");
+            mLogger.debug("start SplashActivity");
             ZphoneApplication.addActivity(this);
             startActivity(new Intent(this, SplashActivity.class)
                     .addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP));
             return;
         }
-        // TODO 恢复界面
-        // 通过获取的action跳转或进入主界面
-        /* Bundle bundle = savedInstanceState;
-         if (bundle == null)
-         {
-             Intent intent = getIntent();
-             bundle = intent == null ? null : intent.getExtras();
-         }*/
 
         Bundle bundle;
         Intent intent = getIntent();
         bundle = intent == null ? null : intent.getExtras();
-
         if (bundle != null
                 && bundle.getInt("action", LaunchActivity.ACTION_NONE) != LaunchActivity.ACTION_NONE) {
             handleAction(bundle);
         } else {
-            mLogger.debug("start Mainctivity");
+            mLogger.debug("start MainActivity");
             startActivity(new Intent(this, MainActivity.class)
                     .addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP));
             ZphoneApplication.addActivity(this);
@@ -88,7 +75,6 @@ public class LaunchActivity extends Activity {
             case ACTION_RESTORE_LAST_STATE:
                 String id = bundle.getString("screen-id");
                 final String screenTypeStr = bundle.getString("screen-type");
-
                 final SCREEN_TYPE screenType = NgnStringUtils.isNullOrEmpty(screenTypeStr) ? SCREEN_TYPE.HOME_T
                         : SCREEN_TYPE.valueOf(screenTypeStr);
                 switch (screenType) {
@@ -107,7 +93,6 @@ public class LaunchActivity extends Activity {
                 break;
             // Show Audio/Video Calls
             case ACTION_SHOW_AVSCREEN:
-                Log.d(LOG_TAG, "Main.ACTION_SHOW_AVSCREEN");
                 final int activeSessionsCount = NgnAVSession
                         .getSize(new NgnPredicate<NgnAVSession>() {
                             @Override

@@ -13,7 +13,7 @@ import android.widget.TextView;
 import com.kyleduo.switchbutton.SwitchButton;
 import com.zycoo.android.zphone.Engine;
 import com.zycoo.android.zphone.R;
-import com.zycoo.android.zphone.RegisterTask;
+import com.zycoo.android.zphone.task.RegisterTask;
 import com.zycoo.android.zphone.ZphoneApplication;
 import com.zycoo.android.zphone.utils.Utils;
 

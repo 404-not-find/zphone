@@ -6,7 +6,7 @@
     android:layout_width="match_parent">
 
     <TextView
-        android:id="@+id/voicemail_duration"
+        android:id="@+id/time_duration"
         style="@style/Two_line_list_Text_only_Text"
         android:layout_marginTop="@dimen/Two_lines_list_text_only_padding_top"
         android:layout_marginEnd="@dimen/Two_lines_list_text_only_padding_right"
@@ -18,10 +18,10 @@
         android:textSize="@dimen/Two_lines_list_text_only_text_sec_size" />
 
     <TextView
-        android:id="@+id/voicemail_name"
+        android:id="@+id/item_name"
         android:textDirection="locale"
         android:textColor="@color/dark_grey"
-        android:layout_toStartOf="@id/voicemail_duration"
+        android:layout_toStartOf="@id/time_duration"
         android:layout_marginTop="@dimen/Two_lines_list_text_only_padding_top"
         style="@style/Two_line_list_Text_only_Text"
         android:text="@string/voice_mail"
@@ -32,10 +32,10 @@
     <com.github.curioustechizen.ago.RelativeTimeTextView
         android:textDirection="locale"
         style="@style/Two_line_list_Text_only_Text"
-        android:id="@+id/voicemail_date"
+        android:id="@+id/time_date"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/voicemail_name"
+        android:layout_below="@id/item_name"
         android:text="@string/voice_mail"
         android:textColor="@color/grey_500"
         android:textSize="@dimen/Two_lines_list_text_only_text_sec_size" />

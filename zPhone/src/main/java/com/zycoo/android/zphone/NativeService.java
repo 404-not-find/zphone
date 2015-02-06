@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.zycoo.android.zphone.task.RegisterTask;
 import com.zycoo.android.zphone.mqtt.ActionListener;
 import com.zycoo.android.zphone.mqtt.ActionListener.Action;
 import com.zycoo.android.zphone.mqtt.ActivityConstants;
@@ -272,10 +273,10 @@ public class NativeService extends NgnNativeService implements MqttCallback, Obs
         new Thread() {
             @Override
             public void run() {
-                if (bundle != null && bundle.getBoolean("autostarted")) {
+                boolean isFirst = mEngine.getConfigurationService().getBoolean(ZycooConfigurationEntry.FIRST_LOGIN, ZycooConfigurationEntry.DEFAULT_FIRST_LOGIN);
+                if (bundle != null && bundle.getBoolean("autostarted") && !isFirst) {
                     if (new NetWorkUtils()
                             .isNetworkConnected(ZphoneApplication.getContext())) {
-                        mLogger.debug("autostarted ....");
                         mEngine.getSipService().register(null);
                     }
                 }
@@ -284,7 +285,6 @@ public class NativeService extends NgnNativeService implements MqttCallback, Obs
                         connectAction();
                     }
                 }
-                mLogger.debug("send ACTION_STATE_EVENT");
                 final Intent i = new Intent(ACTION_STATE_EVENT);
                 i.putExtra("started", true);
                 sendBroadcast(i);
