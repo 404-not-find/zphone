@@ -14,9 +14,9 @@ import com.zycoo.android.zphone.ui.me.ListViewItem;
 import com.zycoo.android.zphone.ui.me.ListViewItemSpinnerWithText;
 import com.zycoo.android.zphone.ui.me.ListViewItemSwitchIconWithText;
 import com.zycoo.android.zphone.ui.me.ListViewItemSwitchIconWithTextViewHolder;
-import com.zycoo.android.zphone.ui.me.ListViewItemWhite;
+import com.zycoo.android.zphone.ui.me.ListViewItemGrey;
 import com.zycoo.android.zphone.utils.Utils;
-import com.zycoo.android.zphone.utils.ZycooConfigurationEntry;
+import com.zycoo.android.zphone.ZycooConfigurationEntry;
 
 import org.doubango.ngn.services.INgnConfigurationService;
 import org.doubango.ngn.utils.NgnConfigurationEntry;
@@ -50,14 +50,11 @@ public class ScreenGeneralActivity extends BaseScreen implements AdapterView.OnI
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.listview);
+        setContentView(R.layout.settings_listview);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         mListView = (ListView) findViewById(android.R.id.list);
         items = new ListViewItem[ITEMS_NUMBER];
         new InitDataTask().execute();
-
-        adapter = new ScreenSettingsAdapter(this, items);
-        mListView.setAdapter(adapter);
         mListView.setOnItemClickListener(this);
     }
 
@@ -74,6 +71,8 @@ public class ScreenGeneralActivity extends BaseScreen implements AdapterView.OnI
 
         @Override
         protected void onPostExecute(Void aVoid) {
+            adapter = new ScreenSettingsAdapter(ScreenGeneralActivity.this, items);
+            mListView.setAdapter(adapter);
             adapter.notifyDataSetInvalidated();
             super.onPostExecute(aVoid);
         }
@@ -87,16 +86,16 @@ public class ScreenGeneralActivity extends BaseScreen implements AdapterView.OnI
     }
 
     public void initData() {
-        items[0] = new ListViewItemWhite(20);
+        items[0] = new ListViewItemGrey(20);
         items[1] = new ListViewItemSwitchIconWithText(R.string.enable_aec, true, mConfigurationService.getBoolean(NgnConfigurationEntry.GENERAL_AEC, NgnConfigurationEntry.DEFAULT_GENERAL_AEC));
         items[2] = new ListViewItemSwitchIconWithText(R.string.voice_activity_detector, true, mConfigurationService.getBoolean(NgnConfigurationEntry.GENERAL_VAD, NgnConfigurationEntry.DEFAULT_GENERAL_VAD));
         items[3] = new ListViewItemSwitchIconWithText(R.string.noise_reduction, true, mConfigurationService.getBoolean(NgnConfigurationEntry.GENERAL_NR, NgnConfigurationEntry.DEFAULT_GENERAL_NR));
         items[4] = new ListViewItemSwitchIconWithText(R.string.launch_when_system_starts, true, mConfigurationService.getBoolean(NgnConfigurationEntry.GENERAL_AUTOSTART, NgnConfigurationEntry.DEFAULT_GENERAL_AUTOSTART));
         items[5] = new ListViewItemSwitchIconWithText(R.string.intercept_outgoing_calls, false, mConfigurationService.getBoolean(NgnConfigurationEntry.GENERAL_INTERCEPT_OUTGOING_CALLS, NgnConfigurationEntry.DEFAULT_GENERAL_INTERCEPT_OUTGOING_CALLS));
-        items[6] = new ListViewItemWhite(40);
+        items[6] = new ListViewItemGrey(40);
         items[7] = new ListViewItemSwitchIconWithText(R.string.enable_video_full_screen_mode, true, mConfigurationService.getBoolean(NgnConfigurationEntry.GENERAL_FULL_SCREEN_VIDEO, NgnConfigurationEntry.DEFAULT_GENERAL_FULL_SCREEN_VIDEO));
         items[8] = new ListViewItemSwitchIconWithText(R.string.enable_front_facing_camera, false, mConfigurationService.getBoolean(NgnConfigurationEntry.GENERAL_USE_FFC, NgnConfigurationEntry.DEFAULT_GENERAL_USE_FFC));
-        items[9] = new ListViewItemWhite(40);
+        items[9] = new ListViewItemGrey(40);
         items[10] = new ListViewItemSpinnerWithText(R.string.media_profile, R.layout.list_item_setting_spinner, true, Profile.getSpinnerIndex(tmedia_profile_t.valueOf(mConfigurationService.getString(
                 NgnConfigurationEntry.MEDIA_PROFILE,
                 NgnConfigurationEntry.DEFAULT_MEDIA_PROFILE))));
@@ -104,11 +103,11 @@ public class ScreenGeneralActivity extends BaseScreen implements AdapterView.OnI
                 mConfigurationService.getFloat(
                         NgnConfigurationEntry.GENERAL_AUDIO_PLAY_LEVEL,
                         NgnConfigurationEntry.DEFAULT_GENERAL_AUDIO_PLAY_LEVEL)));
-        items[12] = new ListViewItemWhite(40);
+        items[12] = new ListViewItemGrey(40);
         items[13] = new ListViewItemSwitchIconWithText(R.string.enable_keypad_tones, true, mConfigurationService.getBoolean(ZycooConfigurationEntry.GENERAL_KEYPAD_TONES, ZycooConfigurationEntry.DEFAULT_GENERAL_KEYPAD_TONES));
         items[14] = new ListViewItemSwitchIconWithText(R.string.enable_keypad_vibration, true, mConfigurationService.getBoolean(ZycooConfigurationEntry.GENERAL_KEYPAD_VIBRATION, ZycooConfigurationEntry.DEFAULT_GENERAL_KEYPAD_VIBRATION));
         items[15] = new ListViewItemSwitchIconWithText(R.string.enable_proximity_sensor, false, mConfigurationService.getBoolean(ZycooConfigurationEntry.GENERAL_PROXIMITY_SENSOR, ZycooConfigurationEntry.DEFAULT_GENERAL_PROXIMITY_SENSOR));
-        items[16] = new ListViewItemWhite(80);
+        items[16] = new ListViewItemGrey(80);
     }
 
     @Override

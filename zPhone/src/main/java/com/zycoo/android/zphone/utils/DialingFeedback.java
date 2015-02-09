@@ -34,6 +34,7 @@ import android.media.ToneGenerator;
 import android.os.Vibrator;
 
 import com.zycoo.android.zphone.Engine;
+import com.zycoo.android.zphone.ZycooConfigurationEntry;
 
 import org.doubango.ngn.services.INgnConfigurationService;
 

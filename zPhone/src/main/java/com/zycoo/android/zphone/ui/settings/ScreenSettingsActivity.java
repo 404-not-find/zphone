@@ -13,7 +13,7 @@ import com.zycoo.android.zphone.R;
 import com.zycoo.android.zphone.ui.me.ListViewItem;
 import com.zycoo.android.zphone.ui.me.ListViewItemAvatarWithText;
 import com.zycoo.android.zphone.ui.me.ListViewItemTextOnly;
-import com.zycoo.android.zphone.ui.me.ListViewItemWhite;
+import com.zycoo.android.zphone.ui.me.ListViewItemGrey;
 import com.zycoo.android.zphone.utils.Utils;
 
 import org.slf4j.Logger;
@@ -49,11 +49,11 @@ public class ScreenSettingsActivity extends BaseScreen implements OnItemClickLis
 
     public void initData() {
         items = new ListViewItem[8];
-        items[0] = new ListViewItemWhite(20);
+        items[0] = new ListViewItemGrey(20);
         items[1] = new ListViewItemAvatarWithText(R.string.general, R.drawable.ic_settings_input_composite_white, true);
         items[2] = new ListViewItemAvatarWithText(R.string.network, R.drawable.ic_settings_input_antenna_white, true);
         items[3] = new ListViewItemAvatarWithText(R.string.security, R.drawable.ic_lock_white, false);
-        items[4] = new ListViewItemWhite(40);
+        items[4] = new ListViewItemGrey(40);
         items[5] = new ListViewItemTextOnly(R.string.codecs, true);
         items[6] = new ListViewItemTextOnly(R.string.qos_qoe, true);
         items[7] = new ListViewItemTextOnly(R.string.natt, false);

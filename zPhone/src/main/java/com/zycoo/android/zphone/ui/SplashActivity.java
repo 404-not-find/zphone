@@ -12,10 +12,10 @@ import android.view.Window;
 import android.widget.ProgressBar;
 
 import com.zycoo.android.zphone.Engine;
-import com.zycoo.android.zphone.IdentitySettingsActivity;
 import com.zycoo.android.zphone.NativeService;
 import com.zycoo.android.zphone.R;
 import com.zycoo.android.zphone.utils.Utils;
+import com.zycoo.android.zphone.ZycooConfigurationEntry;
 
 import org.doubango.ngn.services.INgnConfigurationService;
 import org.doubango.ngn.utils.NgnConfigurationEntry;
@@ -30,9 +30,8 @@ public class SplashActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mLogger.debug("onCreate" + Utils.getTime());
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.activity_launch);
+        setContentView(R.layout.activity_splash);
         ProgressBar progressBar = (ProgressBar) findViewById(R.id.id_launch_pgb);
         progressBar.setVisibility(View.VISIBLE);
         //水波效果加载
@@ -58,13 +57,12 @@ public class SplashActivity extends Activity {
                 if (NativeService.ACTION_STATE_EVENT.equals(intent.getAction())) {
                     if (intent.getBooleanExtra("started", false)) {
                         //TODO CheckNewWork
-                        //check wheather first Login
+                        //check weather first Login ?
                         INgnConfigurationService configurationService = Engine.getInstance()
                                 .getConfigurationService();
-                        boolean isFirst = configurationService.getBoolean("first_login", true);
+                        boolean isFirst = configurationService.getBoolean(ZycooConfigurationEntry.FIRST_LOGIN, ZycooConfigurationEntry.DEFAULT_FIRST_LOGIN);
                         if (isFirst) {
-                            configurationService.putBoolean("first_login", false);
-
+                            configurationService.putBoolean(ZycooConfigurationEntry.FIRST_LOGIN, false);
                             startActivity(new Intent(SplashActivity.this,
                                     IdentitySettingsActivity.class));
                         } else {
@@ -79,7 +77,6 @@ public class SplashActivity extends Activity {
                 }
             }
         };
-        //ZphoneApplication.addActivity(this);
         // NativeService.ACTION_STATE_EVENT
         final IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(NativeService.ACTION_STATE_EVENT);
@@ -101,14 +98,7 @@ public class SplashActivity extends Activity {
             @Override
             public void run() {
                 if (!Engine.getInstance().isStarted()) {
-                    if(Engine.getInstance().start())
-                    {
-                        mLogger.debug("engine start ok");
-                    }
-                    else
-                    {
-                        mLogger.debug("engine start failure");
-                    }
+                    Engine.getInstance().start();
                 }
             }
         });

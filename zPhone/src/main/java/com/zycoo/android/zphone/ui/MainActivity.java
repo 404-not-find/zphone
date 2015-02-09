@@ -55,7 +55,7 @@ import com.zycoo.android.zphone.ui.message.MessageFragment;
 import com.zycoo.android.zphone.ui.message.MessageAdapter;
 import com.zycoo.android.zphone.utils.Theme;
 import com.zycoo.android.zphone.utils.Utils;
-import com.zycoo.android.zphone.utils.ZycooConfigurationEntry;
+import com.zycoo.android.zphone.ZycooConfigurationEntry;
 import com.zycoo.android.zphone.ui.me.MeFragment;
 import com.zycoo.android.zphone.widget.SuperAwesomeCardFragment;
 
@@ -273,18 +273,6 @@ public class MainActivity extends SherlockFragmentActivity implements
                     }
                     if (null != meFragment && meFragment.isVisible()) {
                         meFragment.statusChange(args.getEventType());
-                    }
-
-                    switch (args.getEventType()) {
-                        case REGISTRATION_OK:
-                            // TQC
-                            // Create subscriptionSession
-                            break;
-                        case UNREGISTRATION_OK:
-
-                            break;
-                        default:
-                            break;
                     }
 
                 }

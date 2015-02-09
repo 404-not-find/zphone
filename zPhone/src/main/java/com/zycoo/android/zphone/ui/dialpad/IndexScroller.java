@@ -22,7 +22,7 @@ public class IndexScroller {
      * Add additional properties for customization
      */
     // Hung - store the last touch down eventX and eventY so that we can detect where user click on list view
-    // indexscroller will override touch event of listview, so onclicklistener will not work
+    // indexscroller will override touch event of fragment_message_listview, so onclicklistener will not work
     private float lastTouchDownEventX = -1;
     private float lastTouchDownEventY = -1;
 
@@ -119,7 +119,7 @@ public class IndexScroller {
 
             // Preview is shown when mCurrentSection is set
             // mCurrentSection is the letter that is being pressed
-            // this will draw the big preview text on top of the listview
+            // this will draw the big preview text on top of the fragment_message_listview
             Paint previewPaint = new Paint();
             previewPaint.setColor(Color.BLACK);
             previewPaint.setAlpha(96);
@@ -164,7 +164,7 @@ public class IndexScroller {
     public boolean onTouchEvent(MotionEvent ev) {
         switch (ev.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                lastTouchDownEventX = ev.getX(); // Hung capture the event for later use in listview item click
+                lastTouchDownEventX = ev.getX(); // Hung capture the event for later use in fragment_message_listview item click
                 lastTouchDownEventY = ev.getY();
 
                 // If down event occurs inside index bar region, start indexing

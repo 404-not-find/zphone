@@ -187,6 +187,25 @@
     <dimen name="avatar_with_text_text_padding_top">20dp</dimen>
     <dimen name="avatar_with_text_text_padding_bottom">24dp</dimen>
 
+    <!--Avatar with text and icon-->
+    <dimen name="avatar_with_text_and_icon_text_size">16sp</dimen>
+    <dimen name="avatar_with_text_and_icon_height">56dp</dimen>
+    <dimen name="avatar_with_text_and_icon_avatar_padding_left">16dp</dimen>
+    <dimen name="avatar_with_text_and_icon_icon_padding_right">16dp</dimen>
+    <dimen name="avatar_with_text_and_icon_text_padding_left">72dp</dimen>
+    <dimen name="avatar_with_text_and_icon_text_padding_top">20dp</dimen>
+    <dimen name="avatar_with_text_and_icon_text_padding_bottom">24dp</dimen>
+
+    <!-- Two-lines list Text only -->
+    <!-- Text only-->
+    <dimen name="Two_lines_list_text_only_text_pri_size">16sp</dimen>
+    <dimen name="Two_lines_list_text_only_text_sec_size">14sp</dimen>
+    <dimen name="Two_lines_list_text_only_height">72dp</dimen>
+    <dimen name="Two_lines_list_text_only_padding_left">16dp</dimen>
+    <dimen name="Two_lines_list_text_only_padding_right">16dp</dimen>
+    <dimen name="Two_lines_list_text_only_padding_top">20dp</dimen>
+    <dimen name="Two_lines_list_text_only_padding_bottom">20dp</dimen>
+
     <!-- Three-line list Avatar with text -->
     <dimen name="three_list_avatar_with_text_primary_text_size">16sp</dimen>
     <dimen name="three_list_avatar_with_text_secondary_text_size">14sp</dimen>

@@ -159,6 +159,7 @@
         android:layout_weight="@integer/dialpad_layout_weight_autocomplete_list"
         android:background="@color/grey_100"
         android:smoothScrollbar="true"
+        android:verticalScrollbarPosition="left"
         android:visibility="gone" />
 
     <!-- Keypad section -->

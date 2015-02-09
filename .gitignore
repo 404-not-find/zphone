@@ -5,3 +5,4 @@ import-summary.txt
 local.properties
 ZPhone.iml
 *.apk
+*.iml

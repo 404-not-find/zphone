@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<<<<<<< HEAD
 <module external.linked.project.path="$MODULE_DIR$" external.root.project.path="$MODULE_DIR$/.." external.system.id="GRADLE" external.system.module.group="CooCall" external.system.module.version="unspecified" type="JAVA_MODULE" version="4">
+=======
+<module external.linked.project.path="$MODULE_DIR$" external.root.project.path="$MODULE_DIR$/.." external.system.id="GRADLE" external.system.module.group="ZPhone" external.system.module.version="unspecified" type="JAVA_MODULE" version="4">
+>>>>>>> df54e34c679f43495f6cb0f39bb87d80065e804c
   <component name="FacetManager">
     <facet type="android-gradle" name="Android-Gradle">
       <configuration>
@@ -121,9 +125,15 @@
     <orderEntry type="library" exported="" name="multithread-0.0.7" level="project" />
     <orderEntry type="library" exported="" name="library-2.4.0" level="project" />
     <orderEntry type="library" exported="" name="support-v4-21.0.3" level="project" />
+<<<<<<< HEAD
     <orderEntry type="library" exported="" name="com.amulyakhare.textdrawable-1.0.1" level="project" />
     <orderEntry type="library" exported="" name="apktool-lib-1.4.4-3" level="project" />
     <orderEntry type="library" exported="" name="downloader-1.0" level="project" />
+=======
+    <orderEntry type="library" exported="" name="apktool-lib-1.4.4-3" level="project" />
+    <orderEntry type="library" exported="" name="downloader-1.0" level="project" />
+    <orderEntry type="library" exported="" name="androidasync-2.0.5" level="project" />
+>>>>>>> df54e34c679f43495f6cb0f39bb87d80065e804c
     <orderEntry type="library" exported="" name="ormlite-core-4.47" level="project" />
     <orderEntry type="library" exported="" name="fgelv-0.1.2" level="project" />
     <orderEntry type="library" exported="" name="multidex-1.0.0" level="project" />
@@ -131,9 +141,13 @@
     <orderEntry type="library" exported="" name="support-annotations-21.0.3" level="project" />
     <orderEntry type="library" exported="" name="logback-android-classic-1.1.1-3" level="project" />
     <orderEntry type="library" exported="" name="actionbarsherlock-4.4.0" level="project" />
+<<<<<<< HEAD
     <orderEntry type="library" exported="" name="recyclerview-v7-21.0.0" level="project" />
+=======
+>>>>>>> df54e34c679f43495f6cb0f39bb87d80065e804c
     <orderEntry type="library" exported="" name="simple-xml-2.3.4" level="project" />
     <orderEntry type="module" module-name="switchButton" exported="" />
+    <orderEntry type="module" module-name="swipeMenuListView" exported="" />
     <orderEntry type="module" module-name="VLCLibrary" exported="" />
     <orderEntry type="module" module-name="androidngnstack" exported="" />
     <orderEntry type="module" module-name="paho" exported="" />

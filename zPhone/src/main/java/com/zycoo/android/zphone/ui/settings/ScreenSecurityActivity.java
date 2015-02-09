@@ -1,28 +1,14 @@
 package com.zycoo.android.zphone.ui.settings;
 
-import android.app.Activity;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.CompoundButton.OnCheckedChangeListener;
-import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.Spinner;
 
 import com.zycoo.android.zphone.Engine;
 import com.zycoo.android.zphone.R;
 import com.zycoo.android.zphone.ui.me.ListViewItem;
 import com.zycoo.android.zphone.ui.me.ListViewItemSpinnerWithText;
-import com.zycoo.android.zphone.ui.me.ListViewItemWhite;
+import com.zycoo.android.zphone.ui.me.ListViewItemGrey;
 
 import org.doubango.ngn.services.INgnConfigurationService;
 import org.doubango.ngn.utils.NgnConfigurationEntry;
@@ -54,7 +40,7 @@ public class ScreenSecurityActivity extends BaseScreen {
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.listview);
+        setContentView(R.layout.settings_listview);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         mListView = (ListView) findViewById(android.R.id.list);
         initData();
@@ -64,7 +50,7 @@ public class ScreenSecurityActivity extends BaseScreen {
 
     private void initData() {
         items = new ListViewItem[3];
-        items[0] = new ListViewItemWhite(20);
+        items[0] = new ListViewItemGrey(20);
         items[1] = new ListViewItemSpinnerWithText(R.string.srtp_mode, R.layout.list_item_setting_spinner, true,
                 ScreenSecuritySRtpMode.getSpinnerIndex(tmedia_srtp_mode_t.valueOf(mConfigurationService.getString(
                         NgnConfigurationEntry.SECURITY_SRTP_MODE,

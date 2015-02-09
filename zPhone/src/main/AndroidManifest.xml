@@ -87,7 +87,7 @@
             android:name=".ui.dialpad.ScreenAV"
             android:screenOrientation="portrait"></activity>
         <activity
-            android:name=".AccountSettingsActivity"
+            android:name=".ui.AccountSettingsActivity"
             android:label="@string/title_activity_settings"
             android:screenOrientation="portrait"></activity>
 
@@ -105,7 +105,7 @@
         </activity>
         <activity
             android:label="@string/account"
-            android:name=".IdentitySettingsActivity"
+            android:name=".ui.IdentitySettingsActivity"
             android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

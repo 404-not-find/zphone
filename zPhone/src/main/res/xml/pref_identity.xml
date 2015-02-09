@@ -3,10 +3,10 @@
     <!-- These settings headers are only used on tablets. -->
 
     <header
-        android:fragment="com.zycoo.android.zphone.IdentitySettingsActivity$AcountPreferenceFragment"
+        android:fragment="com.zycoo.android.zphone.ui.IdentitySettingsActivity$AcountPreferenceFragment"
         android:title="@string/pref_header_identity_acount" />
     <header
-        android:fragment="com.zycoo.android.zphone.IdentitySettingsActivity$AMIAcountPreferenceFragment"
+        android:fragment="com.zycoo.android.zphone.ui.IdentitySettingsActivity$AMIAcountPreferenceFragment"
         android:title="@string/pref_header_identity_ami_acount"
          />
 
