@@ -110,5 +110,12 @@ dependencies {
     //---------------android-segmented-control------------------
     //https://github.com/hoang8f/android-segmented-control
     compile 'info.hoang8f:android-segmented:1.0.4'
+
+    //--------------floatingactionbutton -----------------------
+    //https://github.com/makovkastar/FloatingActionButton
+    compile 'com.melnykov:floatingactionbutton:1.1.0'
+    //------------------------textdrawable-----------------------
+    //https://github.com/amulyakhare/TextDrawable
+    compile 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'
 }
 
