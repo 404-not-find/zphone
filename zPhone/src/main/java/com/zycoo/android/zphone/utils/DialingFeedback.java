@@ -61,7 +61,6 @@ public class DialingFeedback {
     private boolean inCall;
     private int toneStream;
     private Activity context;
-
     private ToneGenerator toneGenerator = null;
     private Object toneGeneratorLock = new Object();
     private Vibrator vibrator = null;

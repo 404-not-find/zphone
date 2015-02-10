@@ -70,7 +70,6 @@ dependencies {
     compile project(':switchButton')
     compile project(':VLCLibrary')
     compile project(':paho')
-    compile project(':swipeMenuListView')
     compile 'com.diegocarloslima:fgelv:0.1.+@aar'
     compile 'com.github.snowdream.android.util:log:1.0.4'
     compile 'com.github.snowdream.android.app:downloader:1.0'
@@ -78,10 +77,16 @@ dependencies {
     compile 'com.github.kevinsawicki:http-request:5.5'
     compile 'com.github.snowdream.android.app:updater:1.0@aar'
     compile 'com.android.support:support-v4:21.0.+'
+    //compile 'com.android.support:recyclerview-v7:21.0.2'
     compile 'com.google.android.gms:play-services:6.5.87'
     compile 'com.google.code.gson:gson:2.3.1'
     compile 'com.actionbarsherlock:actionbarsherlock:4.4.0@aar'
+
+    //--------------------nineoldandroids-------------------
+    //https://github.com/JakeWharton/NineOldAndroids/
     compile 'com.nineoldandroids:library:2.4.0'
+
+
     //--------------------android-validation-komensky--------
     //https://github.com/inmite/android-validation-komensky
     //检查输入是否合法
@@ -117,11 +122,13 @@ dependencies {
 
     //--------------floatingactionbutton -----------------------
     //https://github.com/makovkastar/FloatingActionButton
+    //https://github.com/futuresimple/android-floating-action-button api>=14
     compile 'com.melnykov:floatingactionbutton:1.1.0'
 
     //------------------------textdrawable-----------------------
+    // api >= 10
     //https://github.com/amulyakhare/TextDrawable
-    compile 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'
+    //compile 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'
 
     //---------------androidasync-------\
     //https://github.com/koush/AndroidAsync

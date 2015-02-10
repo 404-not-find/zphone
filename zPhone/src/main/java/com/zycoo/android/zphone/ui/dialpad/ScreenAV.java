@@ -1093,7 +1093,6 @@ public class ScreenAV extends SherlockFragmentActivity implements OnClickListene
         @Override
         public void onSensorChanged(SensorEvent event) {
             float[] its = event.values;
-
             try { // Keep it until we get a phone supporting this feature
                 if (mAVScreen == null) {
                     Log.e(ScreenAV.TAG, "invalid state");
