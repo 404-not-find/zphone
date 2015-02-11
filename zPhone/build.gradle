@@ -22,7 +22,7 @@ android {
         }
         free {
             applicationId = "com.zycoo.android.zphone.free"
-            minSdkVersion 8
+            minSdkVersion 10
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
             targetSdkVersion 21
             testInstrumentationRunner 'android.test.'
@@ -37,7 +37,7 @@ android {
     defaultConfig {
         //applicationId "com.zycoo.android.zphone"
         manifestPlaceholders = [FLAVORS_VALUE: "pro"];
-        minSdkVersion 8
+        minSdkVersion 10
         targetSdkVersion 21
         multiDexEnabled true
         testApplicationId "com.zycoo.android.zphone.test"
