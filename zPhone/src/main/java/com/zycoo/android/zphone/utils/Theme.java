@@ -21,7 +21,6 @@
 
 package com.zycoo.android.zphone.utils;
 
-import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -47,7 +46,8 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-//import com.actionbarsherlock.internal.utils.UtilityWrapper;
+import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.zycoo.android.zphone.R;
 import com.zycoo.android.zphone.ZphoneApplication;
 import com.zycoo.android.zphone.ZycooConfigurationEntry;
@@ -57,7 +57,7 @@ import java.util.List;
 
 /**
  * 对主题进行管理
- * 
+ *
  * @author tqcenglish Oct 14, 2014 2:16:10 PM
  */
 public class Theme {
@@ -70,8 +70,7 @@ public class Theme {
     private PackageInfo pInfos = null;
     private Drawable oldBackground = null;
 
-    public Theme(Context context, Handler handler)
-    {
+    public Theme(Context context, Handler handler) {
         this.context = context;
         this.handler = handler;
     }
@@ -189,17 +188,17 @@ public class Theme {
         StateListDrawable std = null;
         if (pressed != null && focused != null && normal != null) {
             std = new StateListDrawable();
-            std.addState(new int[] {
+            std.addState(new int[]{
                     android.R.attr.state_pressed
             }, pressed);
-            std.addState(new int[] {
+            std.addState(new int[]{
                     android.R.attr.state_focused
             }, focused);
-            std.addState(new int[] {}, normal);
+            std.addState(new int[]{}, normal);
         }
 
         if (std != null) {
-           // UtilityWrapper.getInstance().setBackgroundDrawable(v, std);
+            // UtilityWrapper.getInstance().setBackgroundDrawable(v, std);
         }
     }
 
@@ -214,20 +213,20 @@ public class Theme {
         StateListDrawable std = null;
         if (pressed != null && focused != null && selected != null && unselected != null) {
             std = new StateListDrawable();
-            std.addState(new int[] {
+            std.addState(new int[]{
                     android.R.attr.state_pressed
             }, pressed);
-            std.addState(new int[] {
+            std.addState(new int[]{
                     android.R.attr.state_focused
             }, focused);
-            std.addState(new int[] {
+            std.addState(new int[]{
                     android.R.attr.state_selected
             }, selected);
-            std.addState(new int[] {}, unselected);
+            std.addState(new int[]{}, unselected);
         }
 
         if (std != null) {
-           // UtilityWrapper.getInstance().setBackgroundDrawable(v, std);
+            // UtilityWrapper.getInstance().setBackgroundDrawable(v, std);
         }
     }
 
@@ -293,7 +292,7 @@ public class Theme {
     /**
      * Fix the repeatable background of a drawable. This support both bitmap and
      * layer drawables
-     * 
+     *
      * @param d the drawable to fix.
      */
     public static void fixRepeatableDrawable(Drawable d) {
@@ -314,7 +313,7 @@ public class Theme {
     /**
      * Fix the repeatable background of a bitmap drawable. This only support a
      * BitmapDrawable
-     * 
+     *
      * @param d the BitmapDrawable to set repeatable.
      */
     public static void fixRepeatableBitmapDrawable(BitmapDrawable d) {
@@ -328,51 +327,49 @@ public class Theme {
 
     }
 
-    public void changeActionBarColor(int newColor)
-    {
-        // change ActionBar color just if an ActionBar is available
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            Drawable colorDrawable = new ColorDrawable(newColor);
-            Drawable bottomDrawable = context.getResources().getDrawable(
-                    R.drawable.actionbar_bottom);
-            LayerDrawable ld = new LayerDrawable(new Drawable[] {
-                    colorDrawable, bottomDrawable
-            });
-            if (oldBackground == null) {
-                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) {
-                    ld.setCallback(drawableCallback);
-                } else {
-                    ((Activity) context).getActionBar().setBackgroundDrawable(ld);
-                }
+    /**
+     * change ActionBar color just if an ActionBar is available
+     *
+     * @param newColor color id
+     */
+    public void changeActionBarColor(int newColor) {
+        Drawable colorDrawable = new ColorDrawable(newColor);
+        Drawable bottomDrawable = context.getResources().getDrawable(
+                R.drawable.actionbar_bottom);
+        LayerDrawable ld = new LayerDrawable(new Drawable[]{
+                colorDrawable, bottomDrawable
+        });
+        if (oldBackground == null) {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                ld.setCallback(drawableCallback);
             } else {
-                TransitionDrawable td = new TransitionDrawable(new Drawable[] {
-                        oldBackground, ld
-                });
-                // workaround for broken ActionBarContainer drawable handling on
-                // pre-API 17 builds
-                // https://github.com/android/platform_frameworks_base/commit/a7cc06d82e45918c37429a59b14545c6a57db4e4
-                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) {
-                    td.setCallback(drawableCallback);
-                } else {
-                    ((Activity) context).getActionBar().setBackgroundDrawable(td);
-                }
-                td.startTransition(200);
+                ((SherlockFragmentActivity) context).getSupportActionBar().setBackgroundDrawable(ld);
             }
-            oldBackground = ld;
-            // http://stackoverflow.com/questions/11002691/actionbar-setbackgrounddrawable-nulling-background-from-thread-handler
-            ((Activity) context).getActionBar().setDisplayShowTitleEnabled(false);
-            ((Activity) context).getActionBar().setDisplayShowTitleEnabled(true);
+        } else {
+            TransitionDrawable td = new TransitionDrawable(new Drawable[]{
+                    oldBackground, ld
+            });
+            // workaround for broken ActionBarContainer drawable handling on
+            // pre-API 17 builds
+            // https://github.com/android/platform_frameworks_base/commit/a7cc06d82e45918c37429a59b14545c6a57db4e4
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                td.setCallback(drawableCallback);
+            } else {
+                ((SherlockFragmentActivity) context).getSupportActionBar().setBackgroundDrawable(td);
+            }
+            td.startTransition(200);
         }
-        ZphoneApplication.getConfigurationService().putInt(ZycooConfigurationEntry.THEME_COLOR_KEY,
-                newColor);
-        ZphoneApplication.getConfigurationService().commit();
+        oldBackground = ld;
+        // http://stackoverflow.com/questions/11002691/actionbar-setbackgrounddrawable-nulling-background-from-thread-handler
+        ((SherlockFragmentActivity) context).getSupportActionBar().setDisplayShowTitleEnabled(false);
+        ((SherlockFragmentActivity) context).getSupportActionBar().setDisplayShowTitleEnabled(true);
     }
 
     private Drawable.Callback drawableCallback = new Drawable.Callback() {
 
         @Override
         public void invalidateDrawable(Drawable who) {
-            ((Activity) context).getActionBar().setBackgroundDrawable(who);
+            ((SherlockFragmentActivity) context).getSupportActionBar().setBackgroundDrawable(who);
         }
 
         @Override

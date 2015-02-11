@@ -70,8 +70,7 @@ public class ContactListFragment extends SuperAwesomeCardFragment implements OnC
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
         SimpleAdapter adapter = (SimpleAdapter) mAdapter;
-        if(0 == position || position == mAdapter.getCount() + 1)
-        {
+        if (0 == position || position == mAdapter.getCount() + 1) {
             return;
         }
         int section = ((SeparatedListAdapter) adapter).sectionPosition(position - 1);
@@ -222,9 +221,10 @@ public class ContactListFragment extends SuperAwesomeCardFragment implements OnC
             mHandler.post(new Runnable() {
                 @Override
                 public void run() {
-                    mLogger.debug("LOG_TAG","new runable to notifyDataSetChanged");
+                    mLogger.debug("LOG_TAG", "new runable to notifyDataSetChanged");
                     updateSections();
                     notifyDataSetChanged();
+
                 }
             });
         }
@@ -369,6 +369,9 @@ public class ContactListFragment extends SuperAwesomeCardFragment implements OnC
         initializePadding();
         mListView.setOnCreateContextMenuListener(this);
         mListView.setOnItemClickListener(this);
+        //http://www.quora.com/Why-does-the-scroll-bar-change-its-length-during-scrolling
+        //mListView.setSmoothScrollbarEnabled(false);
+
         new GetDataFromDBTask().execute(false);
         return view;
     }

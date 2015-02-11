@@ -20,18 +20,20 @@ import com.github.curioustechizen.ago.RelativeTimeTextView;
 import com.tqcenglish.vlcdemo.AudioPlayActivity;
 import com.zycoo.android.zphone.R;
 import com.zycoo.android.zphone.ZphoneApplication;
+import com.zycoo.android.zphone.ui.message.MessageFragment;
 import com.zycoo.android.zphone.widget.SuperAwesomeCardFragment;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by tqcenglish on 15-1-29.
  */
 public class ContactVoiceFragment extends SuperAwesomeCardFragment implements AdapterView.OnItemClickListener {
 
-    private final String basePath = Environment.getExternalStorageDirectory().getPath() + "/zycoo/voice_mail/" + ZphoneApplication.getHost() + "/";
     private String mContactDisplayName;
     private String mNumber;
     private ListView mListView;
@@ -63,7 +65,7 @@ public class ContactVoiceFragment extends SuperAwesomeCardFragment implements Ad
     public void onResume() {
         super.onResume();
         if (null != mNumber) {
-            new checkVoiceMailTask().execute(basePath + mNumber);
+            new CheckVoiceTask().execute(MessageFragment.VOICE_MAIL_PATH + mNumber, MessageFragment.RECORD_PATH + mNumber);
         }
     }
 
@@ -71,7 +73,7 @@ public class ContactVoiceFragment extends SuperAwesomeCardFragment implements Ad
         mContactDisplayName = displayName;
         mNumber = getPhoneNumber(mContactDisplayName, getSherlockActivity());
         if (null != mNumber) {
-            new checkVoiceMailTask().execute(basePath + mNumber);
+            new CheckVoiceTask().execute(MessageFragment.VOICE_MAIL_PATH + mNumber, MessageFragment.RECORD_PATH + mNumber);
         }
     }
 
@@ -97,16 +99,15 @@ public class ContactVoiceFragment extends SuperAwesomeCardFragment implements Ad
         startActivity(it);
     }
 
-    class checkVoiceMailTask extends AsyncTask<String, Integer, Boolean> {
-
+    class CheckVoiceTask extends AsyncTask<String, Integer, Boolean> {
         @Override
         protected Boolean doInBackground(String... params) {
-            String path = params[0];
+
             mVoiceItems.clear();
-            mAdapter.notifyDataSetChanged();
-            File file = new File(path);
-            File[] voices = file.listFiles();
-            for (File voice : voices) {
+            String voice_mail = params[0];
+            File voice_mail_file = new File(voice_mail);
+            File[] voice_mails = voice_mail_file.listFiles();
+            for (File voice : voice_mails) {
                 VoiceItem item = new VoiceItem();
                 item.path = voice.getAbsolutePath();
                 item.name = voice.getName();
@@ -115,6 +116,24 @@ public class ContactVoiceFragment extends SuperAwesomeCardFragment implements Ad
                 item.type = getResources().getString(R.string.voice_mail);
                 mVoiceItems.add(item);
             }
+            String record = params[1];
+
+            String recording_record = record + "/recording/";
+            File file = new File(recording_record);
+            File[] records = file.listFiles();
+            for (File voice : records) {
+                VoiceItem item = new VoiceItem();
+                item.path = voice.getAbsolutePath();
+                //eg 20150108-115214-804-803-1420689134.274-71.wav
+                item.name = voice.getName();
+               /* Pattern p = Pattern.compile("-([0-9]{10}).");
+                Matcher m = p.matcher(voice.getName());
+                item.date =  m.group();*/
+                item.date = item.name.split("-")[4].split("\\.")[0];
+                item.type = getResources().getString(R.string.record);
+                mVoiceItems.add(item);
+            }
+
             return true;
         }
 

@@ -29,9 +29,10 @@
 
     <com.github.curioustechizen.ago.RelativeTimeTextView
         style="@style/Two_line_list_Text_only_Text"
+        android:layout_alignParentEnd="true"
         android:paddingTop="5dp"
         android:id="@+id/time_date"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/item_name"
         android:text="@string/voice_mail"

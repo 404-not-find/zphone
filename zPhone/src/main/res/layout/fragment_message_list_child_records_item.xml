@@ -27,28 +27,29 @@
         android:layout_height="wrap_content"
         android:textSize="@dimen/Two_lines_list_text_only_text_pri_size" />
 
-    <TextView
+    <com.github.curioustechizen.ago.RelativeTimeTextView
+        android:paddingTop="5dp"
+        android:layout_alignParentEnd="true"
         style="@style/Two_line_list_Text_only_Text"
-        android:layout_marginRight="@dimen/Two_lines_list_text_only_padding_right"
+        android:id="@+id/monitor_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/monitor_name"
+        android:text="@string/voice_mail"
+        android:textColor="@color/grey_500"
+        android:layout_marginEnd="@dimen/Two_lines_list_text_only_padding_right"
+        android:textSize="@dimen/Two_lines_list_text_only_text_sec_size" />
+
+    <TextView
+        android:layout_toStartOf="@id/monitor_date"
+        style="@style/Two_line_list_Text_only_Text"
         android:layout_below="@id/monitor_name"
         android:paddingTop="5dp"
-        android:layout_alignParentRight="true"
         android:id="@+id/monitor_type"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="@color/grey_500"
         android:text="@string/voice_mail"
         android:textSize="@dimen/Two_lines_list_text_only_text_sec_size" />
 
-    <com.github.curioustechizen.ago.RelativeTimeTextView
-        android:layout_toLeftOf="@id/monitor_type"
-        android:paddingTop="5dp"
-        style="@style/Two_line_list_Text_only_Text"
-        android:id="@+id/monitor_date"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/monitor_name"
-        android:text="@string/voice_mail"
-        android:textColor="@color/grey_500"
-        android:textSize="@dimen/Two_lines_list_text_only_text_sec_size" />
 </RelativeLayout>

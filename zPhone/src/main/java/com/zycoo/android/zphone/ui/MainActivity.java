@@ -1,19 +1,3 @@
-/*
- * Copyright (C) 2013 Andreas Stuetz <andreas.stuetz@gmail.com>
- * 
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- * http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.zycoo.android.zphone.ui;
 
 import android.app.SearchManager;
@@ -33,6 +17,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.Toast;
 
@@ -65,66 +50,68 @@ import org.doubango.ngn.sip.NgnSubscriptionSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.ref.WeakReference;
 import java.lang.reflect.Field;
 
 public class MainActivity extends SherlockFragmentActivity implements
         ContactsListFragment.OnContactsInteractionListener {
+    private static final int DEFAULT_DISPLAY_ITEM = 2;
     private Logger mLogger = LoggerFactory.getLogger(MainActivity.class);
-    private MessageFragment messageFragment;
     private BroadcastReceiver mBroadcastReceiver;
     private NativeService mNativeService;
     private IBinder mNativeServiceBinder;
     private ServiceConnection mServiceConnection;
-    private int currentColor;
-    private PagerSlidingTabStrip tabs;
-    private ViewPager pager;
-    private MyPagerAdapter adapter;
+    private int mCurrentColor;
+    private PagerSlidingTabStrip mPagerSlidingTabs;
+    private ViewPager mViewPagers;
     private NgnSubscriptionSession subSession;
     // True if this activity instance is a search result view (used on pre-HC devices that load
     // search results in a separate instance of the activity rather than loading results in-line
     // as the query is typed.
     // android 14以前版本将不同显示
     private boolean isSearchResultView = false;
-    private final Handler handler = new Handler() {
+
+    private static class MainHandler extends Handler {
+        private final WeakReference<MainActivity> mMainActivity;
+
+        public MainHandler(MainActivity activity) {
+            mMainActivity = new WeakReference<MainActivity>(activity);
+        }
+
         @Override
         public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case MessageFragment.HANDLE_WHAT:
-                    messageFragment = (MessageFragment) getSupportFragmentManager()
-                            .findFragmentByTag(
-                                    "android:switcher:" + R.id.pager + ":0");
-                    if (null != messageFragment) {
-                        MessageAdapter messageAdapter = messageFragment.getMessageAdapter();
-                        WrapperExpandableListAdapter wrapperAdapter = messageFragment
-                                .getWrapperAdapter();
-                        if (null != messageAdapter && null != messageAdapter) {
-                            messageAdapter.getVoiceMailsFromDB();
-                            messageAdapter.getMonitorsFromDB();
-                            messageAdapter.notifyDataSetChanged();
-                            wrapperAdapter.notifyDataSetChanged();
-                        }
-                    }
-                    break;
-                default:
-                    break;
-            }
             super.handleMessage(msg);
+            MainActivity activity = mMainActivity.get();
+            if (null != activity) {
+                switch (msg.what) {
+                    case MessageFragment.HANDLE_WHAT:
+                        MessageFragment messageFragment = (MessageFragment) activity.getSupportFragmentManager()
+                                .findFragmentByTag(
+                                        "android:switcher:" + R.id.pager + ":0");
+                        if (null != messageFragment) {
+                            MessageAdapter messageAdapter = messageFragment.getMessageAdapter();
+                            WrapperExpandableListAdapter wrapperAdapter = messageFragment
+                                    .getWrapperAdapter();
+                            if (null != messageAdapter) {
+                                messageAdapter.getVoiceMailsFromDB();
+                                messageAdapter.getMonitorsFromDB();
+                                messageAdapter.notifyDataSetChanged();
+                                wrapperAdapter.notifyDataSetChanged();
+                            }
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
         }
+    }
 
-        @Override
-        public void dispatchMessage(Message msg) {
-            super.dispatchMessage(msg);
-        }
-
-
-        @Override
-        public boolean sendMessageAtTime(Message msg, long uptimeMillis) {
-            return super.sendMessageAtTime(msg, uptimeMillis);
-        }
-    };
+    private final MainHandler handler = new MainHandler(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        //Google analytics
         // Get tracker.
         Tracker t = ((ZphoneApplication) getApplication()).getTracker(
                 ZphoneApplication.TrackerName.APP_TRACKER);
@@ -133,14 +120,13 @@ public class MainActivity extends SherlockFragmentActivity implements
         // Send a screen view.
         t.send(new HitBuilders.ScreenViewBuilder().build());
 
-
+        //Debug
         if (BuildConfig.DEBUG) {
             Utils.enableStrictMode();
         }
-        if (null != savedInstanceState) {
-            currentColor = savedInstanceState.getInt("currentColor");
-            //changeColor(currentColor);
 
+        if (null != savedInstanceState) {
+            mCurrentColor = savedInstanceState.getInt(ZycooConfigurationEntry.CURRENT_COLOR);
         }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -167,57 +153,14 @@ public class MainActivity extends SherlockFragmentActivity implements
             setTitle(title);
         }
 
-        tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
-        pager = (ViewPager) findViewById(R.id.pager);
-        adapter = new MyPagerAdapter(getSupportFragmentManager());
-        pager.setAdapter(adapter);
-        pager.setCurrentItem(2);
+        mPagerSlidingTabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
+        mViewPagers = (ViewPager) findViewById(R.id.pager);
+        mViewPagers.setAdapter(new MyPagerAdapter(getSupportFragmentManager()));
+        mViewPagers.setCurrentItem(DEFAULT_DISPLAY_ITEM);
         setViewPagerScrollSpeed();
 
-        //设置动画
-        //Animation animationFadeIn = AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_in);
-        //getView().startAnimation(animationFadeIn);
-        //animationFadeIn.setFillAfter(true);
-
-
-        //ZoomOutPageTransformer
-        /*
-        pager.setPageTransformer(false, new ViewPager.PageTransformer() {
-            private float MIN_SCALE = 0.85f;
-            private float MIN_ALPHA = 0.5f;
-
-            @Override
-            public void transformPage(View view, float position) {
-                int pageWidth = view.getWidth();
-                int pageHeight = view.getHeight();
-
-                if (position < -1) { // [-Infinity,-1)
-                    // This page is way off-screen to the left.
-                    Utils.CustomSetAlpha(view);
-                } else if (position <= 1) { // [-1,1]
-                    // Modify the default slide transition to
-                    // shrink the page as well
-                    float scaleFactor = Math.max(MIN_SCALE, 1 - Math.abs(position));
-                    float vertMargin = pageHeight * (1 - scaleFactor) / 2;
-                    float horzMargin = pageWidth * (1 - scaleFactor) / 2;
-                    if (position < 0) {
-                        Utils.CustomSetTranslationX(view, horzMargin - vertMargin / 2);
-                    } else {
-                        Utils.CustomSetTranslationX(view, -horzMargin + vertMargin / 2);
-                    }
-                    // Scale the page down (between MIN_SCALE and 1)
-                    Utils.CustomSetScaleXY(view, scaleFactor, scaleFactor);
-                    // Fade the page relative to its size.
-                    Utils.CustomSetAlpha(view, MIN_ALPHA + (scaleFactor - MIN_SCALE)
-                            / (1 - MIN_SCALE) * (1 - MIN_ALPHA));
-                } else { // (1,+Infinity]
-                    // This page is way off-screen to the right.
-                    Utils.CustomSetAlpha(view);
-                }
-            }
-        });
-        */
-        pager.setPageTransformer(false, new ViewPager.PageTransformer() {
+        // fade animation
+        mViewPagers.setPageTransformer(false, new ViewPager.PageTransformer() {
             private float MIN_SCALE = 0.5f;
             private float MIN_ALPHA = 0.4f;
 
@@ -237,16 +180,19 @@ public class MainActivity extends SherlockFragmentActivity implements
             }
         });
 
-
+        //TODO setPageMargin
+        //issue https://github.com/astuetz/PagerSlidingTabStrip/issues/27
         /*final int pageMargin = (int) TypedValue.applyDimension(
                 TypedValue.COMPLEX_UNIT_DIP, 4, getResources()
                         .getDisplayMetrics());
-        pager.setPageMargin(pageMargin);*/
-        tabs.setViewPager(pager);
-        currentColor = ZphoneApplication.getConfigurationService().getInt(
-                ZycooConfigurationEntry.THEME_COLOR_KEY,
+        mViewPagers.setPageMargin(pageMargin);*/
+
+
+        mPagerSlidingTabs.setViewPager(mViewPagers);
+        mCurrentColor = ZphoneApplication.getConfigurationService().getInt(
+                ZycooConfigurationEntry.CURRENT_COLOR,
                 getResources().getColor(R.color.light_blue));
-        changeColor(currentColor);
+        changeColor(mCurrentColor);
         mBroadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -264,7 +210,6 @@ public class MainActivity extends SherlockFragmentActivity implements
                     MeFragment meFragment = (MeFragment) getSupportFragmentManager()
                             .findFragmentByTag(
                                     "android:switcher:" + R.id.pager + ":3");
-
                     DialerFragment dialerFragment =
                             (DialerFragment) getSupportFragmentManager().findFragmentByTag(
                                     "android:switcher:" + R.id.pager + ":2");
@@ -274,7 +219,6 @@ public class MainActivity extends SherlockFragmentActivity implements
                     if (null != meFragment && meFragment.isVisible()) {
                         meFragment.statusChange(args.getEventType());
                     }
-
                 }
             }
         };
@@ -285,10 +229,8 @@ public class MainActivity extends SherlockFragmentActivity implements
 
         Intent intent = new Intent(ZphoneApplication.getContext(), NativeService.class);
         bindService(intent, mServiceConnection = new ServiceConnection() {
-
             @Override
             public void onServiceDisconnected(ComponentName name) {
-
             }
 
             @Override
@@ -299,7 +241,7 @@ public class MainActivity extends SherlockFragmentActivity implements
                     mNativeService.setHandler(handler);
                 } else {
                     mNativeServiceBinder = null;
-                    mLogger.error("binSerice failure ");
+                    mLogger.error("bindService failure ");
                 }
             }
         }, BIND_AUTO_CREATE); //BIND_ABOVE_CLIENT
@@ -307,31 +249,27 @@ public class MainActivity extends SherlockFragmentActivity implements
     }
 
     public void changeColor(int newColor) {
-        tabs.setIndicatorColor(newColor);
+        mPagerSlidingTabs.setIndicatorColor(newColor);
         new Theme(this, handler).changeActionBarColor(newColor);
-        currentColor = newColor;
+        mCurrentColor = newColor;
     }
 
-    public void onColorClicked(View v) {
-        int color = Color.parseColor(v.getTag().toString());
-        changeColor(color);
-    }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
+        //cancel onSaveInstanceState, because some time fragment display than one time
         //super.onSaveInstanceState(outState);
-        outState.putInt("currentColor", currentColor);
+        outState.putInt(ZycooConfigurationEntry.CURRENT_COLOR, mCurrentColor);
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        currentColor = savedInstanceState.getInt("currentColor");
-        changeColor(currentColor);
+        mCurrentColor = savedInstanceState.getInt(ZycooConfigurationEntry.CURRENT_COLOR);
+        changeColor(mCurrentColor);
     }
 
     public class MyPagerAdapter extends FragmentPagerAdapter implements TitleIconTabProvider {
-
         private final String[] TITLES = {
                 getResources().getString(R.string.message),
                 getResources().getString(R.string.contacts),
@@ -351,7 +289,6 @@ public class MainActivity extends SherlockFragmentActivity implements
 
         @Override
         public int getPageIconResId(int position) {
-
             return ICONS[position];
         }
 
@@ -435,15 +372,23 @@ public class MainActivity extends SherlockFragmentActivity implements
         return mNativeService;
     }
 
+    /**
+     * edit number on before call
+     *
+     * @param number need call phone number
+     */
     @Override
     public void ChangeNumberCall(String number) {
-        pager.setCurrentItem(2);
+        mViewPagers.setCurrentItem(2);
         DialerFragment fragment = (DialerFragment) getSupportFragmentManager()
                 .findFragmentByTag(
                         "android:switcher:" + R.id.pager + ":2");
         fragment.setCallText(number);
     }
 
+    /**
+     * close all display, but don't close app
+     */
     @Override
     public void onBackPressed() {
         Intent i = new Intent(Intent.ACTION_MAIN);
@@ -452,18 +397,18 @@ public class MainActivity extends SherlockFragmentActivity implements
         startActivity(i);
     }
 
+    /**
+     * custom scroll duration
+     */
     private void setViewPagerScrollSpeed() {
         try {
             Field mScroller = null;
             mScroller = ViewPager.class.getDeclaredField("mScroller");
             mScroller.setAccessible(true);
-            ViewPagerScroller scroller = new ViewPagerScroller(pager.getContext());
-            mScroller.set(pager, scroller);
-        } catch (NoSuchFieldException e) {
-
-        } catch (IllegalArgumentException e) {
-
-        } catch (IllegalAccessException e) {
+            ViewPagerScroller scroller = new ViewPagerScroller(mViewPagers.getContext());
+            mScroller.set(mViewPagers, scroller);
+        } catch (Exception e) {
+            mLogger.error("setViewPagerScrollSpeed error " + e.getStackTrace());
         }
     }
 }

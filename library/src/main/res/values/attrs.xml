@@ -91,6 +91,7 @@
         <attr name="pstsTabBackground" format="reference" />
         <attr name="pstsShouldExpand" format="boolean" />
         <attr name="pstsTextAllCaps" format="boolean" />
+        <attr name="pstsHasDropShadow" format="boolean"/>
     </declare-styleable>
     <declare-styleable name="CustomShapeImageView">
         <attr name="shape" format="integer">

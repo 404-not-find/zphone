@@ -1,25 +1,28 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <com.hp.views.PagerSlidingTabStrip
         android:id="@+id/tabs"
         android:layout_width="match_parent"
-        android:layout_height="68dip"
+        android:layout_height="56dip"
         android:layout_alignParentBottom="true"
-        android:background="@color/grey_100"
+        app:pstsTabBackground="@color/white"
+        app:pstsIndicatorColor="@android:color/transparent"
+        app:pstsDividerColor="@android:color/transparent"
+        app:pstsIndicatorHeight="0dp"
         android:fillViewport="false"
-        app:pstsShouldExpand="true">
-    </com.hp.views.PagerSlidingTabStrip>
+        app:pstsShouldExpand="true"
+        app:pstsHasDropShadow="true"
+        />
 
     <com.zycoo.android.zphone.widget.CustomViewPager
         android:id="@+id/pager"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@id/tabs"
-        tools:context=".MainActivity">
-    </com.zycoo.android.zphone.widget.CustomViewPager>
+        tools:context=".MainActivity" />
 
 </RelativeLayout>
