@@ -199,7 +199,7 @@ public class NativeService extends NgnNativeService implements MqttCallback, Obs
                         case TERMWAIT:
                         case TERMINATED:
                             if (NgnMediaType.isAudioVideoType(mediaType)) {
-                                mEngine.refreshAVCallNotif(R.drawable.phone_call_25);
+                                mEngine.refreshAVCallNotif(R.drawable.ic_call_grey600);
                                 mEngine.getSoundService().stopRingBackTone();
                                 mEngine.getSoundService().stopRingTone();
                             }
@@ -210,7 +210,7 @@ public class NativeService extends NgnNativeService implements MqttCallback, Obs
                                 final NgnAVSession avSession = NgnAVSession.getSession(args
                                         .getSessionId());
                                 if (avSession != null) {
-                                    mEngine.showAVCallNotif(R.drawable.call_incoming_45,
+                                    mEngine.showAVCallNotif(R.drawable.ic_call_grey600,
                                             getResources().getString(R.string.string_in_coming));
                                     Intent income = new Intent(ZphoneApplication.getContext()
                                             .getApplicationContext(),
@@ -238,7 +238,7 @@ public class NativeService extends NgnNativeService implements MqttCallback, Obs
                             break;
                         case INPROGRESS:
                             if (NgnMediaType.isAudioVideoType(mediaType)) {
-                                mEngine.showAVCallNotif(R.drawable.call_outgoing_45, "Call outing");
+                                mEngine.showAVCallNotif(R.drawable.ic_call_grey600, "Call outing");
                             }
                             break;
                         case RINGING:
@@ -249,7 +249,7 @@ public class NativeService extends NgnNativeService implements MqttCallback, Obs
                         case CONNECTED:
                         case EARLY_MEDIA:
                             if (NgnMediaType.isAudioVideoType(mediaType)) {
-                                mEngine.showAVCallNotif(R.drawable.phone_call_25, "in call");
+                                mEngine.showAVCallNotif(R.drawable.ic_call_grey600, "in call");
                                 mEngine.getSoundService().stopRingBackTone();
                                 mEngine.getSoundService().stopRingTone();
                             }
@@ -338,7 +338,7 @@ public class NativeService extends NgnNativeService implements MqttCallback, Obs
                 mLogger.debug("is connect " + mConnected);
                 if (event.getStatus() == NgnHistoryEvent.StatusType.Missed) {
                     if ((new java.util.Date().getTime()) - event.getEndTime() < 60000) {
-                        mEngine.showMissCallNotif(R.drawable.call_missed_45, event.getDisplayName(), event.getRemoteParty(), event.getEndTime());
+                        mEngine.showMissCallNotif(R.drawable.ic_phone_missed_grey600, event.getDisplayName(), event.getRemoteParty(), event.getEndTime());
                         break;
                     }
                 }

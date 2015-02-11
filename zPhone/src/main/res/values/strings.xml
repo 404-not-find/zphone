@@ -243,6 +243,7 @@
     <string name="voice_mail_make_as_read">Make as read</string>
     <string name="voice_mail_delete">Delete</string>
     <string name="voice_mail_Download">Download</string>
+    <string name="record_download">Download</string>
     <string name="visit_the_official_website">Visit the official website</string>
 
     <!-- AV -->

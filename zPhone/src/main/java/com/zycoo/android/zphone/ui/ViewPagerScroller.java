@@ -6,6 +6,7 @@ import android.widget.Scroller;
 
 /**
  * Created by tqcenglish on 15-1-7.
+ * some time scroll is low, so custom scroll duration time
  */
 public class ViewPagerScroller extends Scroller {
 

@@ -53,11 +53,13 @@ import android.widget.TextView;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
+import com.amulyakhare.textdrawable.TextDrawable;
 import com.hp.views.PinnedSectionListView.PinnedSectionListAdapter;
 import com.twotoasters.sectioncursoradapter.SectionCursorAdapter;
 import com.zycoo.android.zphone.BuildConfig;
 import com.zycoo.android.zphone.R;
 import com.zycoo.android.zphone.ZphoneApplication;
+import com.zycoo.android.zphone.ZycooConfigurationEntry;
 import com.zycoo.android.zphone.ui.dialpad.ScreenAV;
 import com.zycoo.android.zphone.utils.ImageLoader;
 import com.zycoo.android.zphone.utils.Utils;
@@ -927,9 +929,15 @@ public class ContactsListFragment extends SuperAwesomeCardFragment implements
             // Binds the contact's lookup Uri to the QuickContactBadge
             holder.icon.assignContactUri(contactUri);
 
-            // Loads the thumbnail image pointed to by photoUri into the QuickContactBadge in a
-            // background worker thread
-            mImageLoader.loadImage(photoUri, holder.icon);
+            if (null != photoUri) {
+                // Loads the thumbnail image pointed to by photoUri into the QuickContactBadge in a
+                // background worker thread
+                mImageLoader.loadImage(photoUri, holder.icon);
+            } else {
+
+                TextDrawable drawable = ZphoneApplication.getBuilderRect().build(getSectionFromCursor(cursor).toString(), Utils.getColorResourceId(context, cursor.getPosition()));
+                holder.icon.setImageDrawable(drawable);
+            }
         }
 
         @Override

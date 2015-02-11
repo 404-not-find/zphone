@@ -30,6 +30,7 @@ import android.widget.Adapter;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.twotoasters.sectioncursoradapter.SectionCursorAdapter;
 import com.zycoo.android.zphone.R;
 import com.zycoo.android.zphone.ZphoneApplication;
 
@@ -40,6 +41,7 @@ public abstract class SeparatedListAdapter extends BaseAdapter {
     private Context mContext;
     public final Map<String, Adapter> mSections = new LinkedHashMap<String, Adapter>();
     private final LayoutInflater mLayoutInflater;
+
 
     public SeparatedListAdapter(Context context) {
         mContext = context;
@@ -78,8 +80,7 @@ public abstract class SeparatedListAdapter extends BaseAdapter {
         }
     }
 
-    public int sectionPosition(int position)
-    {
+    public int sectionPosition(int position) {
         synchronized (mSections) {
             int sectionPosition = 0;
             for (String section : this.mSections.keySet()) {
@@ -88,8 +89,7 @@ public abstract class SeparatedListAdapter extends BaseAdapter {
                 final int size = adapter.getCount() + 1;
                 position -= size;
                 sectionPosition++;
-                if (position < 0)
-                {
+                if (position < 0) {
                     break;
                 }
             }
@@ -97,8 +97,7 @@ public abstract class SeparatedListAdapter extends BaseAdapter {
         }
     }
 
-    public int getSectionsCount()
-    {
+    public int getSectionsCount() {
         return mSections.size();
     }
 
@@ -147,6 +146,7 @@ public abstract class SeparatedListAdapter extends BaseAdapter {
         return (getItemViewType(position) != Item.SECTION);
     }
 
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         synchronized (mSections) {
@@ -155,16 +155,12 @@ public abstract class SeparatedListAdapter extends BaseAdapter {
             for (String section : mSections.keySet()) {
                 final Adapter adapter = mSections.get(section);
                 final int size = adapter.getCount() + 1;
-
                 if (position == 0) {
-                    if (null == convertView)
-                    {
+                    if (null == convertView) {
                         convertView = mLayoutInflater.inflate(
-                                R.layout.fragment_contact_item_section, null);
+                                R.layout.fragment_contact_item_section, parent, false);
                         sectionViewHolder = new SectionViewHolder(convertView);
-                    }
-                    else
-                    {
+                    } else {
                         sectionViewHolder = (SectionViewHolder) convertView.getTag();
                     }
                     sectionViewHolder.mTextView.setText(section);
@@ -187,19 +183,16 @@ public abstract class SeparatedListAdapter extends BaseAdapter {
         return position;
     }
 
-    public class SectionViewHolder
-    {
+    public class SectionViewHolder {
         TextView mTextView;
 
-        public SectionViewHolder(View v)
-        {
+        public SectionViewHolder(View v) {
             v.setTag(this);
             mTextView = (TextView) v.findViewById(android.R.id.text1);
         }
     }
 
-    public static class Item
-    {
+    public static class Item {
         public static final int ITEM = 0;
         public static final int SECTION = 1;
         public final int type;
@@ -207,15 +200,13 @@ public abstract class SeparatedListAdapter extends BaseAdapter {
         public int sectionPosition;
         public int listPosition;
 
-        public Item(int type, String text)
-        {
+        public Item(int type, String text) {
             this.type = type;
             this.text = text;
         }
 
         @Override
-        public String toString()
-        {
+        public String toString() {
             return text;
         }
     }

@@ -41,11 +41,16 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.zycoo.android.zphonelib.HorizontalScrollViewTopLine;
 import com.zycoo.android.zphonelib.R;
 
 import java.util.Locale;
 
-public class PagerSlidingTabStrip extends HorizontalScrollView {
+public class PagerSlidingTabStrip extends HorizontalScrollViewTopLine {
+
+    //add static value by tqc
+    private static final int COLOR_LIGHT_BLUE = Color.rgb(3, 169, 237);
+    private static final int COLOR_GREY_600 = Color.rgb(117, 117, 117);
 
     public interface IconTabProvider {
         public int getPageIconResId(int position);
@@ -85,6 +90,7 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
 
     private boolean shouldExpand = false;
     private boolean textAllCaps = true;
+    private boolean hasDropShadow = false;
 
     private int scrollOffset = 52;
     private int indicatorHeight = 8;
@@ -118,11 +124,6 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
         setFillViewport(true);
         setWillNotDraw(false);
 
-        tabsContainer = new LinearLayout(context);
-        tabsContainer.setOrientation(LinearLayout.HORIZONTAL);
-        tabsContainer.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,
-                LayoutParams.MATCH_PARENT));
-        addView(tabsContainer);
 
         DisplayMetrics dm = getResources().getDisplayMetrics();
 
@@ -172,6 +173,7 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
         scrollOffset = a.getDimensionPixelSize(R.styleable.PagerSlidingTabStrip_pstsScrollOffset,
                 scrollOffset);
         textAllCaps = a.getBoolean(R.styleable.PagerSlidingTabStrip_pstsTextAllCaps, textAllCaps);
+        hasDropShadow = a.getBoolean(R.styleable.PagerSlidingTabStrip_pstsHasDropShadow, hasDropShadow);
 
         a.recycle();
 
@@ -190,17 +192,29 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
         if (locale == null) {
             locale = getResources().getConfiguration().locale;
         }
+
+
+        // add a line by tqc
+        tabsContainer = new LinearLayout(context);
+        //tabsContainer = new LinearLayoutOutlined(context);
+        tabsContainer.setBackgroundColor(getResources().getColor(android.R.color.transparent));
+        tabsContainer.setOrientation(LinearLayout.HORIZONTAL);
+        LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT,
+                LayoutParams.MATCH_PARENT);
+        if (hasDropShadow) {
+            drawTopLine = true;
+            lp.setMargins(0, 2, 0, 0);
+        }
+        tabsContainer.setLayoutParams(lp);
+        addView(tabsContainer);
     }
 
     public void setViewPager(ViewPager pager) {
         this.pager = pager;
-
         if (pager.getAdapter() == null) {
             throw new IllegalStateException("ViewPager does not have adapter instance.");
         }
-
         pager.setOnPageChangeListener(pageListener);
-
         notifyDataSetChanged();
     }
 
@@ -247,16 +261,21 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
                 scrollToChild(currentPosition, 0);
                 View currentTab = tabsContainer.getChildAt(currentPosition);
                 ImageView imageView = (ImageView) currentTab.findViewById(android.R.id.icon);
+                TextView textView = (TextView) currentTab.findViewById(android.R.id.text1);
+                if (null != textView) {
+                    textView.setTextColor(COLOR_LIGHT_BLUE);
+                }
                 if (null != imageView) {
-                    //change icon color
-                    imageView.setColorFilter(Color.rgb(3, 169, 237));
+                    //change icon color light_blue
+                    imageView.setColorFilter(COLOR_LIGHT_BLUE);
+
                 }
             }
         });
 
     }
 
-    private void addTextIconTab(final int possition, String title, int resId) {
+    private void addTextIconTab(final int position, String title, int resId) {
 
         LinearLayout tab = new LinearLayout(getContext());
         tab.setOrientation(LinearLayout.VERTICAL);
@@ -267,9 +286,10 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
         iv.setId(android.R.id.icon);
         iv.setImageDrawable(getResources().getDrawable(resId));
         tv.setText(title);
+        tv.setId(android.R.id.text1);
         tab.addView(iv);
         tab.addView(tv);
-        addTab(possition, tab);
+        addTab(position, tab);
     }
 
     private void addTextTab(final int position, String title) {
@@ -439,17 +459,23 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
             }
             // update tab imgview
             for (int i = 0; i < tabsContainer.getChildCount(); i++) {
+                View tab = tabsContainer.getChildAt(i);
+                ImageView imageView = (ImageView) tab.findViewById(android.R.id.icon);
+                TextView textView = (TextView) tab.findViewById(android.R.id.text1);
+
                 if (i == position) {
-                    View currentTab = tabsContainer.getChildAt(position);
-                    ImageView imageView = (ImageView) currentTab.findViewById(android.R.id.icon);
                     if (null != imageView) {
-                        imageView.setColorFilter(Color.rgb(3, 169, 237));
+                        imageView.setColorFilter(COLOR_LIGHT_BLUE);
+                    }
+                    if (null != textView) {
+                        textView.setTextColor(COLOR_LIGHT_BLUE);
                     }
                 } else {
-                    View tab = tabsContainer.getChildAt(i);
-                    ImageView imageView = (ImageView) tab.findViewById(android.R.id.icon);
                     if (null != imageView) {
-                        imageView.setColorFilter(Color.rgb(117, 117, 117));
+                        imageView.setColorFilter(COLOR_GREY_600);
+                    }
+                    if (null != textView) {
+                        textView.setTextColor(tabTextColor);
                     }
                 }
             }

@@ -23,7 +23,7 @@
             android:id="@+id/menu_badge_text"
             android:layout_width="20dp"
             android:layout_height="20dp"
-            android:layout_gravity="end|top"
+            android:layout_gravity="right|top"
             android:background="@drawable/message_voice_mail_count_circle_textview"
             android:gravity="center"
             android:textColor="@android:color/white"

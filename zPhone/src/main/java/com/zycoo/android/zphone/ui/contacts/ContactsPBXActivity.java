@@ -88,7 +88,7 @@ public class ContactsPBXActivity extends SherlockActivity implements OnClickList
         setContentView(R.layout.activity_contacts_pbx);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         currentColor = ZphoneApplication.getConfigurationService().getInt(
-                ZycooConfigurationEntry.THEME_COLOR_KEY,
+                ZycooConfigurationEntry.CURRENT_COLOR,
                 getResources().getColor(R.color.light_blue));
         new Theme(this, mHandler).changeActionBarColor(currentColor);
         mPullListView = (PullToRefreshListView) findViewById(R.id.contasts_listView);

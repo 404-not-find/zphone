@@ -131,7 +131,7 @@ public class LaunchActivity extends Activity {
                     } else {
                         mLogger.error("Failed to find associated audio/video session");
                         startActivity(new Intent(this, MainActivity.class));
-                        mEngine.refreshAVCallNotif(R.drawable.phone_call_25);
+                        mEngine.refreshAVCallNotif(R.drawable.ic_call_grey600);
                     }
                 }
                 break;

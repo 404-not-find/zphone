@@ -31,6 +31,7 @@ import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.amulyakhare.textdrawable.TextDrawable;
 import com.nineoldandroids.view.ViewHelper;
 import com.zycoo.android.zphone.ZphoneApplication;
 import com.zycoo.android.zphone.ZycooConfigurationEntry;
@@ -288,6 +289,12 @@ public class Utils {
         int  color = ZphoneApplication.getAppResources().getColor(colorId);
         ColorFilter filter = new PorterDuffColorFilter(color, PorterDuff.Mode.MULTIPLY);
         view.setColorFilter(filter);
+    }
+
+    public static int getColorResourceId(Context context, int position)
+    {
+        int index = ZycooConfigurationEntry.COLORS[(position % ZycooConfigurationEntry.COLORS.length)];
+        return context.getResources().getColor(index);
     }
 
 }

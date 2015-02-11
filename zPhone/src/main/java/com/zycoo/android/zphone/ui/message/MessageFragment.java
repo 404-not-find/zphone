@@ -71,6 +71,8 @@ public class MessageFragment extends SuperAwesomeCardFragment implements OnChild
     private static final int UNIQUE_FRAGMENT_GROUP_ID = 0;
     public static final String UPDATE_MESSAGE_FRAGMENT = MessageFragment.class.getName()
             + ".UPDATE_MESSAGE_FRAGMENT";
+    public static final String RECORD_PATH = Environment.getExternalStorageDirectory().getPath() + "/zycoo/" + ZphoneApplication.getHost() + "/record/";
+    public static final String VOICE_MAIL_PATH = Environment.getExternalStorageDirectory().getPath() + "/zycoo/" + ZphoneApplication.getHost() + "/voice_mail/";
     private Logger mLogger = LoggerFactory.getLogger(MessageFragment.class);
     private PullToRefreshExpandableListView mPullToRefreshExpandableListView;
     private MessageAdapter messageAdapter;
@@ -347,6 +349,7 @@ public class MessageFragment extends SuperAwesomeCardFragment implements OnChild
                     //TODO 删除需要管理员权限
                     //menu.add(UNIQUE_FRAGMENT_GROUP_ID, 2, 0,
                     //      getResources().getString(R.string.voicemail_delete));
+                    menu.add(UNIQUE_FRAGMENT_GROUP_ID, 3, 0, getResources().getString(R.string.record_download));
                     break;
                 default:
                     break;
@@ -486,21 +489,31 @@ public class MessageFragment extends SuperAwesomeCardFragment implements OnChild
             MonitorBean monitorBean = messageAdapter.getMonitors().get(params[0]);
             switch (params[1]) {
                 //play
+                //download
                 case 1:
-                   /* Intent it = new Intent(Intent.ACTION_VIEW);*/
-                    Intent it = new Intent(getActivity(), AudioPlayActivity.class);
+                case 3:
                     ///var/spool/asterisk/monitor/recording/804
-                    String downloadUrl = String
+                    String downloadURL = String
                             .format("http://%s:4242/download_monitor_file?type=%s&extension=%s&file_name=%s",
                                     ZphoneApplication.getHost(),
                                     monitorBean.getType(),
                                     ZphoneApplication.getUserName(),
                                     monitorBean.getFile_name()
                             );
-                    /*it.setDataAndType(
-                            Uri.parse(downloadUrl), "audio/MP3");*/
-                    it.putExtra("path", downloadUrl);
-                    startActivity(it);
+                    if (1 == params[1]) {
+                    /* Intent it = new Intent(Intent.ACTION_VIEW);
+                    it.setDataAndType(
+                            Uri.parse(downloadURL), "audio/MP3");*/
+                        Intent it = new Intent(getActivity(), AudioPlayActivity.class);
+                        it.putExtra("path", downloadURL);
+                        startActivity(it);
+                    }
+                    if (3 == params[1]) {
+                        String extension = monitorBean.getFrom().equals(ZphoneApplication.getUserName()) ? monitorBean.getTo() : monitorBean.getFrom();
+                        String filePath = RECORD_PATH + extension + "/" + monitorBean.getType() + "/" + monitorBean.getFile_name();
+                        new HttpDownloadTask().execute(downloadURL, filePath);
+                    }
+
                     break;
                 //remove_from_call_log
                 case 2:
@@ -580,7 +593,7 @@ public class MessageFragment extends SuperAwesomeCardFragment implements OnChild
                         }
                         //download
                         else if (6 == params[1]) {
-                            String filePath = Environment.getExternalStorageDirectory().getPath() + "/zycoo/voice_mail/" + server + "/" + strs[3] + "/" + strs[4] + ".wav";
+                            String filePath = VOICE_MAIL_PATH + strs[3] + "/" + strs[4] + ".wav";
                             new HttpDownloadTask().execute(download_url, filePath);
                             /*AsyncHttpClient.getDefaultInstance().executeFile(AsyncHttpRequest.create(new HttpRequest) download_url, filePath, new AsyncHttpClient.FileCallback() {
                                 @Override

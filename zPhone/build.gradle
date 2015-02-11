@@ -119,19 +119,18 @@ dependencies {
     //https://github.com/hoang8f/android-segmented-control
     compile 'info.hoang8f:android-segmented:1.0.4'
 
-
-    //--------------floatingactionbutton -----------------------
-    //https://github.com/makovkastar/FloatingActionButton
-    //https://github.com/futuresimple/android-floating-action-button api>=14
-    compile 'com.melnykov:floatingactionbutton:1.1.0'
-
-    //------------------------textdrawable-----------------------
-    // api >= 10
+    //---------------androidasync-------
+    //---------------https://github.com/koush/AndroidAsync -------
+    compile 'com.koushikdutta.async:androidasync:2.+'
+    ///-----------------------TextDrawable-------------------------
     //https://github.com/amulyakhare/TextDrawable
-    //compile 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'
+    compile 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'
+    compile project(':FloatingActionButton')
 
-    //---------------androidasync-------\
-    //https://github.com/koush/AndroidAsync
-    //compile 'com.koushikdutta.async:androidasync:2.+'
+    //-------------------AndroidViewAnimations--------
+    //https://github.com/daimajia/AndroidViewAnimations
+    //compile 'com.nineoldandroids:library:2.4.0' already add
+    compile 'com.daimajia.easing:library:1.0.1@aar'
+    compile 'com.daimajia.androidanimations:library:1.1.3@aar'
 }
 

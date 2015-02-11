@@ -15,7 +15,6 @@
         android:cacheColorHint="@android:color/transparent"
         android:dividerHeight="1dp"
         android:groupIndicator="@null"
-        android:paddingTop="10dp"
         android:background="@color/white"
         ptr:ptrHeaderBackground="@android:color/darker_gray"
         ptr:ptrHeaderTextColor="@android:color/white" />

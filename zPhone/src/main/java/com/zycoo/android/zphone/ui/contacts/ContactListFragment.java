@@ -4,6 +4,8 @@ package com.zycoo.android.zphone.ui.contacts;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -24,10 +26,12 @@ import android.widget.SectionIndexer;
 import android.widget.TextView;
 
 import com.actionbarsherlock.view.MenuItem;
+import com.amulyakhare.textdrawable.TextDrawable;
 import com.hp.views.PinnedSectionListView.PinnedSectionListAdapter;
 import com.zycoo.android.zphone.DatabaseHelper;
 import com.zycoo.android.zphone.R;
 import com.zycoo.android.zphone.ZphoneApplication;
+import com.zycoo.android.zphone.ZycooConfigurationEntry;
 import com.zycoo.android.zphone.ui.dialpad.ScreenAV;
 import com.zycoo.android.zphone.utils.Utils;
 import com.zycoo.android.zphone.widget.SuperAwesomeCardFragment;
@@ -58,6 +62,7 @@ public class ContactListFragment extends SuperAwesomeCardFragment implements OnC
     private TextView footer;
     public RelativeLayout mLoadingRL;
 
+
     public static ContactListFragment newInstance(int position) {
         ContactListFragment f = new ContactListFragment();
         Bundle b = new Bundle();
@@ -70,8 +75,7 @@ public class ContactListFragment extends SuperAwesomeCardFragment implements OnC
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
         SimpleAdapter adapter = (SimpleAdapter) mAdapter;
-        if(0 == position || position == mAdapter.getCount() + 1)
-        {
+        if (0 == position || position == mAdapter.getCount() + 1) {
             return;
         }
         int section = ((SeparatedListAdapter) adapter).sectionPosition(position - 1);
@@ -107,11 +111,6 @@ public class ContactListFragment extends SuperAwesomeCardFragment implements OnC
         private final Handler mHandler;
         //private final NgnObservableList<NgnContact> mContactsList;
         private List<PBXPhoneBookBean> mPBXContactsList;
-
-        /* private final int[] COLORS = new int[] {
-                 R.color.green_light, R.color.orange_light,
-                 R.color.light_blue, R.color.light_red
-         };*/
 
         public SimpleAdapter(Context context) {
             super(context);
@@ -178,7 +177,7 @@ public class ContactListFragment extends SuperAwesomeCardFragment implements OnC
 
         @Override
         public int getViewTypeCount() {
-            // SECITON, ITEM
+            // SECTION, ITEM
             return 2;
         }
 
@@ -222,9 +221,10 @@ public class ContactListFragment extends SuperAwesomeCardFragment implements OnC
             mHandler.post(new Runnable() {
                 @Override
                 public void run() {
-                    mLogger.debug("LOG_TAG","new runable to notifyDataSetChanged");
+                    mLogger.debug("LOG_TAG", "new runable to notifyDataSetChanged");
                     updateSections();
                     notifyDataSetChanged();
+
                 }
             });
         }
@@ -241,7 +241,6 @@ public class ContactListFragment extends SuperAwesomeCardFragment implements OnC
      */
     static class ContactsAdapter extends BaseAdapter {
         private final LayoutInflater mInflater;
-
         private final Context mContext;
         private List<PBXPhoneBookBean> mContacts;
         private final String mSectionText;
@@ -284,12 +283,10 @@ public class ContactListFragment extends SuperAwesomeCardFragment implements OnC
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             View view = convertView;
-
+            final PBXPhoneBookBean contact = (PBXPhoneBookBean) getItem(position);
             if (view == null) {
                 view = mInflater.inflate(R.layout.fragment_contact_remote_list_item, parent, false);
             }
-            final PBXPhoneBookBean contact = (PBXPhoneBookBean) getItem(position);
-
             if (contact != null) {
                 final ImageView ivAvatar = (ImageView) view
                         .findViewById(R.id.screen_tab_contacts_item_imageView_avatar);
@@ -297,20 +294,11 @@ public class ContactListFragment extends SuperAwesomeCardFragment implements OnC
                     final TextView tvDisplayName = (TextView) view
                             .findViewById(R.id.screen_tab_contacts_item_textView_displayname);
                     tvDisplayName.setText(contact.name);
-                    /*
-                    final Bitmap avatar = contact.getPhoto();
-                    if (avatar == null) {
-                        ivAvatar.setImageResource(R.drawable.ic_action_user);
-                    }
-                    else {
-                        ivAvatar.setImageBitmap(NgnGraphicsUtils.getResizedBitmap(avatar,
-                                NgnGraphicsUtils.getSizeInPixel(48),
-                                NgnGraphicsUtils.getSizeInPixel(48)));
-                    }
-                    */
+                    int colorId = mContext.getResources().getColor(ZycooConfigurationEntry.COLORS[(position % ZycooConfigurationEntry.COLORS.length)]);
+                    TextDrawable drawable = ZphoneApplication.getBuilderCircular().build(mSectionText, colorId);
+                    ivAvatar.setImageDrawable(drawable);
                 }
             }
-
             return view;
         }
     }
@@ -369,6 +357,9 @@ public class ContactListFragment extends SuperAwesomeCardFragment implements OnC
         initializePadding();
         mListView.setOnCreateContextMenuListener(this);
         mListView.setOnItemClickListener(this);
+        //http://www.quora.com/Why-does-the-scroll-bar-change-its-length-during-scrolling
+        //mListView.setSmoothScrollbarEnabled(false);
+
         new GetDataFromDBTask().execute(false);
         return view;
     }
