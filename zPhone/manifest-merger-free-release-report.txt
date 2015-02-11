@@ -42,6 +42,8 @@ MERGED from com.actionbarsherlock:actionbarsherlock:4.4.0:3:3
 MERGED from info.hoang8f:android-segmented:1.0.4:7:5
 MERGED from ZPhone:swipeMenuListView:unspecified:7:5
 MERGED from com.android.support:support-v4:21.0.3:15:5
+MERGED from com.amulyakhare:com.amulyakhare.textdrawable:1.0.1:8:5
+MERGED from ZPhone:FloatingActionButton:unspecified:7:5
 	tools:overrideLibrary
 		ADDED from AndroidManifest.xml:11:9
 	android:targetSdkVersion
@@ -197,6 +199,8 @@ MERGED from com.android.support:support-v4:21.0.3:16:5
 MERGED from com.actionbarsherlock:actionbarsherlock:4.4.0:4:3
 MERGED from ZPhone:swipeMenuListView:unspecified:11:5
 MERGED from com.android.support:support-v4:21.0.3:16:5
+MERGED from com.amulyakhare:com.amulyakhare.textdrawable:1.0.1:12:5
+MERGED from ZPhone:FloatingActionButton:unspecified:11:5
 	android:label
 		ADDED from AndroidManifest.xml:46:9
 		REJECTED from ZPhone:library:unspecified:14:9

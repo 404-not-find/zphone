@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.amulyakhare.textdrawable.TextDrawable;
 import com.github.curioustechizen.ago.RelativeTimeTextView;
 import com.zycoo.android.zphone.DatabaseHelper;
 import com.zycoo.android.zphone.R;
@@ -231,13 +232,9 @@ public class MessageAdapter extends BaseExpandableListAdapter {
                                 .getColor(
                                         com.zycoo.android.zphone.R.color.dark_grey));
                     }
-                  /*  if (childPosition % 2 == 0) {
-                        voicemailItemViewHolder.mVoicemailItemRv
-                                .setBackgroundColor(ZphoneApplication.color_grey_100);
-                    } else {
-                        voicemailItemViewHolder.mVoicemailItemRv
-                                .setBackgroundColor(ZphoneApplication.color_grey_200);
-                    }*/
+                    int colorId = Utils.getColorResourceId(mContext, childPosition);
+                    TextDrawable textDrawable = ZphoneApplication.getBuilderRect().build(newName.substring(0, 1), colorId);
+                    voicemailItemViewHolder.photoIv.setImageDrawable(textDrawable);
                 }
                 break;
             case 1:
@@ -262,14 +259,9 @@ public class MessageAdapter extends BaseExpandableListAdapter {
                     monitorViewHolder.mTypeTv.setText(selectRecordBean.getType());
                     monitorViewHolder.mNameTv.setText(selectRecordBean.getFrom() + "--"
                             + selectRecordBean.getTo());
-
-                    /*if (childPosition % 2 == 0) {
-                        monitorViewHolder.mMonitorItemRv
-                                .setBackgroundColor(ZphoneApplication.color_grey_100);
-                    } else {
-                        monitorViewHolder.mMonitorItemRv
-                                .setBackgroundColor(ZphoneApplication.color_grey_200);
-                    }*/
+                    int colorId = Utils.getColorResourceId(mContext, childPosition);
+                    TextDrawable textDrawable = ZphoneApplication.getBuilderCircular().build(selectRecordBean.getFrom().substring(0, 1), colorId);
+                    monitorViewHolder.photoIv.setImageDrawable(textDrawable);
                 }
                 break;
             default:
@@ -304,12 +296,13 @@ public class MessageAdapter extends BaseExpandableListAdapter {
             expandedIv = (ImageView) v
                     .findViewById(R.id.sample_activity_list_group_expanded_image);
             badge_tv = (TextView) v.findViewById(R.id.menu_badge_text);
+
         }
     }
 
     class MonitorViewHolder {
         RelativeLayout mMonitorItemRv;
-        ImageView mPhotoIv;
+        ImageView photoIv;
         TextView mNameTv;
         TextView mTypeTv;
         RelativeTimeTextView mDateTv;
@@ -322,11 +315,13 @@ public class MessageAdapter extends BaseExpandableListAdapter {
             mDurationTv = (TextView) v.findViewById(R.id.monitor_duration);
             mDateTv = (RelativeTimeTextView) v.findViewById(R.id.monitor_date);
             mMonitorItemRv = (RelativeLayout) v.findViewById(R.id.monitor_item_rv);
+            photoIv = (ImageView) v.findViewById(android.R.id.icon);
         }
     }
 
     class VoiceMailViewHolder {
         RelativeLayout mVoicemailItemRv;
+        ImageView photoIv;
         TextView nameTv;
         RelativeTimeTextView dateTv;
         TextView durationTv;
@@ -337,6 +332,7 @@ public class MessageAdapter extends BaseExpandableListAdapter {
             durationTv = (TextView) v.findViewById(R.id.time_duration);
             nameTv = (TextView) v.findViewById(R.id.item_name);
             mVoicemailItemRv = (RelativeLayout) v.findViewById(R.id.voicemail_item_rv);
+            photoIv = (ImageView) v.findViewById(android.R.id.icon);
         }
     }
 

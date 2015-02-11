@@ -91,7 +91,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_toRightOf="@+id/screen_presence_imageButton_cam"
-                    android:src="@drawable/folder_movie_24"
                     android:visibility="invisible" >
                 </ImageButton>
 

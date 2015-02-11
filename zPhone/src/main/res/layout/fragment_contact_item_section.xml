@@ -12,10 +12,11 @@
         android:layout_height="wrap_content"
         android:gravity="start"
         android:textDirection="locale"
-        android:paddingStart="72dp"
-        android:paddingEnd="72dp"
         android:textColor="@color/grey_700"
         android:textSize="20sp"
-        tools:text="Two Toasters" />
+        tools:text="Two Toasters"
+        android:paddingRight="72dp"
+        android:paddingLeft="72dp"
+        />
 
 </LinearLayout>

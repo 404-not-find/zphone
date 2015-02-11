@@ -22,7 +22,7 @@ android {
         }
         free {
             applicationId = "com.zycoo.android.zphone.free"
-            minSdkVersion 8
+            minSdkVersion 10
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
             targetSdkVersion 21
             testInstrumentationRunner 'android.test.'
@@ -37,7 +37,7 @@ android {
     defaultConfig {
         //applicationId "com.zycoo.android.zphone"
         manifestPlaceholders = [FLAVORS_VALUE: "pro"];
-        minSdkVersion 8
+        minSdkVersion 10
         targetSdkVersion 21
         multiDexEnabled true
         testApplicationId "com.zycoo.android.zphone.test"
@@ -110,8 +110,11 @@ dependencies {
     compile 'info.hoang8f:android-segmented:1.0.4'
     compile project(':swipeMenuListView')
     //https://github.com/hoang8f/android-segmented-control
-
     //---------------https://github.com/koush/AndroidAsync -------
-        compile 'com.koushikdutta.async:androidasync:2.+'
+    compile 'com.koushikdutta.async:androidasync:2.+'
+    ///-----------------------TextDrawable-------------------------
+    //https://github.com/amulyakhare/TextDrawable
+    compile 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'
+    compile project(':FloatingActionButton')
 }
 

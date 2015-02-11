@@ -40,6 +40,7 @@ import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
 import com.actionbarsherlock.view.MenuItem;
+import com.faizmalkani.floatingactionbutton.FloatingActionButton;
 import com.zycoo.android.zphone.Engine;
 import com.zycoo.android.zphone.ui.MainActivity;
 import com.zycoo.android.zphone.R;
@@ -92,6 +93,7 @@ public class DialerFragment extends SuperAwesomeCardFragment implements OnClickL
     private HistoryEventItem historyEventItem;
     private SimpleAdapter mSimpleAdapter;
     private List<Map<String, Object>> mAccountMap;
+    private FloatingActionButton mFab;
     // 拨号按键反馈
     private DialingFeedback dialFeedback;
     // 拨号盘1和0
@@ -236,7 +238,7 @@ public class DialerFragment extends SuperAwesomeCardFragment implements OnClickL
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_dial, null);
+        view = inflater.inflate(R.layout.fragment_dial, container, false);
         mDial_call_log_segmented = (SegmentedGroup) view.findViewById(R.id.dial_call_log_segmented);
         mSpinner = (Spinner) view.findViewById(R.id.spinnerAdapter);
         digits = (DigitsEditText) view.findViewById(R.id.digitsText);
@@ -244,6 +246,9 @@ public class DialerFragment extends SuperAwesomeCardFragment implements OnClickL
         callBar = (DialerCallBar) view.findViewById(R.id.dialerCallBar);
         dialText = (ImageButton) view.findViewById(R.id.dialTextDigitButton);
         autoCompleteList = (ListView) view.findViewById(R.id.autoCompleteList);
+        mFab = (FloatingActionButton) view.findViewById(R.id.fab_button);
+        mFab.listenTo(autoCompleteList);
+        mFab.setOnClickListener(this);
         //拨号历史分类
         mDial_call_log_segmented.setOnCheckedChangeListener(this);
         //关闭快速滚动
@@ -497,7 +502,6 @@ public class DialerFragment extends SuperAwesomeCardFragment implements OnClickL
     }
 
 
-
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
         afterTextChanged(digits.getText());
@@ -508,7 +512,7 @@ public class DialerFragment extends SuperAwesomeCardFragment implements OnClickL
             ((HistoryEventItemAdapter) itemAdapter).setInsearchMode(true);
         }
         //当未显示时，可能影响界面恢复
-        if(mIsVisibleToUser) {
+        if (mIsVisibleToUser) {
             itemAdapter.getFilter().filter(newText);
         }
         // Allow account chooser button to automatically change again as we have
@@ -583,6 +587,12 @@ public class DialerFragment extends SuperAwesomeCardFragment implements OnClickL
                 digits.setCursorVisible(true);
             }
         }
+        switch (viewId)
+        {
+            case R.id.fab_button:
+                setTextDialing(isDigit);
+                break;
+        }
 
     }
 
@@ -643,6 +653,7 @@ public class DialerFragment extends SuperAwesomeCardFragment implements OnClickL
 
         // Update views visibility
         dialPad.setVisibility(isDigit ? View.VISIBLE : View.GONE);
+        callBar.setVisibility(isDigit ? View.VISIBLE : View.GONE);
         autoCompleteList.setVisibility(hasAutocompleteList() ? View.VISIBLE : View.GONE);
 
         // Invalidate to ask to require the text button to a digit button

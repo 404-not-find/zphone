@@ -43,7 +43,6 @@ public class ZycooConfigurationEntry {
     public static final String DATA_BASE_NAME = "SoftPhone.db";
 
 
-
     //general
     public static final String GENERAL_KEYPAD_VIBRATION = "GENERAL_KEYPAD_VIBRATION." + TAG;
     public static final String GENERAL_KEYPAD_TONES = "GENERAL_KEYPAD_TONES." + TAG;
@@ -57,4 +56,8 @@ public class ZycooConfigurationEntry {
     public static final String FIRST_LOGIN = "first_login" + TAG;
     //currentColor
     public static final String CURRENT_COLOR = "currentColor" + TAG;
+
+    //Color Item
+    public static final int[] COLORS = {R.color.red_100, R.color.pink_200, R.color.grey_600, R.color.blue_700};
+
 }

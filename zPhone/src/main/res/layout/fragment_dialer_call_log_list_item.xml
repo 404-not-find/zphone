@@ -24,9 +24,8 @@
         android:textColor="?android:attr/textColorPrimary"
         android:textSize="16sp" />
 
-    <com.github.curioustechizen.ago.RelativeTimeTextView
-        android:text="time"
-        android:id="@+id/call_history_time_tv"
+    <TextView
+        android:id="@+id/number"
         android:layout_below="@id/name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -42,11 +41,12 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_marginEnd="16dp"
-        android:clickable="true"
+        android:duplicateParentState="true"
         android:focusable="false"
         android:focusableInTouchMode="false"
         android:scaleType="fitCenter"
-        android:src="@drawable/call_outgoing_45" />
+        android:tint="@color/blue_700"
+        android:src="@drawable/ic_call_grey600"/>
 
 
     <TextView
@@ -60,9 +60,10 @@
         android:layout_marginEnd="16dp"
         android:textSize="14sp" />
 
-    <TextView
-        android:id="@+id/number"
-        android:layout_alignBaseline="@id/call_history_time_tv"
+
+    <com.github.curioustechizen.ago.RelativeTimeTextView
+        android:id="@+id/call_history_time_tv"
+        android:layout_alignBaseline="@id/number"
         android:layout_toStartOf="@id/secondary_action_icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

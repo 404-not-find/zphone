@@ -17,11 +17,13 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.amulyakhare.textdrawable.TextDrawable;
 import com.github.curioustechizen.ago.RelativeTimeTextView;
 import com.zycoo.android.zphone.Engine;
 import com.zycoo.android.zphone.R;
 import com.zycoo.android.zphone.ZphoneApplication;
 import com.zycoo.android.zphone.utils.AndroidUtils;
+import com.zycoo.android.zphone.utils.Utils;
 
 import org.doubango.ngn.media.NgnMediaType;
 import org.doubango.ngn.model.NgnContact;
@@ -102,7 +104,7 @@ public class HistoryEventItemAdapter
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         ContactViewHolder contactViewHolder = null;
         CallLogHolderView callLogHolderView = null;
         if (historyItems.get(position) instanceof ContactItem) {
@@ -130,7 +132,8 @@ public class HistoryEventItemAdapter
                     if (null != bitmap) {
                         con.photoBitmapView.setImageBitmap(bitmap);
                     } else {
-                        con.photoBitmapView.setImageResource(R.drawable.ic_contact_picture_holo_light);
+                        TextDrawable drawable = ZphoneApplication.getBuilderRect().build(contact.getDisplayName().substring(0, 1), Utils.getColorResourceId(context, position));
+                        con.photoBitmapView.setImageDrawable(drawable);
                     }
                     super.onPostExecute(aVoid);
                 }
@@ -142,11 +145,6 @@ public class HistoryEventItemAdapter
                     return null;
                 }
             }.execute(contactViewHolder);
-            if (position % 2 == 0) {
-                contactViewHolder.mItemRv.setBackgroundColor(ZphoneApplication.color_grey_100);
-            } else {
-                contactViewHolder.mItemRv.setBackgroundColor(ZphoneApplication.color_grey_200);
-            }
         } else if (historyItems.get(position) instanceof HistoryEventItem) {
             NgnHistoryEvent event = ((HistoryEventItem) historyItems.get(position)).getEvent();
             if (null == convertView
@@ -185,28 +183,23 @@ public class HistoryEventItemAdapter
 
             switch (event.getStatus()) {
                 case Outgoing:
-                    callLogHolderView.callTypeIconsView
-                            .setImageResource(R.drawable.call_outgoing_45);
+                    callLogHolderView.callTypeIconsView.setImageResource(R.drawable.ic_call_made_white);
+                    Utils.setImageViewFilter(callLogHolderView.callTypeIconsView, R.color.light_blue);
                     break;
                 case Incoming:
-                    callLogHolderView.callTypeIconsView
-                            .setImageResource(R.drawable.call_incoming_45);
+                    callLogHolderView.callTypeIconsView.setImageResource(R.drawable.ic_call_received_white);
+                    Utils.setImageViewFilter(callLogHolderView.callTypeIconsView, R.color.blue_700);
                     break;
                 case Failed:
                 case Missed:
-                    callLogHolderView.callTypeIconsView.setImageResource(R.drawable.call_missed_45);
+                    callLogHolderView.callTypeIconsView.setImageResource(R.drawable.ic_call_missed_white);
+                    Utils.setImageViewFilter(callLogHolderView.callTypeIconsView, R.color.red_500);
                     break;
             }
             callLogHolderView.callTimeTextView.setReferenceTime(event.getStartTime());
             callLogHolderView.callDurationTextView.setText(AndroidUtils.formatIntToTimeStr((event
                     .getEndTime()
                     - event.getStartTime()) / 1000));
-
-            if (position % 2 == 0) {
-                callLogHolderView.mItemRv.setBackgroundColor(ZphoneApplication.color_grey_100);
-            } else {
-                callLogHolderView.mItemRv.setBackgroundColor(ZphoneApplication.color_grey_200);
-            }
             //TODO 需要根据呼叫号码查询数据库获取头像
         }
         return convertView;

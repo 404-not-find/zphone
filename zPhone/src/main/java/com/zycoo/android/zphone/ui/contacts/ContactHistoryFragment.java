@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.github.curioustechizen.ago.RelativeTimeTextView;
@@ -63,35 +64,35 @@ public class ContactHistoryFragment extends SuperAwesomeCardFragment implements 
         return callDetailHistoryView;
     }
 
-    public LinearLayout buildCallLogLayout(int callType, final String callNumber,
+    public RelativeLayout buildCallLogLayout(int callType, final String callNumber,
                                            final int callDuration, final long callDate) {
         // Inflates the address layout
-        final LinearLayout callLogLayout =
-                (LinearLayout) LayoutInflater.from(getActivity()).inflate(
-                        R.layout.list_item_avatar_with_text_and_icon_three_line_relative_time, mCallLogLayout, false);
+        final RelativeLayout callLogLayout =
+                (RelativeLayout) LayoutInflater.from(getActivity()).inflate(
+                        R.layout.fragment_dialer_call_log_list_item, mCallLogLayout, false);
         //get views
         final ImageView callTypeIv = (ImageView) callLogLayout
-                .findViewById(R.id.id_item_av_iv);
+                .findViewById(R.id.call_type_icons);
         final TextView callNumberTv = (TextView) callLogLayout
-                .findViewById(R.id.id_item_name_tv);
+                .findViewById(R.id.name);
         final TextView callDurationTv = (TextView) callLogLayout
-                .findViewById(R.id.id_item_second_name_tv);
+                .findViewById(R.id.call_history_duration_tv);
         final RelativeTimeTextView callDateTv = (RelativeTimeTextView) callLogLayout
-                .findViewById(R.id.id_item_three_name_tv);
+                .findViewById(R.id.call_history_time_tv);
         // If there's no addresses for the contact, shows the empty view and message, and hides the
         // header and button.
         switch (callType) {
             case CallLog.Calls.INCOMING_TYPE:
-                callTypeIv.setImageResource(R.drawable.ic_call_received_grey600);
+                callTypeIv.setImageResource(R.drawable.ic_call_received_white);
                 Utils.setImageViewFilter(callTypeIv, R.color.light_blue);
                 break;
             case CallLog.Calls.OUTGOING_TYPE:
-                callTypeIv.setImageResource(R.drawable.ic_call_made_grey600);
+                callTypeIv.setImageResource(R.drawable.ic_call_made_white);
                 Utils.setImageViewFilter(callTypeIv, R.color.blue_700);
                 break;
 
             case CallLog.Calls.MISSED_TYPE:
-                callTypeIv.setImageResource(R.drawable.ic_call_missed_grey600);
+                callTypeIv.setImageResource(R.drawable.ic_call_missed_white);
                 Utils.setImageViewFilter(callTypeIv, R.color.red_700);
                 break;
             default:
@@ -104,8 +105,9 @@ public class ContactHistoryFragment extends SuperAwesomeCardFragment implements 
             callDurationTv.setVisibility(View.GONE);
         }
         callDateTv.setReferenceTime(callDate);
-        final ImageView callIv = (ImageView) callLogLayout.findViewById(R.id.id_item_icon_iv);
-        callIv.setImageResource(R.drawable.ic_call_grey600);
+        final ImageView callIv = (ImageView) callLogLayout.findViewById(R.id.secondary_action_icon);
+        callIv.setImageResource(R.drawable.ic_call_white);
+        Utils.setImageViewFilter(callIv, R.color.blue_700);
         callIv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -165,16 +167,16 @@ public class ContactHistoryFragment extends SuperAwesomeCardFragment implements 
                     do {
                         i++;
                         //Builds the address layout
-                        final LinearLayout layout = buildCallLogLayout(
+                        final RelativeLayout layout = buildCallLogLayout(
                                 data.getInt(data.getColumnIndex(CallLog.Calls.TYPE)),
                                 data.getString(data.getColumnIndex(CallLog.Calls.NUMBER)),
                                 data.getInt(data.getColumnIndex(CallLog.Calls.DURATION)),
                                 data.getLong(data.getColumnIndex(CallLog.Calls.DATE)));
-                        if (i % 2 == 0) {
+                        /*if (i % 2 == 0) {
                             layout.setBackgroundColor(ZphoneApplication.color_grey_200);
                         } else {
                             layout.setBackgroundColor(ZphoneApplication.color_grey_100);
-                        }
+                        }*/
                         mCallLogLayout.addView(layout, callLogLayoutParams);
                     } while (data.moveToNext());
                 } else {

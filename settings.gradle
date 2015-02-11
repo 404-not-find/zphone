@@ -1,4 +1,4 @@
-include ':androidngnstack', ':VLCLibrary', ':libvlc', ':PanningViewLibrary', ':paho'
+include ':androidngnstack', ':VLCLibrary', ':libvlc', ':PanningViewLibrary', ':paho', ':FloatingActionButton'
 include ':library'
 include ':zPhone'
 include ':switchButton'

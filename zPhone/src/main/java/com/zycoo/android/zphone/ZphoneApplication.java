@@ -5,8 +5,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
 import android.support.multidex.MultiDex;
-import android.util.Log;
 
+import com.amulyakhare.textdrawable.TextDrawable;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
 
@@ -23,6 +23,8 @@ public class ZphoneApplication extends NgnApplication {
     private final static String PROPERTY_ID = "UA-47275396-3";
     private static List<Activity> mActivityList = new ArrayList<Activity>();
     protected INgnConfigurationService mConfigurationService;
+    private TextDrawable.IBuilder mTextDrawableIBuilderRect;
+    private TextDrawable.IBuilder mTextDrawableIBuilderCircular;
     private INgnSipService mSipService;
     public static int color_grey_100;
     public static int color_grey_200;
@@ -30,7 +32,18 @@ public class ZphoneApplication extends NgnApplication {
 
     public ZphoneApplication() {
         CrashHandler.getInstance().init(this);
+        mTextDrawableIBuilderRect = TextDrawable.builder()
+                .beginConfig()
+                .withBorder(2)
+                .endConfig()
+                .rect();
+        mTextDrawableIBuilderCircular = TextDrawable.builder()
+                .beginConfig()
+                .withBorder(2)
+                .endConfig()
+                .round();
     }
+
 
     public static Resources getAppResources() {
         return getContext().getResources();
@@ -108,9 +121,18 @@ public class ZphoneApplication extends NgnApplication {
         }
         return mTrackers.get(trackerId);
     }
+
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
         MultiDex.install(this);
+    }
+
+    public static TextDrawable.IBuilder getBuilderRect() {
+        return sInstance.mTextDrawableIBuilderRect;
+    }
+
+    public static TextDrawable.IBuilder getBuilderCircular() {
+        return sInstance.mTextDrawableIBuilderCircular;
     }
 }
