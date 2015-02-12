@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:custom="http://schemas.android.com/apk/res-auto"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-    >
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <TableRow
         android:layout_width="match_parent"
@@ -13,20 +12,19 @@
         <com.zycoo.android.zphone.widget.DialDialpadButton
             style="@style/DialpadButtonStyle"
             custom:text1="1"
-            android:id="@+id/button1"
-            />
+            android:id="@+id/button1" />
 
         <com.zycoo.android.zphone.widget.DialDialpadButton
             style="@style/DialpadButtonStyle"
             custom:text1="2"
             custom:text2="ABC"
-            android:id="@+id/button2"/>
+            android:id="@+id/button2" />
 
         <com.zycoo.android.zphone.widget.DialDialpadButton
             style="@style/DialpadButtonStyle"
             custom:text1="3"
             custom:text2="DEF"
-            android:id="@+id/button3"/>
+            android:id="@+id/button3" />
     </TableRow>
 
     <TableRow
@@ -38,22 +36,19 @@
             style="@style/DialpadButtonStyle"
             custom:text1="4"
             android:id="@+id/button4"
-            custom:text2="GHI"
-            />
+            custom:text2="GHI" />
 
         <com.zycoo.android.zphone.widget.DialDialpadButton
             style="@style/DialpadButtonStyle"
             custom:text1="5"
             android:id="@+id/button5"
-            custom:text2="JKL"
-            />
+            custom:text2="JKL" />
 
         <com.zycoo.android.zphone.widget.DialDialpadButton
             style="@style/DialpadButtonStyle"
             custom:text1="6"
             android:id="@+id/button6"
-            custom:text2="MNO"
-            />
+            custom:text2="MNO" />
 
 
     </TableRow>
@@ -67,22 +62,19 @@
             style="@style/DialpadButtonStyle"
             custom:text1="7"
             android:id="@+id/button7"
-            custom:text2="PQRS"
-            />
+            custom:text2="PQRS" />
 
         <com.zycoo.android.zphone.widget.DialDialpadButton
             style="@style/DialpadButtonStyle"
             custom:text1="8"
             android:id="@+id/button8"
-            custom:text2="TUV"
-            />
+            custom:text2="TUV" />
 
         <com.zycoo.android.zphone.widget.DialDialpadButton
             style="@style/DialpadButtonStyle"
             custom:text1="9"
             android:id="@+id/button9"
-            custom:text2="WXYZ"
-            />
+            custom:text2="WXYZ" />
     </TableRow>
 
     <TableRow
@@ -94,21 +86,18 @@
         <com.zycoo.android.zphone.widget.DialDialpadButton
             style="@style/DialpadButtonStyle"
             custom:text1="*"
-            android:id="@+id/buttonstar"
-            />
+            android:id="@+id/buttonstar" />
 
 
         <com.zycoo.android.zphone.widget.DialDialpadButton
             style="@style/DialpadButtonStyle"
             custom:text1="0"
             android:id="@+id/button0"
-            custom:text2="+"
-            />
+            custom:text2="+" />
 
         <com.zycoo.android.zphone.widget.DialDialpadButton
             style="@style/DialpadButtonStyle"
             custom:text1="#"
-            android:id="@+id/buttonpound"
-            />
+            android:id="@+id/buttonpound" />
     </TableRow>
 </TableLayout>

@@ -26,15 +26,15 @@ public class DialDialpadButton extends RelativeLayout {
 
     public DialDialpadButton(Context context, AttributeSet attrs) {
         super(context, attrs);
+        LayoutInflater.from(context).inflate(R.layout.dial_dialpad_button, this, true);
         TypedArray array = context.obtainStyledAttributes(attrs,
                 R.styleable.Options, 0, 0);
         String text1 = array.getString(R.styleable.Options_text1);
         String text2 = array.getString(R.styleable.Options_text2);
-        float textSize1 = array.getFloat(R.styleable.Options_textSize1, 48);
+        float textSize1 = array.getFloat(R.styleable.Options_textSize1, 30);
         float textSize2 = array.getFloat(R.styleable.Options_textSize2, 14);
         boolean text2Visible = array.getBoolean(R.styleable.Options_text2visible, true);
         array.recycle();
-        View rootView = LayoutInflater.from(context).inflate(R.layout.dial_dialpad_button, this, true);
         tv1 = (TextView) findViewById(android.R.id.text1);
         tv2 = (TextView) findViewById(android.R.id.text2);
         tv1.setText(text1);
@@ -48,7 +48,6 @@ public class DialDialpadButton extends RelativeLayout {
 
     public void setTextViewText1(String text) {
         tv1.setText(text);
-
     }
 
     public void setTextViewText2(String text) {

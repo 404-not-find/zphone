@@ -59,7 +59,6 @@ import com.twotoasters.sectioncursoradapter.SectionCursorAdapter;
 import com.zycoo.android.zphone.BuildConfig;
 import com.zycoo.android.zphone.R;
 import com.zycoo.android.zphone.ZphoneApplication;
-import com.zycoo.android.zphone.ZycooConfigurationEntry;
 import com.zycoo.android.zphone.ui.dialpad.ScreenAV;
 import com.zycoo.android.zphone.utils.ImageLoader;
 import com.zycoo.android.zphone.utils.Utils;
@@ -813,7 +812,7 @@ public class ContactsListFragment extends SuperAwesomeCardFragment implements
             mInflater = LayoutInflater.from(context);
             // Defines a span for highlighting the part of a display name that matches the search
             // string
-            highlightTextSpan = new TextAppearanceSpan(getActivity(), R.style.searchTextHiglight);
+            highlightTextSpan = new TextAppearanceSpan(getActivity(), R.style.searchTextHighlight);
         }
 
         /**

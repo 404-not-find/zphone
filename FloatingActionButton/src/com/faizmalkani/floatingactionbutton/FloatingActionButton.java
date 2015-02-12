@@ -36,6 +36,7 @@ public class FloatingActionButton extends View {
     private int mRightDisplayed = -1;
     private int mTopDisplayed = -1;
     private int mBottomDisplayed = -1;
+
     /**
      * The FAB button's Y position when it is displayed.
      */
@@ -144,8 +145,8 @@ public class FloatingActionButton extends View {
             color = darkenColor(mColor);
             rect = new Rect(mLeftDisplayed, mTopDisplayed, mRightDisplayed, mBottomDisplayed);
         }
-        if (event.getAction() == MotionEvent.ACTION_MOVE){
-            if (!rect.contains(mLeftDisplayed + (int) event.getX(), mTopDisplayed + (int) event.getY())){
+        if (event.getAction() == MotionEvent.ACTION_MOVE) {
+            if (!rect.contains(mLeftDisplayed + (int) event.getX(), mTopDisplayed + (int) event.getY())) {
                 color = mColor;
             }
         }
@@ -158,15 +159,12 @@ public class FloatingActionButton extends View {
         hideWithTime(hide, 500);
     }
 
-    public void hideWithTime(boolean hide, int time)
-    {
+    public void hideWithTime(boolean hide, int time) {
 
         // If the hidden state is being updated
         if (mHidden != hide) {
-
             // Store the new hidden state
             mHidden = hide;
-
             // Animate the FAB to it's new Y position
             ObjectAnimator animator = ObjectAnimator.ofFloat(this, "y", mHidden ? mYHidden : mYDisplayed).setDuration(time);
             animator.setInterpolator(mInterpolator);
@@ -175,10 +173,17 @@ public class FloatingActionButton extends View {
     }
 
 
-    public void listenTo(HideDialpad hideDialpad, AbsListView listView) {
+    public void listenTo(final HideDialpad hideDialpad, AbsListView listView) {
         if (null != listView) {
-            DirectionScrollListener listener = new DirectionScrollListener(this,hideDialpad);
+            DirectionScrollListener listener = new DirectionScrollListener(this);
             listView.setOnScrollListener(listener);
+            listView.setOnTouchListener(new OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    hideDialpad.hideDialpad();
+                    return false;
+                }
+            });
         }
     }
 }

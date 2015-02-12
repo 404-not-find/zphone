@@ -26,14 +26,12 @@ class DirectionScrollListener implements AbsListView.OnScrollListener{
 
     private static final int DIRECTION_CHANGE_THRESHOLD = 1;
     private final FloatingActionButton mFloatingActionButton;
-    private HideDialpad mHideDialpad;
     private int mPrevPosition;
     private int mPrevTop;
     private boolean mUpdated;
 
-    DirectionScrollListener(FloatingActionButton floatingActionButton, HideDialpad hideDialpad) {
+    DirectionScrollListener(FloatingActionButton floatingActionButton) {
         mFloatingActionButton = floatingActionButton;
-        mHideDialpad = hideDialpad;
     }
 
     @Override
@@ -62,7 +60,7 @@ class DirectionScrollListener implements AbsListView.OnScrollListener{
 
     @Override
     public void onScrollStateChanged(AbsListView view, int scrollState) {
-        mHideDialpad.hideDialpad();
+
     }
 
 }

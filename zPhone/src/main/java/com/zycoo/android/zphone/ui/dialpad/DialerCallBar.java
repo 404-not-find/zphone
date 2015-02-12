@@ -82,7 +82,6 @@ public class DialerCallBar extends LinearLayout implements OnClickListener, OnLo
         findViewById(R.id.dialButton).setOnClickListener(this);
         findViewById(R.id.deleteButton).setOnClickListener(this);
         findViewById(R.id.deleteButton).setOnLongClickListener(this);
-        findViewById(R.id.dialTextDigitButton).setOnClickListener(this);
         this.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, 32));
 
         if (!Utils.isPro(ZphoneApplication.getContext())) {
@@ -129,7 +128,6 @@ public class DialerCallBar extends LinearLayout implements OnClickListener, OnLo
             findViewById(R.id.dialVideoButton).setVisibility(View.GONE);
         }
         findViewById(R.id.deleteButton).setEnabled(enabled);
-        findViewById(R.id.dialTextDigitButton).setEnabled(enabled);
     }
 
     /**
@@ -154,8 +152,6 @@ public class DialerCallBar extends LinearLayout implements OnClickListener, OnLo
                 actionListener.placeCall();
             } else if (viewId == R.id.deleteButton) {
                 actionListener.deleteChar();
-            } else if (viewId == R.id.dialTextDigitButton) {
-                actionListener.placeTextDigit(v);
             }
         }
     }

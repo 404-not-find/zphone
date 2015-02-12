@@ -33,6 +33,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RadioGroup;
 import android.widget.SimpleAdapter;
@@ -105,6 +106,7 @@ public class DialerFragment extends SuperAwesomeCardFragment implements OnClickL
     private final int[] buttonsToLongAttach = new int[]{
             R.id.button0, R.id.button1
     };
+    private LinearLayout dialPadLv;
     // 拨号盘
     private Dialpad dialPad;
     private AlertDialog missingVoicemailDialog;
@@ -115,7 +117,6 @@ public class DialerFragment extends SuperAwesomeCardFragment implements OnClickL
 
     // 拨号盘下方的语音拨号和视频拨号
     private DialerCallBar callBar;
-    private ImageButton dialText;
     // 标示双拨号盘
     private boolean mDualPane;
     // TODO 自动补全拨号
@@ -247,9 +248,10 @@ public class DialerFragment extends SuperAwesomeCardFragment implements OnClickL
         mDial_call_log_segmented = (SegmentedGroup) view.findViewById(R.id.dial_call_log_segmented);
         mSpinner = (Spinner) view.findViewById(R.id.spinnerAdapter);
         digits = (DigitsEditText) view.findViewById(R.id.digitsText);
+        dialPadLv = (LinearLayout) view.findViewById(R.id.dialPad_ll);
         dialPad = (Dialpad) view.findViewById(R.id.dialPad);
         callBar = (DialerCallBar) view.findViewById(R.id.dialerCallBar);
-        dialText = (ImageButton) view.findViewById(R.id.dialTextDigitButton);
+
         autoCompleteList = (ListView) view.findViewById(R.id.autoCompleteList);
         mFab = (FloatingActionButton) view.findViewById(R.id.fab_button);
 
@@ -258,9 +260,9 @@ public class DialerFragment extends SuperAwesomeCardFragment implements OnClickL
         mDial_call_log_segmented.setOnCheckedChangeListener(this);
         //关闭快速滚动
         autoCompleteList.setFastScrollEnabled(false);
-        mFab.listenTo(this ,autoCompleteList);
+        mFab.listenTo(this, autoCompleteList);
         //if (Build.VERSION.SDK_INT >= 11) {
-            autoCompleteList.setFastScrollAlwaysVisible(false);
+        autoCompleteList.setFastScrollAlwaysVisible(false);
         //}
         rewriteTextInfo = (TextView) view.findViewById(R.id.rewriteTextInfo);
 
@@ -544,19 +546,16 @@ public class DialerFragment extends SuperAwesomeCardFragment implements OnClickL
         // digitsWrapper.setBackgroundDrawable(notEmpty ? digitsBackground :
         // digitsEmptyBackground);
         //callBar.setEnabled(notEmpty);
-
         if (!notEmpty && isDigit) {
             digits.setCursorVisible(false);
         }
         applyTextToAutoComplete();
-
     }
 
     @Override
     public void onTrigger(int keyCode, int dialTone) {
         dialFeedback.giveFeedback(dialTone);
         keyPressed(keyCode);
-
     }
 
     private void keyPressed(int keyCode) {
@@ -589,10 +588,8 @@ public class DialerFragment extends SuperAwesomeCardFragment implements OnClickL
                 digits.setCursorVisible(true);
             }
         }
-        switch (viewId)
-        {
+        switch (viewId) {
             case R.id.fab_button:
-                mFab.hideWithTime(true, 0);
                 setTextDialing(isDigit);
                 break;
         }
@@ -628,12 +625,18 @@ public class DialerFragment extends SuperAwesomeCardFragment implements OnClickL
         setTextDialing(textMode, false);
     }
 
+
+    public void setTextDialing(boolean textMode, boolean forceRefresh)
+    {
+        setTextDialing(textMode, forceRefresh, true);
+    }
     /**
      * Set the mode of the text/digit input.
      *
      * @param textMode True if text mode. False if digit mode
      */
-    public void setTextDialing(boolean textMode, boolean forceRefresh) {
+    public void setTextDialing(boolean textMode, boolean forceRefresh, boolean animation) {
+
         if (!forceRefresh && (isDigit != null && isDigit == !textMode)) {
             // Nothing to do
             return;
@@ -652,30 +655,23 @@ public class DialerFragment extends SuperAwesomeCardFragment implements OnClickL
             digits.removeTextChangedListener(digitFormater);
         }
         digits.setCursorVisible(!isDigit);
-        digits.setIsDigit(isDigit, true);
+        digits.setIsDigit(isDigit, false);
 
-        // Update views visibility
-        if(isDigit)
-        {
-            dialPad.setVisibility(View.VISIBLE);
-            callBar.setVisibility(View.VISIBLE);
+        // Update views visibilityonRe
+        if (isDigit) {
+            dialPadLv.setVisibility(View.VISIBLE);
+            mFab.hide(true);
             YoYo.with(Techniques.SlideInUp)
-                    .duration(300)
-                    .playOn(dialPad);
-            YoYo.with(Techniques.SlideInUp)
-                    .duration(100)
-                    .playOn(callBar);
+                    .duration(800)
+                    .playOn(dialPadLv);
+        } else {
+            mFab.hide(false);
+            YoYo.with(Techniques.SlideOutDown)
+                    .duration(800)
+                    .playOn(dialPadLv);
+            dialPadLv.setVisibility(View.GONE);
         }
-        else
-        {
-            dialPad.setVisibility(View.GONE);
-            callBar.setVisibility(View.GONE);
-        }
-
         autoCompleteList.setVisibility(hasAutocompleteList() ? View.VISIBLE : View.GONE);
-
-        // Invalidate to ask to require the text button to a digit button
-        //getSherlockActivity().supportInvalidateOptionsMenu();
     }
 
     /**
@@ -724,13 +720,11 @@ public class DialerFragment extends SuperAwesomeCardFragment implements OnClickL
 
     @Override
     public void onResume() {
+        super.onResume();
         ((HistoryEventItemAdapter) itemAdapter).setInsearchMode(false);
         //界面恢复时通过拨号分类的OnCheckChange时间改变界面,不通过过滤
         //itemAdapter.getFilter().filter("");
         setTextDialing(true);
-        dialText.setImageResource(isDigit ? R.drawable.ic_translate_grey600
-                : R.drawable.ic_dialpad_grey600);
-        super.onResume();
     }
 
     @Override
@@ -894,9 +888,9 @@ public class DialerFragment extends SuperAwesomeCardFragment implements OnClickL
             });
         }
     }
-    public void hideDialpad()
-    {
-        if( dialPad.getVisibility() == View.VISIBLE) {
+
+    public void hideDialpad() {
+        if (dialPadLv.getVisibility() == View.VISIBLE) {
             setTextDialing(true);
         }
     }

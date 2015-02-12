@@ -85,6 +85,7 @@
 -keep class org.slf4j.LoggerFactory
 -keep class ch.qos.logback.core.**{ *; }
 -keep class ch.qos.logback.classic.**{ *; }
+-keep class com.faizmalkani.floatingactionbutton.**{ *;}
 -keep public class * extends android.app.Application
 
 

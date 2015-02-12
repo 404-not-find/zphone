@@ -45,8 +45,8 @@
         android:focusable="false"
         android:focusableInTouchMode="false"
         android:scaleType="fitCenter"
-        android:tint="@color/blue_700"
-        android:src="@drawable/ic_call_grey600"/>
+        android:tint="@color/green_500"
+        android:src="@drawable/ic_call_white"/>
 
 
     <TextView

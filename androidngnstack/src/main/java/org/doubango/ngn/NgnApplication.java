@@ -37,8 +37,6 @@ import android.media.AudioManager;
 import android.net.ConnectivityManager;
 import android.os.Build;
 import android.os.PowerManager;
-import android.support.multidex.MultiDex;
-import android.support.multidex.MultiDexApplication;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.Display;
@@ -303,8 +301,7 @@ import android.view.WindowManager;
  * Global object defining the application. You should extends this class in your own
  * Android application. 
  */
-
-public class NgnApplication extends Application {
+public class NgnApplication extends Application{
 	private final static String TAG = NgnApplication.class.getCanonicalName();
 	
 	private static NgnApplication sInstance;
@@ -609,7 +606,7 @@ public class NgnApplication extends Application {
     	// FIXME: one-way audio on Galaxy SII and Nexus
     	// return isSLEs2Supported() && Arrays.asList(sSLEs2FriendlyBuildModels).contains(sBuildModel); // AcceptOnlyIn(Array)
     	// return isSLEs2Supported() && !Arrays.asList(sSLEs2UnFriendlyBuildModels).contains(sBuildModel); // AcceptAllExceptIn(Array)
-    	return false;
+    	return isHovis(); //false;
     }
     
     public static boolean acquirePowerLock(){

@@ -20,8 +20,7 @@
     along with CSipSimple.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
-<com.zycoo.android.zphone.ui.dialpad.DialerLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<com.zycoo.android.zphone.ui.dialpad.DialerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/top_digit_dialer"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
@@ -90,20 +89,11 @@
     <RelativeLayout
         android:id="@+id/topField"
         android:layout_width="fill_parent"
-        android:layout_height="0dp"
+        android:layout_height="72dp"
         android:layout_marginBottom="0dip"
-        android:layout_weight="@integer/dialpad_layout_weight_digits"
-        android:background="@color/grey_100"
+        android:background="@color/white"
         android:orientation="horizontal"
         android:padding="0dip">
-
-        <!-- Dummy item to prevent DigitsEditText from receiving focus -->
-
-        <!-- <View
-             android:layout_width="0dp"
-             android:layout_height="0dp"
-             android:focusable="true"
-             android:focusableInTouchMode="true" />-->
 
         <LinearLayout
             android:id="@+id/account_choose_bt"
@@ -126,7 +116,6 @@
 
         <com.zycoo.android.zphone.ui.dialpad.DigitsEditText
             android:id="@+id/digitsText"
-
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:layout_alignParentStart="true"
@@ -143,37 +132,52 @@
             android:id="@+id/rewriteTextInfo"
             android:background="@color/grey_300"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="12dp"
             android:layout_alignParentBottom="true"
             android:layout_alignParentStart="true"
             android:gravity="center"
-            android:textColor="#88FFFFFF"
             android:textSize="12sp"
             android:textStyle="italic" />
-
-        <!--
-             <com.csipsimple.widgets.AccountChooserButton
-            android:id="@+id/accountChooserButton"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true" />
-        -->
     </RelativeLayout>
     <!-- Autocomplete -->
-    <FrameLayout
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+    <FrameLayout xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_weight="80"
         android:layout_height="0dp">
+
         <ListView
             android:id="@+id/autoCompleteList"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:background="@color/white"
             android:smoothScrollbar="true"
             android:verticalScrollbarPosition="left"
             android:visibility="gone" />
+
+        <LinearLayout
+            android:id="@+id/dialPad_ll"
+            android:background="@color/white"
+            android:layout_width="match_parent"
+            android:layout_height="272dp"
+            android:orientation="vertical"
+            android:visibility="invisible"
+            android:layout_gravity="bottom">
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@color/grey_200"/>
+            <com.zycoo.android.zphone.ui.dialpad.Dialpad
+                android:id="@+id/dialPad"
+                android:layout_width="match_parent"
+                android:layout_gravity="center_horizontal"
+                android:layout_height="224dp" />
+
+            <com.zycoo.android.zphone.ui.dialpad.DialerCallBar
+                android:id="@+id/dialerCallBar"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:orientation="horizontal" />
+        </LinearLayout>
 
         <com.faizmalkani.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab_button"
@@ -183,8 +187,8 @@
             android:layout_marginBottom="16dp"
             android:layout_marginEnd="16dp"
             app:color="@color/light_blue"
-            app:drawable="@drawable/ic_dialpad_white"/>
+            app:drawable="@drawable/ic_dialpad_white" />
     </FrameLayout>
     <!-- Keypad section -->
-    <include layout="@layout/fragment_dialpad_compose_3x5" />
+
 </com.zycoo.android.zphone.ui.dialpad.DialerLayout>

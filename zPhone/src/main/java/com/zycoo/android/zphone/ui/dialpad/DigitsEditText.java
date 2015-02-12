@@ -49,11 +49,11 @@ public class DigitsEditText extends EditText {
     public DigitsEditText(Context context) {
         this(context, null);
     }
-    
+
     public DigitsEditText(Context context, AttributeSet attrs, int style) {
         this(context, attrs);
     }
-    
+
     public DigitsEditText(Context context, AttributeSet attrs) {
         super(context, attrs);
         /*
@@ -67,10 +67,11 @@ public class DigitsEditText extends EditText {
         */
         setIsDigit(true, false);
     }
-    
+
     public synchronized void setIsDigit(boolean isDigit, boolean autofocus) {
-        if(this.isDigit == null || this.isDigit != isDigit) {
+        if (this.isDigit == null || this.isDigit != isDigit) {
             this.isDigit = isDigit;
+            //cancel focus
             reflexSetShowSoftInputOnFocus(!isDigit);
             if (isDigit) {
                 setRawInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
@@ -97,12 +98,12 @@ public class DigitsEditText extends EditText {
     @Override
     protected void onFocusChanged(boolean focused, int direction, Rect previouslyFocusedRect) {
         super.onFocusChanged(focused, direction, previouslyFocusedRect);
-        if(focused) {
+        if (focused) {
             applyKeyboardShowHide(false);
-        }else {
+        } else {
             final InputMethodManager imm = ((InputMethodManager) getContext()
                     .getSystemService(Context.INPUT_METHOD_SERVICE));
-            if(imm != null && imm.isActive(this)) {
+            if (imm != null && imm.isActive(this)) {
                 imm.hideSoftInputFromWindow(getApplicationWindowToken(), 0);
             }
         }
@@ -127,16 +128,16 @@ public class DigitsEditText extends EditText {
         return ret;
     }
 */
-    
+
     private void applyKeyboardShowHide(boolean autofocus) {
         final InputMethodManager imm = ((InputMethodManager) getContext()
                 .getSystemService(Context.INPUT_METHOD_SERVICE));
         if (imm != null) {
-            if(isDigit) {
-                if(imm.isActive(this)) {
+            if (isDigit) {
+                if (imm.isActive(this)) {
                     imm.hideSoftInputFromWindow(getApplicationWindowToken(), 0);
                 }
-            }else if(autofocus) {
+            } else if (autofocus) {
                 imm.showSoftInput(this, 0);
             }
         }
@@ -178,9 +179,9 @@ public class DigitsEditText extends EditText {
         // blink but for now no better way were found to hide keyboard for sure
         applyKeyboardShowHide(false);
     }
-    
+
     private void reflexSetShowSoftInputOnFocus(boolean show) {
-        if(showSoftInputOnFocus != null) {
+        if (showSoftInputOnFocus != null) {
             //UtilityWrapper.safelyInvokeMethod(showSoftInputOnFocus, this, show);
         }
     }
