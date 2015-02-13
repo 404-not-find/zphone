@@ -1,55 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/Two_line_list_Text_only"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/monitor_item_rv"
+    android:layout_height="72dp"
     android:layout_width="match_parent">
 
+    <ImageView
+        android:id="@android:id/icon"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        style="@style/item_iv_start"
+        android:src="@drawable/ic_voicemail_grey600"
+        />
+
     <TextView
-        style="@style/Two_line_list_Text_only_Text"
-        android:layout_marginTop="@dimen/Two_lines_list_text_only_padding_top"
-        android:layout_marginRight="@dimen/Two_lines_list_text_only_padding_right"
-        android:layout_alignParentRight="true"
         android:id="@+id/monitor_duration"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/grey_500"
-        android:text="@string/voice_mail"
-        android:textSize="@dimen/Two_lines_list_text_only_text_sec_size" />
+        android:layout_marginTop="16dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        tools:text="27s"
+        style="@style/item_tv3"
+        />
 
     <TextView
         android:id="@+id/monitor_name"
-        android:layout_toLeftOf="@id/monitor_duration"
-        android:layout_marginTop="@dimen/Two_lines_list_text_only_padding_top"
-        style="@style/Two_line_list_Text_only_Text"
-        android:text="@string/voice_mail"
-        android:textColor="@color/dark_grey"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="@dimen/Two_lines_list_text_only_text_pri_size" />
+        android:layout_toStartOf="@id/monitor_duration"
+        android:layout_toLeftOf="@id/monitor_duration"
+        android:layout_alignBaseline="@id/monitor_duration"
+        style="@style/item_tv1"
+        tools:text="name"
+        />
+
 
     <com.github.curioustechizen.ago.RelativeTimeTextView
-        android:paddingTop="5dp"
-        android:layout_alignParentEnd="true"
-        style="@style/Two_line_list_Text_only_Text"
         android:id="@+id/monitor_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/monitor_name"
-        android:text="@string/voice_mail"
-        android:textColor="@color/grey_500"
-        android:layout_marginEnd="@dimen/Two_lines_list_text_only_padding_right"
-        android:textSize="@dimen/Two_lines_list_text_only_text_sec_size" />
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/monitor_duration"
+        style="@style/item_tv4"
+        tools:text="2hour" />
 
     <TextView
-        android:layout_toStartOf="@id/monitor_date"
-        style="@style/Two_line_list_Text_only_Text"
-        android:layout_below="@id/monitor_name"
-        android:paddingTop="5dp"
         android:id="@+id/monitor_type"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@color/grey_500"
-        android:text="@string/voice_mail"
-        android:textSize="@dimen/Two_lines_list_text_only_text_sec_size" />
-
+        android:layout_below="@id/monitor_duration"
+        android:layout_toStartOf="@id/monitor_date"
+        android:layout_toLeftOf="@id/monitor_date"
+        style="@style/item_tv2"
+        tools:text="Recording"
+        />
 </RelativeLayout>

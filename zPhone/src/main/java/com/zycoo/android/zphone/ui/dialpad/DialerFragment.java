@@ -261,9 +261,10 @@ public class DialerFragment extends SuperAwesomeCardFragment implements OnClickL
         //关闭快速滚动
         autoCompleteList.setFastScrollEnabled(false);
         mFab.listenTo(this, autoCompleteList);
-        //if (Build.VERSION.SDK_INT >= 11) {
+	//java.lang.NoSuchMethodError: android.widget.ListView.setFastScrollAlwaysVisible
+        if (Build.VERSION.SDK_INT >= 11) {
         autoCompleteList.setFastScrollAlwaysVisible(false);
-        //}
+        }
         rewriteTextInfo = (TextView) view.findViewById(R.id.rewriteTextInfo);
 
         //声明一个SimpleAdapter独享，设置数据与对应关系
@@ -657,21 +658,20 @@ public class DialerFragment extends SuperAwesomeCardFragment implements OnClickL
         digits.setCursorVisible(!isDigit);
         digits.setIsDigit(isDigit, false);
 
-        // Update views visibilityonRe
         if (isDigit) {
             dialPadLv.setVisibility(View.VISIBLE);
             mFab.hide(true);
             YoYo.with(Techniques.SlideInUp)
-                    .duration(800)
+                    .duration(500)
                     .playOn(dialPadLv);
         } else {
             mFab.hide(false);
             YoYo.with(Techniques.SlideOutDown)
-                    .duration(800)
+                    .duration(500)
                     .playOn(dialPadLv);
-            dialPadLv.setVisibility(View.GONE);
         }
-        autoCompleteList.setVisibility(hasAutocompleteList() ? View.VISIBLE : View.GONE);
+        //autoCompleteList.setVisibility(hasAutocompleteList() ? View.VISIBLE : View.GONE);
+        autoCompleteList.setVisibility(View.VISIBLE);
     }
 
     /**

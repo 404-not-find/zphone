@@ -1,58 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="56dp">
 
     <QuickContactBadge
         android:id="@android:id/icon"
-        android:layout_centerVertical="true"
         android:layout_width="40dp"
         android:layout_height="40dp"
+        android:layout_centerVertical="true"
         android:scaleType="fitCenter"
-        android:layout_marginStart="16dp"
-        android:src="@drawable/ic_contact_picture_holo_light" />
-
-    <!--
-         Use standard android.R class text2 id instead of app specific id. This is just useful for
-         consistency. This is secondary text and not always visible so by default is has its
-         visibility set to gone
-    -->
+        android:src="@drawable/ic_account_box_grey600"
+        style="@style/item_iv_start" />
 
     <TextView
         android:id="@android:id/text2"
         android:layout_width="match_parent"
-        android:layout_height="20dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="72dp"
+        android:layout_marginBottom="8dp"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:ellipsize="marquee"
-        android:fontFamily="sans-serif"
-        android:paddingLeft="72dp"
-        android:singleLine="true"
-        android:text="Matches Other Field"
-        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textSize="14sp"
+        style="@style/item_tv2"
+        tools:text="Matches Other Field"
+        android:text="@string/matches_other_field"
         android:visibility="gone" />
-
-    <!--
-         Use standard android.R class text1 id instead of app specific id. This is just useful for
-         consistency. This view also sets layout_alignWithParentIfMissing=true which lets the view
-         align with the parent view if the text2 view is not part of the view hierarchy (which is
-         its initial state).
-    -->
 
     <TextView
         android:id="@android:id/text1"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_above="@android:id/text2"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
+        android:layout_centerVertical="true"
         android:layout_alignWithParentIfMissing="true"
-        android:ellipsize="marquee"
-        android:fontFamily="sans-serif-light"
+        android:layout_marginTop="8dp"
         android:gravity="center_vertical"
-        android:layout_marginLeft="72dp"
-        android:textSize="16sp"
-        android:singleLine="true"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-
+        style="@style/item_tv1"
+        tools:text="John Done" />
 </RelativeLayout>

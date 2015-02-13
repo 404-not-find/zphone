@@ -371,4 +371,65 @@
         <item name="android:paddingRight">5dp</item>
     </style>
 
+
+    <style name="contact_item_tv1">
+        <item name="android:gravity">left|center_vertical</item>
+        <item name="android:paddingLeft">72dp</item>
+        <item name="android:paddingRight">72dp</item>
+    </style>
+
+    <style name="item_iv_start">
+        <item name="android:layout_marginLeft">16dp</item>
+        <item name="android:layout_centerVertical">true</item>
+    </style>
+
+    <style name="contact_local_item_tv_base">
+        <item name="android:ellipsize">marquee</item>
+        <item name="android:singleLine">true</item>
+    </style>
+
+    <style name="item_tv_start" parent="contact_local_item_tv_base">
+        <item name="android:layout_marginLeft">72dp</item>
+    </style>
+
+    <style name="item_tv_end" parent="contact_local_item_tv_base">
+        <item name="android:layout_marginRight">16dp</item>
+    </style>
+
+    <style name="item_tv1" parent="item_tv_start">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/dark_grey</item>
+    </style>
+
+    <style name="item_tv2" parent="item_tv_start">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/grey_700</item>
+    </style>
+
+    <style name="item_tv3" parent="item_tv_end">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/grey_700</item>
+    </style>
+
+    <style name="item_tv4" parent="item_tv_end">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/grey_700</item>
+    </style>
+
+    <style name="gravity_bottom_end">
+        <item name="android:layout_gravity">bottom|right</item>
+    </style>
+
+    <style name="dial_pad_height">
+        <item name="android:layout_height">150dp</item>
+    </style>
+    <style name="dial_call_bar_height">
+        <item name="android:layout_height">36dp</item>
+    </style>
+    <style name="dial_pad_call_bar_height">
+        <item name="android:layout_height">186dp</item>
+    </style>
+    <style name="digits_edit_text_height">
+        <item name="android:layout_height">48dp</item>
+    </style>
 </resources>

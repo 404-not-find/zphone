@@ -21,5 +21,16 @@
         <item name="android:fastScrollAlwaysVisible">true</item>
         <item name="android:scrollbarStyle">outsideInset</item>
     </style>
-
+    <style name="dial_pad_height">
+        <item name="android:layout_height">224dp</item>
+    </style>
+    <style name="dial_call_bar_height">
+        <item name="android:layout_height">48dp</item>
+    </style>
+    <style name="dial_pad_call_bar_height">
+        <item name="android:layout_height">272dp</item>
+    </style>
+    <style name="digits_edit_text_height">
+        <item name="android:layout_height">56dp</item>
+    </style>
 </resources>

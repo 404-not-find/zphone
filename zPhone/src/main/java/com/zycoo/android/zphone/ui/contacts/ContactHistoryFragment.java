@@ -65,16 +65,16 @@ public class ContactHistoryFragment extends SuperAwesomeCardFragment implements 
     }
 
     public RelativeLayout buildCallLogLayout(int callType, final String callNumber,
-                                           final int callDuration, final long callDate) {
+                                             final int callDuration, final long callDate) {
         // Inflates the address layout
         final RelativeLayout callLogLayout =
                 (RelativeLayout) LayoutInflater.from(getActivity()).inflate(
                         R.layout.fragment_dialer_call_log_list_item, mCallLogLayout, false);
         //get views
         final ImageView callTypeIv = (ImageView) callLogLayout
-                .findViewById(R.id.call_type_icons);
+                .findViewById(android.R.id.icon1);
         final TextView callNumberTv = (TextView) callLogLayout
-                .findViewById(R.id.name);
+                .findViewById(android.R.id.text1);
         final TextView callDurationTv = (TextView) callLogLayout
                 .findViewById(R.id.call_history_duration_tv);
         final RelativeTimeTextView callDateTv = (RelativeTimeTextView) callLogLayout
@@ -105,7 +105,7 @@ public class ContactHistoryFragment extends SuperAwesomeCardFragment implements 
             callDurationTv.setVisibility(View.GONE);
         }
         callDateTv.setReferenceTime(callDate);
-        final ImageView callIv = (ImageView) callLogLayout.findViewById(R.id.secondary_action_icon);
+        final ImageView callIv = (ImageView) callLogLayout.findViewById(android.R.id.icon2);
         callIv.setImageResource(R.drawable.ic_call_white);
         Utils.setImageViewFilter(callIv, R.color.blue_700);
         callIv.setOnClickListener(new View.OnClickListener() {

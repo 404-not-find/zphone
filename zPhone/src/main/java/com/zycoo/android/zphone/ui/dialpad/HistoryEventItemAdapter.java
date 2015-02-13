@@ -11,9 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
-import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -250,12 +248,12 @@ public class HistoryEventItemAdapter
         public CallLogHolderView(View v) {
             v.setTag(this);
             callImageView = (ImageView) v
-                    .findViewById(R.id.secondary_action_icon);
+                    .findViewById(android.R.id.icon2);
 
-            nameTextView = (TextView) v.findViewById(R.id.name);
-            numberTextView = (TextView) v.findViewById(R.id.number);
+            nameTextView = (TextView) v.findViewById(android.R.id.text1);
+            numberTextView = (TextView) v.findViewById(android.R.id.text2);
             callTypeIconsView = (ImageView) v
-                    .findViewById(R.id.call_type_icons);
+                    .findViewById(android.R.id.icon1);
             callTimeTextView = (RelativeTimeTextView) v
                     .findViewById(R.id.call_history_time_tv);
             callDurationTextView = (TextView) v

@@ -98,9 +98,9 @@
     <string name="audio_call">Audio Call</string>
 
     <!-- Fragment Dial -->
-    <string name="in_call">Incoming</string>
     <string name="all_call">All</string>
-    <string name="out_call">Outgoing</string>
+    <string name="out_call">Out</string>
+    <string name="in_call">In</string>
     <string name="miss_call">Missed</string>
 
 
@@ -345,4 +345,6 @@
     <string name="downloaded_successful">Downloaded Successful</string>
     <string name="downloaded_file_to">Downloaded file to</string>
     <string name="download_failure">Download failure</string>
+
+    <string name="matches_other_field">Matches Other Field</string>
 </resources>

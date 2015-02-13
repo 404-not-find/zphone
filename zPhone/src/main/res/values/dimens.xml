@@ -132,9 +132,9 @@
     <integer name="dialpad_layout_weight_digits">10</integer>
     <integer name="dialpad_layout_weight_autocomplete_list">40</integer>
 
-    <dimen name="dialpad_vertical_margin">2dip</dimen>
-    <dimen name="dialpad_digits_text_size">35sp</dimen>
-    <dimen name="dialpad_no_digits_text_size">20sp</dimen>
+    <dimen name="dialpad_vertical_margin">1dp</dimen>
+    <dimen name="dialpad_digits_text_size">16sp</dimen>
+    <dimen name="dialpad_no_digits_text_size">14sp</dimen>
 
     <!-- Call Log -->
     <dimen name="call_log_icon_margin">4dip</dimen>

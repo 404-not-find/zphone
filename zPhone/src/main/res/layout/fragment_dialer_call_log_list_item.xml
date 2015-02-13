@@ -1,73 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/call_history_item_rv"
     android:layout_width="match_parent"
     android:layout_height="72dp">
 
     <ImageView
-        android:id="@+id/call_type_icons"
+        android:id="@android:id/icon1"
         android:layout_width="34dp"
-        android:layout_height="wrap_content"
+        android:layout_height="34dp"
         android:layout_centerVertical="true"
         android:scaleType="fitCenter"
-        android:src="@drawable/ic_call_missed_black"
-        android:layout_marginLeft="16dp" />
-
-    <TextView
-        android:id="@+id/name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:singleLine="true"
-        android:text="name"
-        android:layout_marginStart="72dp"
-        android:layout_marginTop="20dp"
-        android:textColor="?android:attr/textColorPrimary"
-        android:textSize="16sp" />
-
-    <TextView
-        android:id="@+id/number"
-        android:layout_below="@id/name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:singleLine="true"
-        android:layout_gravity="center_vertical"
-        android:layout_marginStart="72dp"
-        android:textSize="14sp" />
+        android:src="@drawable/ic_call_missed_grey600"
+        style="@style/item_iv_start" />
 
     <ImageView
+        android:id="@android:id/icon2"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:layout_alignParentEnd="true"
-        android:id="@+id/secondary_action_icon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:layout_marginEnd="16dp"
-        android:duplicateParentState="true"
         android:focusable="false"
         android:focusableInTouchMode="false"
         android:scaleType="fitCenter"
         android:tint="@color/green_500"
-        android:src="@drawable/ic_call_white"/>
+        android:src="@drawable/ic_call_white" />
 
 
     <TextView
         android:id="@+id/call_history_duration_tv"
-        android:layout_alignBaseline="@id/name"
+        android:layout_alignBaseline="@android:id/text1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:singleLine="true"
-        android:text="123"
-        android:layout_toStartOf="@id/secondary_action_icon"
-        android:layout_marginEnd="16dp"
-        android:textSize="14sp" />
+        android:layout_toStartOf="@android:id/icon2"
+        android:layout_toLeftOf="@android:id/icon2"
+        style="@style/item_tv3"
+        tools:text="56s" />
 
 
     <com.github.curioustechizen.ago.RelativeTimeTextView
         android:id="@+id/call_history_time_tv"
-        android:layout_alignBaseline="@id/number"
-        android:layout_toStartOf="@id/secondary_action_icon"
+        android:layout_alignBaseline="@android:id/text2"
+        android:layout_toStartOf="@android:id/icon2"
+        android:layout_toLeftOf="@android:id/icon2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:textSize="14sp"
-        android:text="27" />
+        style="@style/item_tv4"
+        tools:text="1hour" />
+
+
+    <TextView
+        android:id="@android:id/text1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_toStartOf="@id/call_history_duration_tv"
+        android:layout_toLeftOf="@id/call_history_duration_tv"
+        tools:text="123456789"
+        style="@style/item_tv1" />
+
+    <TextView
+        android:id="@android:id/text2"
+        android:layout_below="@android:id/text1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toStartOf="@id/call_history_time_tv"
+        android:layout_toLeftOf="@id/call_history_time_tv"
+        tools:text="sip:123456789@123456789"
+        style="@style/item_tv1" />
+
 </RelativeLayout>

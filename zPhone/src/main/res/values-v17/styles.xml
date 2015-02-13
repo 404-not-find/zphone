@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <style name="AppBaseTheme" parent="Theme.Sherlock.Light.DarkActionBar"></style>
+    <style name="AppBaseTheme" parent="Theme.Sherlock.Light.DarkActionBar" />
 
     <!-- Application theme. -->
-    <style name="AppTheme" parent="AppBaseTheme"></style>
+    <style name="AppTheme" parent="AppBaseTheme" />
 
     <style name="Icon_with_text_Text_start_base">
         <item name="android:layout_marginStart">@dimen/icon_with_text_text_padding_left_16dp</item>
@@ -25,14 +25,41 @@
     <style name="Text_only_Text_base">
         <item name="android:layout_marginStart">@dimen/text_only_padding_left</item>
     </style>
+
     <style name="Three_line_list_Avatar_with_text_icon_Avatar_base">
         <item name="android:layout_marginStart">
             @dimen/three_list_avatar_with_text_icon_avatar_padding
         </item>
     </style>
+
     <style name="Three_line_list_Avatar_with_text_icon_Text_base">
         <item name="android:layout_marginStart">
             @dimen/three_list_avatar_with_text_icon_text_padding_left
         </item>
+    </style>
+
+    <style name="contact_item_tv1">
+        <item name="android:gravity">start|center_vertical</item>
+        <item name="android:textDirection">locale</item>
+        <item name="android:paddingStart">72dp</item>
+        <item name="android:paddingEnd">72dp</item>
+    </style>
+
+    <style name="item_iv_start">
+        <item name="android:layout_marginStart">16dp</item>
+        <item name="android:layout_centerVertical">true</item>
+    </style>
+
+    <style name="item_tv_start" parent="contact_local_item_tv_base">
+        <item name="android:layout_marginStart">72dp</item>
+        <item name="android:textDirection">locale</item>
+    </style>
+    <style name="item_tv_end" parent="contact_local_item_tv_base">
+        <item name="android:layout_marginEnd">16dp</item>
+        <item name="android:textDirection">locale</item>
+    </style>
+
+    <style name="gravity_bottom_end">
+        <item name="android:layout_gravity">bottom|end</item>
     </style>
 </resources>

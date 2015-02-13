@@ -289,10 +289,10 @@ public class ContactListFragment extends SuperAwesomeCardFragment implements OnC
             }
             if (contact != null) {
                 final ImageView ivAvatar = (ImageView) view
-                        .findViewById(R.id.screen_tab_contacts_item_imageView_avatar);
+                        .findViewById(android.R.id.icon);
                 if (ivAvatar != null) {
                     final TextView tvDisplayName = (TextView) view
-                            .findViewById(R.id.screen_tab_contacts_item_textView_displayname);
+                            .findViewById(android.R.id.text1);
                     tvDisplayName.setText(contact.name);
                     int colorId = mContext.getResources().getColor(ZycooConfigurationEntry.COLORS[(position % ZycooConfigurationEntry.COLORS.length)]);
                     TextDrawable drawable = ZphoneApplication.getBuilderCircular().build(mSectionText, colorId);

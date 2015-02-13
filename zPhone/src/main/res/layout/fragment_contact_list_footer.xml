@@ -1,21 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/contact_pbx"
     android:layout_width="match_parent"
     android:layout_height="48dp"
-    android:background="@color/grey_300"
-    android:orientation="horizontal">
-
+    android:background="@color/grey_300">
     <TextView
-        android:textDirection="locale"
-        android:paddingRight="72dp"
-        android:paddingLeft="72dp"
         android:id="@+id/contact_footer_one_tv"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
-        android:text="footer"
         android:textColor="@color/grey_700"
-        android:textSize="20sp" />
+        android:textSize="20sp"
+        style="@style/contact_item_tv1"
+        tools:text="Contact Footer"
+        />
 
 </LinearLayout>

@@ -31,8 +31,8 @@ public class DialDialpadButton extends RelativeLayout {
                 R.styleable.Options, 0, 0);
         String text1 = array.getString(R.styleable.Options_text1);
         String text2 = array.getString(R.styleable.Options_text2);
-        float textSize1 = array.getFloat(R.styleable.Options_textSize1, 30);
-        float textSize2 = array.getFloat(R.styleable.Options_textSize2, 14);
+        float textSize1 = array.getFloat(R.styleable.Options_textSize1, 28);
+        float textSize2 = array.getFloat(R.styleable.Options_textSize2, 12);
         boolean text2Visible = array.getBoolean(R.styleable.Options_text2visible, true);
         array.recycle();
         tv1 = (TextView) findViewById(android.R.id.text1);
