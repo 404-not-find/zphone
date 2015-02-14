@@ -20,6 +20,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class ScreenSettingsActivity extends BaseScreen implements OnItemClickListener {
+    private static final int PRO_ITEMS_SIZE = 8;
+    private static final int FREE_ITEMS_SIZE = 6;
+    private int mItemsSize;
     private ListViewItem[] items;
     private ListView mListView;
     private BaseAdapter adapter;
@@ -31,32 +34,39 @@ public class ScreenSettingsActivity extends BaseScreen implements OnItemClickLis
         setContentView(R.layout.activity_settings);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         mListView = (ListView) findViewById(R.id.setting_listView);
-        initData();
         isFreeVersion();
+        items = new ListViewItem[mItemsSize];
+        initData();
         adapter = new ScreenSettingsAdapter(this, items);
         mListView.setAdapter(adapter);
         mListView.setOnItemClickListener(this);
     }
 
     public void isFreeVersion() {
-        if (!Utils.isPro(this)) {
-            ((ListViewItemTextOnly) items[5]).setDividerVisible(false);
-            ((ListViewItemTextOnly) items[6]).setVisible(false);//QoSQoe
-            ((ListViewItemTextOnly) items[7]).setVisible(false);//Natt
-
+        if (Utils.isPro(this)) {
+            mItemsSize = PRO_ITEMS_SIZE;
+        }
+        else
+        {
+            mItemsSize = FREE_ITEMS_SIZE;
         }
     }
 
     public void initData() {
-        items = new ListViewItem[8];
         items[0] = new ListViewItemGrey(20);
         items[1] = new ListViewItemAvatarWithText(R.string.general, R.drawable.ic_settings_input_composite_white, true);
         items[2] = new ListViewItemAvatarWithText(R.string.network, R.drawable.ic_settings_input_antenna_white, true);
         items[3] = new ListViewItemAvatarWithText(R.string.security, R.drawable.ic_lock_white, false);
         items[4] = new ListViewItemGrey(40);
-        items[5] = new ListViewItemTextOnly(R.string.codecs, true);
-        items[6] = new ListViewItemTextOnly(R.string.qos_qoe, true);
-        items[7] = new ListViewItemTextOnly(R.string.natt, false);
+        if (Utils.isPro(this)) {
+            items[5] = new ListViewItemTextOnly(R.string.codecs, true);
+            items[6] = new ListViewItemTextOnly(R.string.qos_qoe, true);
+            items[7] = new ListViewItemTextOnly(R.string.natt, false);
+        }
+        else
+        {
+            items[5] = new ListViewItemTextOnly(R.string.codecs, false);
+        }
     }
 
     @Override

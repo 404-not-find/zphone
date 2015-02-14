@@ -13,6 +13,7 @@
         <TextView
             android:id="@+id/id_item_name_tv"
             android:layout_height="36dp"
+            android:layout_marginStart="16dp"
             android:layout_marginLeft="16dp"
             android:textSize="16sp"
             android:gravity="center"
@@ -24,15 +25,18 @@
             android:id="@+id/id_item_spinner"
             android:layout_below="@+id/id_item_name_tv"
             android:layout_width="match_parent"
-            android:layout_alignParentRight="true"
+            android:layout_marginEnd="16dp"
             android:layout_marginRight="16dp"
+            android:layout_marginStart="16dp"
             android:layout_marginLeft="16dp"
             android:layout_height="wrap_content"/>
     </RelativeLayout>
 
     <TextView
         android:clickable="false"
+        android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
+        android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
         android:id="@+id/id_item_divider_tv"
         android:background="@color/grey_300"

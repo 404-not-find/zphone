@@ -207,6 +207,7 @@ public class MeListAdapter extends BaseAdapter {
                 TextView whiteTv = (TextView) convertView.findViewById(R.id.id_item_grey_divider_tv);
                 int height_dp = ((ListViewItemGrey) objects[position]).getItemHeight();
                 whiteTv.setHeight((int) Utils.convertDpToPixel(height_dp, context));
+                convertView.setClickable(fasle);
                 break;
             case ListViewItem.TYPE_EXIT:
                 convertView = LayoutInflater.from(context).inflate(R.layout.list_item_me_exit, null);

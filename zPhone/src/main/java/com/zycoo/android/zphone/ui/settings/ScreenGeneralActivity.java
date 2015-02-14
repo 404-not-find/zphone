@@ -29,7 +29,9 @@ import org.slf4j.LoggerFactory;
  * Created by tqcenglish on 14-12-18.
  */
 public class ScreenGeneralActivity extends BaseScreen implements AdapterView.OnItemClickListener {
-    private static final int ITEMS_NUMBER = 17;
+    private static final int PRO_ITEMS_NUMBER = 16;
+    private static final int FREE_ITEMS_NUMBER = 10;
+    private int mItemsSize;
     private ListViewItem[] items;
     private ListView mListView;
     private BaseAdapter adapter;
@@ -53,19 +55,18 @@ public class ScreenGeneralActivity extends BaseScreen implements AdapterView.OnI
         setContentView(R.layout.settings_listview);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         mListView = (ListView) findViewById(android.R.id.list);
-        items = new ListViewItem[ITEMS_NUMBER];
+        if (Utils.isPro(this)) {
+            mItemsSize = PRO_ITEMS_NUMBER;
+        }
+        else
+        {
+            mItemsSize = FREE_ITEMS_NUMBER;
+        }
+        items = new ListViewItem[mItemsSize];
         new InitDataTask().execute();
         mListView.setOnItemClickListener(this);
     }
 
-    public void isFreeVersion() {
-        if (!Utils.isPro(this)) {
-            ((ListViewItemSwitchIconWithText) items[7]).setVisible(false);
-            ((ListViewItemSwitchIconWithText) items[8]).setVisible(false);
-            ((ListViewItemSpinnerWithText) items[10]).setVisible(false);
-            ((ListViewItemSpinnerWithText) items[11]).setVisible(false);
-        }
-    }
 
     private class InitDataTask extends AsyncTask<Void, Void, Void> {
 
@@ -80,7 +81,6 @@ public class ScreenGeneralActivity extends BaseScreen implements AdapterView.OnI
         @Override
         protected Void doInBackground(Void... params) {
             initData();
-            isFreeVersion();
             return null;
         }
     }
@@ -93,21 +93,23 @@ public class ScreenGeneralActivity extends BaseScreen implements AdapterView.OnI
         items[4] = new ListViewItemSwitchIconWithText(R.string.launch_when_system_starts, true, mConfigurationService.getBoolean(NgnConfigurationEntry.GENERAL_AUTOSTART, NgnConfigurationEntry.DEFAULT_GENERAL_AUTOSTART));
         items[5] = new ListViewItemSwitchIconWithText(R.string.intercept_outgoing_calls, false, mConfigurationService.getBoolean(NgnConfigurationEntry.GENERAL_INTERCEPT_OUTGOING_CALLS, NgnConfigurationEntry.DEFAULT_GENERAL_INTERCEPT_OUTGOING_CALLS));
         items[6] = new ListViewItemGrey(40);
-        items[7] = new ListViewItemSwitchIconWithText(R.string.enable_video_full_screen_mode, true, mConfigurationService.getBoolean(NgnConfigurationEntry.GENERAL_FULL_SCREEN_VIDEO, NgnConfigurationEntry.DEFAULT_GENERAL_FULL_SCREEN_VIDEO));
-        items[8] = new ListViewItemSwitchIconWithText(R.string.enable_front_facing_camera, false, mConfigurationService.getBoolean(NgnConfigurationEntry.GENERAL_USE_FFC, NgnConfigurationEntry.DEFAULT_GENERAL_USE_FFC));
-        items[9] = new ListViewItemGrey(40);
-        items[10] = new ListViewItemSpinnerWithText(R.string.media_profile, R.layout.list_item_setting_spinner, true, Profile.getSpinnerIndex(tmedia_profile_t.valueOf(mConfigurationService.getString(
-                NgnConfigurationEntry.MEDIA_PROFILE,
-                NgnConfigurationEntry.DEFAULT_MEDIA_PROFILE))));
-        items[11] = new ListViewItemSpinnerWithText(R.string.audio_playback_level, R.layout.list_item_setting_spinner, false, AudioPlayBackLevel.getSpinnerIndex(
-                mConfigurationService.getFloat(
-                        NgnConfigurationEntry.GENERAL_AUDIO_PLAY_LEVEL,
-                        NgnConfigurationEntry.DEFAULT_GENERAL_AUDIO_PLAY_LEVEL)));
-        items[12] = new ListViewItemGrey(40);
-        items[13] = new ListViewItemSwitchIconWithText(R.string.enable_keypad_tones, true, mConfigurationService.getBoolean(ZycooConfigurationEntry.GENERAL_KEYPAD_TONES, ZycooConfigurationEntry.DEFAULT_GENERAL_KEYPAD_TONES));
-        items[14] = new ListViewItemSwitchIconWithText(R.string.enable_keypad_vibration, true, mConfigurationService.getBoolean(ZycooConfigurationEntry.GENERAL_KEYPAD_VIBRATION, ZycooConfigurationEntry.DEFAULT_GENERAL_KEYPAD_VIBRATION));
-        items[15] = new ListViewItemSwitchIconWithText(R.string.enable_proximity_sensor, false, mConfigurationService.getBoolean(ZycooConfigurationEntry.GENERAL_PROXIMITY_SENSOR, ZycooConfigurationEntry.DEFAULT_GENERAL_PROXIMITY_SENSOR));
-        items[16] = new ListViewItemGrey(80);
+        items[7] = new ListViewItemSwitchIconWithText(R.string.enable_keypad_tones, true, mConfigurationService.getBoolean(ZycooConfigurationEntry.GENERAL_KEYPAD_TONES, ZycooConfigurationEntry.DEFAULT_GENERAL_KEYPAD_TONES));
+        items[8] = new ListViewItemSwitchIconWithText(R.string.enable_keypad_vibration, true, mConfigurationService.getBoolean(ZycooConfigurationEntry.GENERAL_KEYPAD_VIBRATION, ZycooConfigurationEntry.DEFAULT_GENERAL_KEYPAD_VIBRATION));
+        items[9] = new ListViewItemSwitchIconWithText(R.string.enable_proximity_sensor, false, mConfigurationService.getBoolean(ZycooConfigurationEntry.GENERAL_PROXIMITY_SENSOR, ZycooConfigurationEntry.DEFAULT_GENERAL_PROXIMITY_SENSOR));
+        if(Utils.isPro(this)) {
+            items[10] = new ListViewItemGrey(40);
+            items[11] = new ListViewItemSwitchIconWithText(R.string.enable_video_full_screen_mode, true, mConfigurationService.getBoolean(NgnConfigurationEntry.GENERAL_FULL_SCREEN_VIDEO, NgnConfigurationEntry.DEFAULT_GENERAL_FULL_SCREEN_VIDEO));
+            items[12] = new ListViewItemSwitchIconWithText(R.string.enable_front_facing_camera, false, mConfigurationService.getBoolean(NgnConfigurationEntry.GENERAL_USE_FFC, NgnConfigurationEntry.DEFAULT_GENERAL_USE_FFC));
+            items[13] = new ListViewItemGrey(40);
+            items[14] = new ListViewItemSpinnerWithText(R.string.media_profile, R.layout.list_item_setting_spinner, true, Profile.getSpinnerIndex(tmedia_profile_t.valueOf(mConfigurationService.getString(
+                    NgnConfigurationEntry.MEDIA_PROFILE,
+                    NgnConfigurationEntry.DEFAULT_MEDIA_PROFILE))));
+            items[15] = new ListViewItemSpinnerWithText(R.string.audio_playback_level, R.layout.list_item_setting_spinner, false, AudioPlayBackLevel.getSpinnerIndex(
+                    mConfigurationService.getFloat(
+                            NgnConfigurationEntry.GENERAL_AUDIO_PLAY_LEVEL,
+                            NgnConfigurationEntry.DEFAULT_GENERAL_AUDIO_PLAY_LEVEL)));
+        }
+
     }
 
     @Override
@@ -120,9 +122,9 @@ public class ScreenGeneralActivity extends BaseScreen implements AdapterView.OnI
             case 5:
             case 7:
             case 8:
-            case 13:
-            case 14:
-            case 15:
+            case 9:
+            case 11:
+            case 12:
                 ListViewItemSwitchIconWithTextViewHolder switchIconWithTextViewHolder = (ListViewItemSwitchIconWithTextViewHolder) view.getTag(ListViewItemSwitchIconWithTextViewHolder.switch_icon_with_text_id);
                 switchIconWithTextViewHolder.setChecked(!switchIconWithTextViewHolder.getSwitchButton().isChecked());
                 switchIconWithTextViewHolder.getSwitchButton().toggle();
@@ -136,7 +138,7 @@ public class ScreenGeneralActivity extends BaseScreen implements AdapterView.OnI
     @Override
     protected void onPause() {
         if (super.mComputeConfiguration) {
-            for (int i = 0; i < ITEMS_NUMBER; i++) {
+            for (int i = 0; i < mItemsSize; i++) {
                 switch (i) {
                     case 1:
                         mConfigurationService.putBoolean(NgnConfigurationEntry.GENERAL_AEC, ((ListViewItemSwitchIconWithText) items[i]).isChecked());
@@ -154,28 +156,27 @@ public class ScreenGeneralActivity extends BaseScreen implements AdapterView.OnI
                     case 5:
                         mConfigurationService.putBoolean(NgnConfigurationEntry.GENERAL_INTERCEPT_OUTGOING_CALLS, ((ListViewItemSwitchIconWithText) items[i]).isChecked());
                         break;
-
                     case 7:
-                        mConfigurationService.putBoolean(NgnConfigurationEntry.GENERAL_FULL_SCREEN_VIDEO, ((ListViewItemSwitchIconWithText) items[i]).isChecked());
+                        mConfigurationService.putBoolean(ZycooConfigurationEntry.GENERAL_KEYPAD_TONES, ((ListViewItemSwitchIconWithText) items[i]).isChecked());
                         break;
                     case 8:
+                        mConfigurationService.putBoolean(ZycooConfigurationEntry.GENERAL_KEYPAD_VIBRATION, ((ListViewItemSwitchIconWithText) items[i]).isChecked());
+                        break;
+                    case 9:
+                        mConfigurationService.putBoolean(ZycooConfigurationEntry.GENERAL_PROXIMITY_SENSOR, ((ListViewItemSwitchIconWithText) items[i]).isChecked());
+                        break;
+                    case 11:
+                        mConfigurationService.putBoolean(NgnConfigurationEntry.GENERAL_FULL_SCREEN_VIDEO, ((ListViewItemSwitchIconWithText) items[i]).isChecked());
+                        break;
+                    case 12:
                         mConfigurationService.putBoolean(NgnConfigurationEntry.GENERAL_USE_FFC, ((ListViewItemSwitchIconWithText) items[i]).isChecked());
                         break;
-                    case 10:
+                    case 14:
                         // profile should be moved to another screen (e.g. Media)
                         mConfigurationService.putString(NgnConfigurationEntry.MEDIA_PROFILE, sProfiles[((ListViewItemSpinnerWithText) items[i]).getSelection()].mValue.toString());
                         break;
-                    case 11:
-                        mConfigurationService.putFloat(NgnConfigurationEntry.GENERAL_AUDIO_PLAY_LEVEL, sAudioPlaybackLevels[((ListViewItemSpinnerWithText) items[i]).getSelection()].mValue);
-                        break;
-                    case 13:
-                        mConfigurationService.putBoolean(ZycooConfigurationEntry.GENERAL_KEYPAD_TONES, ((ListViewItemSwitchIconWithText) items[i]).isChecked());
-                        break;
-                    case 14:
-                        mConfigurationService.putBoolean(ZycooConfigurationEntry.GENERAL_KEYPAD_VIBRATION, ((ListViewItemSwitchIconWithText) items[i]).isChecked());
-                        break;
                     case 15:
-                        mConfigurationService.putBoolean(ZycooConfigurationEntry.GENERAL_PROXIMITY_SENSOR, ((ListViewItemSwitchIconWithText) items[i]).isChecked());
+                        mConfigurationService.putFloat(NgnConfigurationEntry.GENERAL_AUDIO_PLAY_LEVEL, sAudioPlaybackLevels[((ListViewItemSpinnerWithText) items[i]).getSelection()].mValue);
                         break;
                     default:
                         break;
@@ -200,7 +201,9 @@ public class ScreenGeneralActivity extends BaseScreen implements AdapterView.OnI
                 }
                 MediaSessionMgr.defaultsSetVadEnabled(vad);
                 MediaSessionMgr.defaultsSetNoiseSuppEnabled(nr);
-                MediaSessionMgr.defaultsSetProfile(sProfiles[((ListViewItemSpinnerWithText) items[10]).getSelection()].mValue);
+                if(Utils.isPro(this)) {
+                    MediaSessionMgr.defaultsSetProfile(sProfiles[((ListViewItemSpinnerWithText) items[14]).getSelection()].mValue);
+                }
             }
             super.mComputeConfiguration = false;
         }

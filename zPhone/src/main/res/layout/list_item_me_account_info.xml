@@ -4,6 +4,7 @@
                 android:layout_width="match_parent"
                 android:background="@color/white">
 
+    <!--android:background="@drawable/account_selector"-->
     <LinearLayout
             android:id="@+id/register_ll"
             style="@style/Three_line_list_Avatar_with_text_icon_Avatar"
@@ -30,6 +31,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/three_list_avatar_with_text_primary_text_size"
+                android:textDirection="locale"
                 android:text="JohnDoe"/>
 
         <TextView
@@ -49,10 +51,12 @@
 
     <com.kyleduo.switchbutton.SwitchButton
             style="@style/Three_line_list_Avatar_with_text_icon_Icon"
+            android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
+            android:layout_marginEnd="16dp"
             android:layout_marginRight="16dp"
             android:id="@+id/register_status_bt"
             android:checked="false"/>
