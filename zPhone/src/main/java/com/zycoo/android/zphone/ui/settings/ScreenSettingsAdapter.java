@@ -91,7 +91,7 @@ public class ScreenSettingsAdapter extends BaseAdapter {
                     }
                     int height_dp = ((ListViewItemGrey) listViewItem).getItemHeight();
                     whiteViewHolder.setWhiteDividerHeight((int) Utils.convertDpToPixel(height_dp, context));
-                    convertView.setClickable(fasle);
+                    convertView.setClickable(false);
                     break;
                 case ListViewItem.TYPE_AVATAR_WITH_TEXT:
                     ListViewItemAvatarWithText itemAvatarWithText = ((ListViewItemAvatarWithText) listViewItem);
