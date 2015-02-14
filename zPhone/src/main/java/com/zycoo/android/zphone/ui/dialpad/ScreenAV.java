@@ -740,7 +740,7 @@ public class ScreenAV extends SherlockFragmentActivity implements OnClickListene
             return;
         }
         if (mViewTrying == null) {
-            mViewTrying = mInflater.inflate(R.layout.view_call_trying, null);
+            mViewTrying = mInflater.inflate(R.layout.view_call_trying, mMainLayout, false);
         }
         mTvInfo = (TextView) mViewTrying.findViewById(R.id.view_call_trying_textView_info);
         final TextView tvRemote = (TextView) mViewTrying

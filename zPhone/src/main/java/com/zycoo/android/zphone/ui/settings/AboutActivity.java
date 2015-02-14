@@ -18,6 +18,7 @@ import com.zycoo.android.zphone.R;
 import com.zycoo.android.zphone.ui.me.ListViewItem;
 import com.zycoo.android.zphone.ui.me.ListViewItemTextOnly;
 import com.zycoo.android.zphone.ui.me.ListViewItemGrey;
+import com.zycoo.android.zphone.utils.HelpUtils;
 import com.zycoo.android.zphone.utils.Utils;
 
 import org.slf4j.Logger;
@@ -56,10 +57,11 @@ public class AboutActivity extends BaseScreen implements AdapterView.OnItemClick
     }
 
     private void initData() {
-        items = new ListViewItem[3];
+        items = new ListViewItem[4];
         items[0] = new ListViewItemGrey(20);
         items[1] = new ListViewItemTextOnly(R.string.feedback, true);
-        items[2] = new ListViewItemTextOnly(R.string.check_for_updates, false);
+        items[2] = new ListViewItemTextOnly(R.string.check_for_updates, true);
+        items[3] = new ListViewItemTextOnly(R.string.open_source_licenses, false);
 
     }
 
@@ -161,6 +163,9 @@ public class AboutActivity extends BaseScreen implements AdapterView.OnItemClick
                 break;
             case 2:
                 onCheckUpdateClick();
+                break;
+            case 3:
+                HelpUtils.showAbout(this);
                 break;
             default:
                 break;

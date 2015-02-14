@@ -33,6 +33,7 @@ import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.widget.HorizontalScrollView;
@@ -196,7 +197,6 @@ public class PagerSlidingTabStrip extends HorizontalScrollViewTopLine {
 
         // add a line by tqc
         tabsContainer = new LinearLayout(context);
-        //tabsContainer = new LinearLayoutOutlined(context);
         tabsContainer.setBackgroundColor(getResources().getColor(android.R.color.transparent));
         tabsContainer.setOrientation(LinearLayout.HORIZONTAL);
         LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT,
@@ -277,7 +277,7 @@ public class PagerSlidingTabStrip extends HorizontalScrollViewTopLine {
 
     private void addTextIconTab(final int position, String title, int resId) {
 
-        LinearLayout tab = new LinearLayout(getContext());
+      /*  LinearLayout tab = new LinearLayout(getContext());
         tab.setOrientation(LinearLayout.VERTICAL);
         TextView tv = new TextView(getContext());
         tv.setGravity(Gravity.CENTER_HORIZONTAL);
@@ -288,7 +288,12 @@ public class PagerSlidingTabStrip extends HorizontalScrollViewTopLine {
         tv.setText(title);
         tv.setId(android.R.id.text1);
         tab.addView(iv);
-        tab.addView(tv);
+        tab.addView(tv);*/
+        View tab = LayoutInflater.from(getContext()).inflate(R.layout.pager_sliding_tab_strip_icon_text, null);
+        ImageView iv = (ImageView) tab.findViewById(android.R.id.icon);
+        TextView text1 = (TextView) tab.findViewById(android.R.id.text1);
+        iv.setImageResource(resId);
+        text1.setText(title);
         addTab(position, tab);
     }
 
@@ -314,7 +319,7 @@ public class PagerSlidingTabStrip extends HorizontalScrollViewTopLine {
         tab.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TQC
+                //tqc
                 pager.setCurrentItem(position);
             }
         });

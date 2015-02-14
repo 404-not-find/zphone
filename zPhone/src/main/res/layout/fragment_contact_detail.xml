@@ -27,31 +27,13 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
-        <RelativeLayout
+        <LinearLayout
+            android:id="@+id/contact_detail_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <TextView
-                style="@style/Text_only_Text"
-                android:id="@+id/id_item_name_address_tv"
-                android:layout_width="match_parent"
-                android:text="@string/setting"
-                android:textColor="@color/grey_700" />
-            <TextView
-                android:id="@+id/contact_details_number"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-            <LinearLayout
-                android:layout_below="@id/id_item_name_address_tv"
-                android:id="@+id/contact_details_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingBottom="@dimen/padding" />
-        </RelativeLayout>
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/padding" />
     </ScrollView>
-
     <TextView
         android:id="@id/android:empty"
         android:layout_width="match_parent"
@@ -61,5 +43,4 @@
         android:text="@string/no_contact_selected"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:visibility="gone" />
-
 </FrameLayout>

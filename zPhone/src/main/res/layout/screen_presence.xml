@@ -75,7 +75,7 @@
                 android:layout_width="40px"
                 android:layout_height="60px"
                 android:layout_below="@+id/screen_presence_textView_avatar"
-                android:src="@drawable/ic_action_user"
+                android:src="@drawable/ic_account_box_grey600"
                 android:visibility="invisible" >
             </ImageView>
 

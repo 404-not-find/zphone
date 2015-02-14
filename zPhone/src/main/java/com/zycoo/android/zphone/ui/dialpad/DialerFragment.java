@@ -153,7 +153,7 @@ public class DialerFragment extends SuperAwesomeCardFragment implements OnClickL
         mAccountMap = new ArrayList<Map<String, Object>>();
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("account_extension_tv", ZphoneApplication.getUserName());
-        map.put("account_photo_iv", R.drawable.ic_action_user);
+        map.put("account_photo_iv", R.drawable.ic_account_box_grey600);
         map.put("account_status_iv",
                 ZphoneApplication.getSipService().isRegistered() ? R.drawable.ic_status_dot_green
                         : R.drawable.ic_status_dot_red);
@@ -723,7 +723,7 @@ public class DialerFragment extends SuperAwesomeCardFragment implements OnClickL
         super.onResume();
         ((HistoryEventItemAdapter) itemAdapter).setInsearchMode(false);
         //界面恢复时通过拨号分类的OnCheckChange时间改变界面,不通过过滤
-        //itemAdapter.getFilter().filter("");
+        itemAdapter.getFilter().filter("");
         setTextDialing(true);
     }
 

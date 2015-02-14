@@ -89,7 +89,7 @@ public class ScreenAVQueue extends BaseScreen {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         menu.add(0, MENU_HANGUP_ALLCALLS, 0, "Hang Up all calls").setIcon(
-                R.drawable.phone_hang_up_48);
+                R.drawable.ic_call_end_grey600);
         return super.onCreateOptionsMenu(menu);
     }
 

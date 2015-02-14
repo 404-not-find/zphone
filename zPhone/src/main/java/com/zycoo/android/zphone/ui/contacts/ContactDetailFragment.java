@@ -1,75 +1,37 @@
-/*
- * Copyright (C) 2013 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 
 package com.zycoo.android.zphone.ui.contacts;
 
-import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
-import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.res.AssetFileDescriptor;
 import android.database.Cursor;
-import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.provider.CallLog;
 import android.provider.ContactsContract;
 import android.provider.ContactsContract.CommonDataKinds.StructuredPostal;
 import android.provider.ContactsContract.Contacts;
-import android.provider.ContactsContract.Contacts.Photo;
 import android.provider.ContactsContract.Data;
 import android.support.v4.app.LoaderManager;
-import android.support.v4.app.NavUtils;
-import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.actionbarsherlock.app.SherlockFragment;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
-import com.github.curioustechizen.ago.RelativeTimeTextView;
-import com.zycoo.android.zphone.BuildConfig;
 import com.zycoo.android.zphone.Engine;
-import com.zycoo.android.zphone.ui.MainActivity;
 import com.zycoo.android.zphone.R;
 import com.zycoo.android.zphone.ZphoneApplication;
 import com.zycoo.android.zphone.ui.dialpad.ScreenAV;
-import com.zycoo.android.zphone.utils.AndroidUtils;
-import com.zycoo.android.zphone.utils.ImageLoader;
 import com.zycoo.android.zphone.utils.Utils;
 import com.zycoo.android.zphone.widget.SuperAwesomeCardFragment;
 
 import org.doubango.ngn.media.NgnMediaType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.FileNotFoundException;
-import java.io.IOException;
 
 public class ContactDetailFragment extends SuperAwesomeCardFragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
@@ -84,9 +46,7 @@ public class ContactDetailFragment extends SuperAwesomeCardFragment implements L
     private static final String GEO_URI_SCHEME_PREFIX = "geo:0,0?q=";
     // Used to store references to key views, layouts and menu items as these need to be updated
     // in multiple methods throughout this class.
-    private TextView mContactDetailsNumber;
-    private LinearLayout mDetailsLayout;
-    private TextView mEmptyView;
+    private LinearLayout mDetailLayout;
 
     public static ContactDetailFragment newInstance(int position, Uri contactUri) {
         // Create new instance of this fragment
@@ -131,54 +91,98 @@ public class ContactDetailFragment extends SuperAwesomeCardFragment implements L
         final View detailView =
                 inflater.inflate(R.layout.fragment_contact_detail, container, false);
         // Gets handles to view objects in the layout
-        mDetailsLayout = (LinearLayout) detailView.findViewById(R.id.contact_details_layout);
-        mContactDetailsNumber = (TextView) detailView.findViewById(R.id.contact_details_number);
-        mEmptyView = (TextView) detailView.findViewById(android.R.id.empty);
+        mDetailLayout = (LinearLayout) detailView.findViewById(R.id.contact_detail_layout);
         return detailView;
     }
 
     public void setContact(Uri contactUri) {
         if (null != contactUri) {
             mContactUri = contactUri;
+            getSherlockActivity().getSupportLoaderManager().restartLoader(ContactPhoneQuery.QUERY_ID, null, this);
             getSherlockActivity().getSupportLoaderManager().restartLoader(ContactAddressQuery.QUERY_ID, null, this);
         }
     }
 
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        // Saves the contact Uri
-        //outState.putParcelable(EXTRA_CONTACT_URI, mContactUri);
-    }
-
-    private LinearLayout buildEmptyAddressLayout() {
-        return buildAddressLayout(0, null, null);
+    private LinearLayout buildEmptyItemLayout(int stringId) {
+        LinearLayout linearLayout = (LinearLayout) LayoutInflater.from(getActivity()).inflate(
+                R.layout.list_item_text_only, mDetailLayout, false);
+        TextView textView = (TextView) linearLayout.findViewById(R.id.id_item_name_tv);
+        textView.setText(stringId);
+        return linearLayout;
     }
 
 
-    /**
-     * Builds an address LinearLayout based on address information from the
-     * Contacts Provider. Each address for the contact gets its own LinearLayout
-     * object; for example, if the contact has three postal addresses, then 3
-     * LinearLayouts are generated.
-     *
-     * @param addressType      From
-     *                         {@link android.provider.ContactsContract.CommonDataKinds.StructuredPostal#TYPE}
-     * @param addressTypeLabel From
-     *                         {@link android.provider.ContactsContract.CommonDataKinds.StructuredPostal#LABEL}
-     * @param address          From
-     *                         {@link android.provider.ContactsContract.CommonDataKinds.StructuredPostal#FORMATTED_ADDRESS}
-     * @return A LinearLayout to add to the contact details layout, populated
-     * with the provided address details.
-     */
-    private LinearLayout buildAddressLayout(int addressType, String addressTypeLabel,
-                                            final String address) {
+    class PhoneItemViewHolder {
+        ImageView avatar;
+        ImageView icon;
+        TextView name;
+        TextView secondName;
 
+        public PhoneItemViewHolder(View view) {
+            secondName =
+                    (TextView) view.findViewById(R.id.id_item_second_name_tv);
+            name =
+                    (TextView) view.findViewById(R.id.id_item_name_tv);
+            avatar =
+                    (ImageView) view.findViewById(R.id.id_item_av_iv);
+            icon = (ImageView) view.findViewById(R.id.id_item_icon_iv);
+        }
+    }
+
+    private LinearLayout buildPhoneItemLayout(int phoneType, String phoneTypeLabel, final String phoneNumber) {
+        LinearLayout linearLayout;
+        if (phoneTypeLabel == null && phoneType == 0) {
+            linearLayout = buildEmptyItemLayout(R.string.not_find_phone_number);
+        } else {
+            linearLayout = (LinearLayout) LayoutInflater.from(getActivity()).inflate(
+                    R.layout.list_item_avatar_with_text_and_icon_two_line, mDetailLayout, false);
+            PhoneItemViewHolder phoneItemViewHolder = new PhoneItemViewHolder(linearLayout);
+            phoneItemViewHolder.name.setText(phoneNumber);
+            CharSequence label =
+                    ContactsContract.CommonDataKinds.Phone.getTypeLabel(getResources(), phoneType, phoneTypeLabel);
+            phoneItemViewHolder.secondName.setText(label);
+            phoneItemViewHolder.avatar.setImageResource(R.drawable.ic_call_white);
+            Utils.setImageViewFilter(phoneItemViewHolder.avatar, R.color.teal_500);
+            phoneItemViewHolder.avatar.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    new Thread(
+                            new Runnable() {
+                                @Override
+                                public void run() {
+                                    // voice call
+                                    if (Engine.getInstance().getSipService().isRegistered()) {
+                                        ScreenAV.makeCall(phoneNumber,
+                                                NgnMediaType.Audio,
+                                                ZphoneApplication.getContext());
+                                    }
+                                }
+
+                            }
+
+                    ).start();
+                }
+            });
+            phoneItemViewHolder.icon.setImageResource(R.drawable.ic_message_white);
+            Utils.setImageViewFilter(phoneItemViewHolder.icon, R.color.teal_500);
+            phoneItemViewHolder.icon.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Uri uri = Uri.parse("smsto:" + phoneNumber);
+                    Intent sendIntent = new Intent(Intent.ACTION_VIEW, uri);
+                    startActivity(sendIntent);
+                }
+            });
+        }
+        return linearLayout;
+    }
+
+    private LinearLayout buildAddressItemLayout(int addressType, String addressTypeLabel,
+                                                final String address) {
         // Inflates the address layout
         final LinearLayout addressLayout =
                 (LinearLayout) LayoutInflater.from(getActivity()).inflate(
-                        R.layout.list_item_avatar_with_text_two_line, mDetailsLayout, false);
+                        R.layout.list_item_avatar_with_text_two_line, mDetailLayout, false);
 
         // Gets handles to the view objects in the layout
         final TextView headerTextView =
@@ -250,16 +254,21 @@ public class ContactDetailFragment extends SuperAwesomeCardFragment implements L
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        final Uri uri = Uri.withAppendedPath(mContactUri, Contacts.Data.CONTENT_DIRECTORY);
         switch (id) {
-
             case ContactAddressQuery.QUERY_ID:
                 // This query loads contact address details, see
                 // ContactAddressQuery for more information.
-                final Uri uri = Uri.withAppendedPath(mContactUri, Contacts.Data.CONTENT_DIRECTORY);
                 return new CursorLoader(getActivity(), uri,
                         ContactAddressQuery.PROJECTION,
                         ContactAddressQuery.SELECTION,
                         null, null);
+            case ContactPhoneQuery.QUERY_ID:
+                return new CursorLoader(getActivity(), uri,
+                        ContactPhoneQuery.PROJECTION,
+                        ContactPhoneQuery.SELECTION,
+                        null, null);
+
         }
         return null;
     }
@@ -269,28 +278,43 @@ public class ContactDetailFragment extends SuperAwesomeCardFragment implements L
         if (mContactUri == null) {
             return;
         }
+        final LinearLayout.LayoutParams layoutParams =
+                new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT);
         switch (loader.getId()) {
             case ContactAddressQuery.QUERY_ID:
-                final LinearLayout.LayoutParams layoutParams =
-                        new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                                ViewGroup.LayoutParams.WRAP_CONTENT);
-                mDetailsLayout.removeAllViews();
                 // Loops through all the rows in the Cursor
                 if (data.moveToFirst()) {
                     do {
-
-                        final LinearLayout layout = buildAddressLayout(
+                        final LinearLayout layout = buildAddressItemLayout(
                                 data.getInt(ContactAddressQuery.TYPE),
                                 data.getString(ContactAddressQuery.LABEL),
                                 data.getString(ContactAddressQuery.ADDRESS));
                         // Adds the new address layout to the details layout
-                        mDetailsLayout.addView(layout, layoutParams);
+                        mDetailLayout.addView(layout, layoutParams);
                     } while (data.moveToNext());
                 } else {
                     // If nothing found, adds an empty address layout
                     Log.e("nothing", " adds an empty address layout");
-                    mDetailsLayout.addView(buildEmptyAddressLayout(), layoutParams);
+                    //mDetailLayout.addView(buildEmptyItemLayout(R.string.not_find_address), layoutParams);
                 }
+                break;
+            case ContactPhoneQuery.QUERY_ID:
+                // Loops through all the rows in the Cursor
+                if (data.moveToFirst()) {
+                    do {
+                        final LinearLayout layout = buildPhoneItemLayout(
+                                data.getInt(ContactPhoneQuery.TYPE),
+                                data.getString(ContactPhoneQuery.LABEL),
+                                data.getString(ContactPhoneQuery.NUMBER));
+                        // Adds the new address layout to the details layout
+                        mDetailLayout.addView(layout, layoutParams);
+                    } while (data.moveToNext());
+                } else {
+                    // If nothing found, adds an empty address layout
+                    //mDetailLayout.addView(buildEmptyItemLayout(R.string.not_find_phone_number), layoutParams);
+                }
+
                 break;
         }
     }
@@ -304,6 +328,22 @@ public class ContactDetailFragment extends SuperAwesomeCardFragment implements L
     public void onResume() {
         super.onResume();
         getSherlockActivity().getSupportLoaderManager().restartLoader(ContactAddressQuery.QUERY_ID, null, this);
+    }
+
+
+    public interface ContactPhoneQuery {
+        final static int QUERY_ID = 3;
+        final static String[] PROJECTION = {
+                ContactsContract.CommonDataKinds.Phone._ID,
+                ContactsContract.CommonDataKinds.Phone.NUMBER,
+                ContactsContract.CommonDataKinds.Phone.TYPE,
+                ContactsContract.CommonDataKinds.Phone.LABEL
+        };
+        final static String SELECTION = Data.MIMETYPE + "='" + ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE + "'";
+        final static int ID = 0;
+        final static int NUMBER = 1;
+        final static int TYPE = 2;
+        final static int LABEL = 3;
     }
 
     /**
@@ -332,9 +372,5 @@ public class ContactDetailFragment extends SuperAwesomeCardFragment implements L
         final static int ADDRESS = 1;
         final static int TYPE = 2;
         final static int LABEL = 3;
-    }
-
-    public interface SipContactDetailQuery {
-        final static int QUERY_ID = 3;
     }
 }

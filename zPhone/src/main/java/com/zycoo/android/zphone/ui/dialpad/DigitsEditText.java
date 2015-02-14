@@ -79,7 +79,7 @@ public class DigitsEditText extends EditText {
             } else {
                 setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS
                         | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
-                setTextSize(TypedValue.COMPLEX_UNIT_SP, getContext().getResources().getDimension(R.dimen.dialpad_no_digits_text_size));
+                setTextSize(TypedValue.COMPLEX_UNIT_PX, getContext().getResources().getDimension(R.dimen.dialpad_no_digits_text_size));
             }
         }
         applyKeyboardShowHide(autofocus);
