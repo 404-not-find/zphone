@@ -38,7 +38,8 @@ public class NgnUriUtils {
 			}
 			
 			final SipUri sipUri = new SipUri(uri);
-			if(sipUri.isValid()){
+            //tqc NullPoint NgnEngine.getInstance().getContactService()
+			if(sipUri.isValid() && null != NgnEngine.getInstance().getContactService()){
 				displayname = sipUri.getUserName();
 				contact = NgnEngine.getInstance().getContactService().getContactByPhoneNumber(displayname);
 				if(contact != null && !NgnStringUtils.isNullOrEmpty(contact.getDisplayName())){

@@ -69,6 +69,7 @@ public class RegisterTask extends AsyncTask<Void, Void, Boolean> {
             if (mSipService.isRegistered()) {
                 mSipService.unRegister();
             }
+            //TODO some time return false, need force stop
             result = mSipService.register(ZphoneApplication.getContext());
         } else {
             result = mSipService.unRegister();

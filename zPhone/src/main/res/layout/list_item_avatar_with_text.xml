@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
@@ -11,18 +12,20 @@
 
         <ImageView
             android:id="@+id/id_item_av_iv"
-            style="@style/Avatar_with_text_Avatar"
+            style="@style/item_iv_start"
+            android:layout_height="wrap_content"
             android:layout_width="wrap_content"
             android:tint="@color/light_blue"
             android:src="@drawable/ic_settings_white" />
 
         <TextView
             android:id="@+id/id_item_name_tv"
-            style="@style/Avatar_with_text_Text"
             android:layout_width="match_parent"
             android:textDirection="locale"
-            android:text="@string/setting"
-            android:textColor="@color/grey_700" />
+            tools:text="@string/setting"
+            android:textColor="@color/dark_grey"
+            style="@style/Avatar_with_text_Text"
+            />
     </RelativeLayout>
 
     <LinearLayout

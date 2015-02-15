@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
@@ -11,33 +12,28 @@
 
         <ImageView
             android:id="@+id/id_item_av_iv"
-            style="@style/Avatar_with_text_Avatar"
+            android:layout_height="wrap_content"
             android:layout_width="wrap_content"
             android:tint="@color/light_blue"
-            android:src="@drawable/ic_settings_white" />
+            android:src="@drawable/ic_settings_white"
+            style="@style/item_iv_start" />
 
-        <LinearLayout
-            style="@style/Two_line_list_Avatar_with_text_Text"
-            android:orientation="vertical"
+        <TextView
+            android:id="@+id/id_item_name_tv"
+            android:layout_height="wrap_content"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_marginTop="16dp"
+            tools:text="@string/setting"
+            style="@style/item_tv1" />
 
-            <TextView
-                android:id="@+id/id_item_name_tv"
-                android:textSize="16sp"
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:text="@string/setting"
-                android:textColor="@color/grey_700" />
+        <TextView
 
-            <TextView
-                android:layout_height="wrap_content"
-                android:textSize="14sp"
-                android:id="@+id/id_item_second_name_tv"
-                android:layout_width="match_parent"
-                android:text="@string/setting"
-                android:textColor="@color/grey_700" />
-        </LinearLayout>
+            android:id="@+id/id_item_second_name_tv"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_below="@id/id_item_name_tv"
+            tools:text="@string/setting"
+            style="@style/item_tv2" />
     </RelativeLayout>
 
     <TextView

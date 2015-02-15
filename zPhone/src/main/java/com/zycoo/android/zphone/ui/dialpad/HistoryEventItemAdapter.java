@@ -182,11 +182,11 @@ public class HistoryEventItemAdapter
             switch (event.getStatus()) {
                 case Outgoing:
                     callLogHolderView.callTypeIconsView.setImageResource(R.drawable.ic_call_made_white);
-                    Utils.setImageViewFilter(callLogHolderView.callTypeIconsView, R.color.light_blue);
+                    Utils.setImageViewFilter(callLogHolderView.callTypeIconsView, R.color.teal_500);
                     break;
                 case Incoming:
                     callLogHolderView.callTypeIconsView.setImageResource(R.drawable.ic_call_received_white);
-                    Utils.setImageViewFilter(callLogHolderView.callTypeIconsView, R.color.blue_700);
+                    Utils.setImageViewFilter(callLogHolderView.callTypeIconsView, R.color.cyan_500);
                     break;
                 case Failed:
                 case Missed:

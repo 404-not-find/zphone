@@ -21,12 +21,13 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:layout_marginEnd="16dp"
         android:focusable="false"
         android:focusableInTouchMode="false"
         android:scaleType="fitCenter"
         android:tint="@color/green_500"
-        android:src="@drawable/ic_call_white" />
+        android:src="@drawable/ic_call_white"
+        style="@style/item_iv_end"
+        />
 
 
     <TextView

@@ -355,7 +355,6 @@
     <string name="about_body"><![CDATA[
         <b>CooCall</b><br>
         Version %s<br><br>
-        <a href="http://www.zycoo.com">zycoo</a><br>
         <a href="https://code.google.com/p/imsdroid/">imsdroid</a><br>
         <a href="http://www.doubango.org/index.html">doubango</a><br>
     ]]></string>
@@ -366,5 +365,8 @@
     <!-- Shown as a link in the About screen of the app; user can click it to see the licenses. -->
     <string name="about_licenses">Open Source Licenses</string>
     <string name="ok">OK</string>
+
+    <string name="delete_voice_file_successful">Delete voice file %s successful</string>
+    <string name="delete_voice_file_failure">Delete voice file %s failure</string>
 
 </resources>

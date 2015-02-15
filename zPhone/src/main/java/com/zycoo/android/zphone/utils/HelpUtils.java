@@ -17,12 +17,19 @@
 package com.zycoo.android.zphone.utils;
 
 
-import android.app.*;
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.text.Html;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
@@ -39,8 +46,8 @@ import com.zycoo.android.zphone.R;
  * This is a set of helper methods for showing contextual help information in the app.
  */
 public class HelpUtils {
-    public static void showAbout(Activity activity) {
-        FragmentManager fm = activity.getFragmentManager();
+    public static void showAbout(FragmentActivity activity) {
+        FragmentManager fm = activity.getSupportFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
         Fragment prev = fm.findFragmentByTag("dialog_about");
         if (prev != null) {
@@ -100,7 +107,7 @@ public class HelpUtils {
             TextView aboutBodyView = (TextView) layoutInflater.inflate(R.layout.dialog_about, null);
             aboutBodyView.setText(aboutBody);
             aboutBodyView.setMovementMethod(new LinkMovementMethod());
-
+            aboutBodyView.setBackgroundColor(getResources().getColor(R.color.white));
             return new AlertDialog.Builder(getActivity())
                     .setTitle(R.string.about)
                     .setView(aboutBodyView)
@@ -115,8 +122,8 @@ public class HelpUtils {
         }
     }
 
-    public static void showOpenSourceLicenses(Activity activity) {
-        FragmentManager fm = activity.getFragmentManager();
+    public static void showOpenSourceLicenses(FragmentActivity activity) {
+        FragmentManager fm = activity.getSupportFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
         Fragment prev = fm.findFragmentByTag("dialog_licenses");
         if (prev != null) {
@@ -151,8 +158,8 @@ public class HelpUtils {
         }
     }
 
-    public static void showEula(Activity activity) {
-        FragmentManager fm = activity.getFragmentManager();
+    public static void showEula(FragmentActivity activity) {
+        FragmentManager fm = activity.getSupportFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
         Fragment prev = fm.findFragmentByTag("dialog_eula");
         if (prev != null) {

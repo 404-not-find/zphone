@@ -33,6 +33,9 @@ import org.doubango.ngn.media.NgnMediaType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ContactDetailFragment extends SuperAwesomeCardFragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
     public final Logger logger;
@@ -47,6 +50,7 @@ public class ContactDetailFragment extends SuperAwesomeCardFragment implements L
     // Used to store references to key views, layouts and menu items as these need to be updated
     // in multiple methods throughout this class.
     private LinearLayout mDetailLayout;
+    private List<String> mNumbers = new ArrayList<String>();
 
     public static ContactDetailFragment newInstance(int position, Uri contactUri) {
         // Create new instance of this fragment
@@ -164,7 +168,7 @@ public class ContactDetailFragment extends SuperAwesomeCardFragment implements L
                 }
             });
             phoneItemViewHolder.icon.setImageResource(R.drawable.ic_message_white);
-            Utils.setImageViewFilter(phoneItemViewHolder.icon, R.color.teal_500);
+            Utils.setImageViewFilter(phoneItemViewHolder.icon, R.color.cyan_500);
             phoneItemViewHolder.icon.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -301,6 +305,7 @@ public class ContactDetailFragment extends SuperAwesomeCardFragment implements L
                 break;
             case ContactPhoneQuery.QUERY_ID:
                 // Loops through all the rows in the Cursor
+                mNumbers.clear();
                 if (data.moveToFirst()) {
                     do {
                         final LinearLayout layout = buildPhoneItemLayout(
@@ -309,12 +314,16 @@ public class ContactDetailFragment extends SuperAwesomeCardFragment implements L
                                 data.getString(ContactPhoneQuery.NUMBER));
                         // Adds the new address layout to the details layout
                         mDetailLayout.addView(layout, layoutParams);
+                        mNumbers.add(data.getString(ContactPhoneQuery.NUMBER));
                     } while (data.moveToNext());
+                    ContactVoiceFragment voiceFragment = (ContactVoiceFragment) getActivity().getSupportFragmentManager()
+                            .findFragmentByTag(
+                                    "android:switcher:" + R.id.pager + ":2");
+                    voiceFragment.setContact(mNumbers);
                 } else {
                     // If nothing found, adds an empty address layout
                     //mDetailLayout.addView(buildEmptyItemLayout(R.string.not_find_phone_number), layoutParams);
                 }
-
                 break;
         }
     }
@@ -326,8 +335,10 @@ public class ContactDetailFragment extends SuperAwesomeCardFragment implements L
 
     @Override
     public void onResume() {
-        super.onResume();
+        mDetailLayout.removeAllViews();
         getSherlockActivity().getSupportLoaderManager().restartLoader(ContactAddressQuery.QUERY_ID, null, this);
+        getSherlockActivity().getSupportLoaderManager().restartLoader(ContactPhoneQuery.QUERY_ID, null, this);
+        super.onResume();
     }
 
 
@@ -372,5 +383,9 @@ public class ContactDetailFragment extends SuperAwesomeCardFragment implements L
         final static int ADDRESS = 1;
         final static int TYPE = 2;
         final static int LABEL = 3;
+    }
+
+    public List<String> getmNumbers() {
+        return mNumbers;
     }
 }

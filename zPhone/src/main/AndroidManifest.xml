@@ -2,12 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.zycoo.android.zphone"
-    android:versionCode="150130"
+    android:versionCode="150215"
     android:versionName="1.1">
-
     <uses-sdk
-        android:minSdkVersion="8"
-        android:targetSdkVersion="21"
         tools:overrideLibrary="com.google.android.gms" />
 
     <uses-permission android:name="android.permission.READ_CALL_LOG" />

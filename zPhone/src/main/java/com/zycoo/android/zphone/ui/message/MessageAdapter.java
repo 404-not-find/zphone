@@ -34,12 +34,11 @@ public class MessageAdapter extends BaseExpandableListAdapter {
     private final Logger mLogger = LoggerFactory.getLogger(MessageAdapter.class);
     private int count_new = 0;
     private final Context mContext;
-    private final Resources mResources;
     private final LayoutInflater mLayoutInflater;
     private final String[] mGroups;
     private final int[] mGroupDrawables = {
-            R.drawable.ic_email_grey600,
-            R.drawable.ic_voicemail_grey600
+            R.drawable.ic_email_white,
+            R.drawable.ic_voicemail_white
     };
     private List<List<?>> mAllChilds;
     private List<VoiceMailBean> mVoiceMails;
@@ -49,10 +48,9 @@ public class MessageAdapter extends BaseExpandableListAdapter {
         mContext = context;
         mLayoutInflater = (LayoutInflater) mContext
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        mResources = context.getResources();
         mGroups = new String[]{
-                mResources.getString(R.string.voice_mail),
-                mResources.getString(R.string.record),
+                ZphoneApplication.getAppResources().getString(R.string.voice_mail),
+                ZphoneApplication.getAppResources().getString(R.string.record),
         };
         mAllChilds = new ArrayList<>();
         mVoiceMails = new ArrayList<VoiceMailBean>();
@@ -152,7 +150,6 @@ public class MessageAdapter extends BaseExpandableListAdapter {
             groupViewHolder = (GroupViewHolder) convertView.getTag();
         }
         groupViewHolder.photoIv.setImageResource(mGroupDrawables[groupPosition]);
-        groupViewHolder.photoIv.setColorFilter(ZphoneApplication.getAppResources().getColor(R.color.blue_700));
         groupViewHolder.nameTv.setText(mGroups[groupPosition]);
         final int resId = isExpanded ? R.drawable.ic_keyboard_arrow_down_white : R.drawable.ic_keyboard_arrow_right_white;
         groupViewHolder.expandedIv.setImageResource(resId);
@@ -163,9 +160,11 @@ public class MessageAdapter extends BaseExpandableListAdapter {
                 } else {
                     groupViewHolder.badge_tv.setVisibility(View.INVISIBLE);
                 }
+                Utils.setImageViewFilter(groupViewHolder.photoIv,R.color.cyan_500);
                 break;
             case 1:
                 groupViewHolder.badge_tv.setVisibility(View.INVISIBLE);
+                Utils.setImageViewFilter(groupViewHolder.photoIv,R.color.teal_500);
                 break;
 
             default:

@@ -1,0 +1,16 @@
+Index: androidngnstack/src/main/java/org/doubango/ngn/utils/NgnUriUtils.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- androidngnstack/src/main/java/org/doubango/ngn/utils/NgnUriUtils.java	(revision )
++++ androidngnstack/src/main/java/org/doubango/ngn/utils/NgnUriUtils.java	(revision )
+@@ -39,7 +39,7 @@
+ 			
+ 			final SipUri sipUri = new SipUri(uri);
+             //tqc NullPoint NgnEngine.getInstance().getContactService()
+-			if(sipUri.isValid()){
++			if(sipUri.isValid() && null != NgnEngine.getInstance().getContactService()){
+ 				displayname = sipUri.getUserName();
+ 				contact = NgnEngine.getInstance().getContactService().getContactByPhoneNumber(displayname);
+ 				if(contact != null && !NgnStringUtils.isNullOrEmpty(contact.getDisplayName())){

@@ -80,7 +80,7 @@
             android:id="@+id/account_choose_bt"
             android:layout_width="100dp"
             android:layout_height="match_parent"
-            android:paddingBottom="5dp"
+            android:layout_centerVertical="true"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             >
@@ -147,7 +147,6 @@
 
         <LinearLayout
             android:id="@+id/dialPad_ll"
-            android:background="@color/white"
             android:layout_width="match_parent"
             style="@style/dial_pad_call_bar_height"
             android:orientation="vertical"
@@ -165,7 +164,10 @@
                 android:layout_width="match_parent"
                 android:layout_gravity="center_horizontal"
                  />
-
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/grey_200" />
             <com.zycoo.android.zphone.ui.dialpad.DialerCallBar
                 android:id="@+id/dialerCallBar"
                 android:layout_width="match_parent"

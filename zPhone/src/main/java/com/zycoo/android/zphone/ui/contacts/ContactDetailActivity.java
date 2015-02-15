@@ -178,14 +178,12 @@ public class ContactDetailActivity extends SherlockFragmentActivity implements
                     // name field based on OS version.
                     final String contactName = data.getString(ContactDetailQuery.DISPLAY_NAME);
                     getSupportActionBar().setTitle(contactName);
-                    ContactHistoryFragment fragment = (ContactHistoryFragment) getSupportFragmentManager()
+                    ContactHistoryFragment fragment = (ContactHistoryFragment)getSupportFragmentManager()
                             .findFragmentByTag(
                                     "android:switcher:" + R.id.pager + ":0");
-                    fragment.setContact(contactName);
-                    ContactVoiceFragment voiceFragment = (ContactVoiceFragment) getSupportFragmentManager()
-                            .findFragmentByTag(
-                                    "android:switcher:" + R.id.pager + ":2");
-                    voiceFragment.setContact(contactName);
+                    if(null != fragment) {
+                        fragment.setContact(contactName);
+                    }
                 }
                 break;
         }

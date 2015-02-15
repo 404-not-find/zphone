@@ -54,6 +54,8 @@ import java.util.Observer;
 public class ContactListFragment extends SuperAwesomeCardFragment implements OnClickListener, AdapterView.OnItemClickListener {
     private Logger mLogger = LoggerFactory.getLogger(ContactListFragment.class);
     private static final String DOWN_DATA_DB = "/download_file?path=/etc/asterisk/sysconf/database/data.db";
+    private static String DATA_DB_PATH = String.format("/data/data/%s/databases/data.db", ZphoneApplication.getContext()
+            .getPackageName());
     private static final int UNIQUE_FRAGMENT_GROUP_ID = 2;
     private ListView mListView;
     private BaseAdapter mAdapter;
@@ -466,15 +468,13 @@ public class ContactListFragment extends SuperAwesomeCardFragment implements OnC
     }
 
     public void downloadDataDB() {
-        String dataDbPath = String.format("/data/data/%s/databases/data.db", ZphoneApplication.getContext()
-                .getPackageName());
         int bytesRead = 0;
         byte[] buffer = new byte[1024];
         try {
             InputStream in = getEngine().getHttpClientService().getBinary(
                     ZphoneApplication.getHttpSite(DOWN_DATA_DB));
             if (null != in) {
-                OutputStream os = new FileOutputStream(new File(dataDbPath));
+                OutputStream os = new FileOutputStream(new File(DATA_DB_PATH));
                 while ((bytesRead = in.read(buffer, 0, 1024)) != -1) {
                     os.write(buffer, 0, bytesRead);
                 }
@@ -514,7 +514,10 @@ public class ContactListFragment extends SuperAwesomeCardFragment implements OnC
                 getEngine().getConfigurationService().putBoolean("first_load_remote_contacts", false);
                 getEngine().getConfigurationService().commit();
             }
-            ((SimpleAdapter) mAdapter).updateSections();
+            //If first run, but can't down db file so check file weather exist
+            if(new File(DATA_DB_PATH).exists()) {
+                ((SimpleAdapter) mAdapter).updateSections();
+            }
             return null;
         }
     }
