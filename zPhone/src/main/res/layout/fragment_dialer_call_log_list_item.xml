@@ -70,6 +70,6 @@
         android:layout_toStartOf="@id/call_history_time_tv"
         android:layout_toLeftOf="@id/call_history_time_tv"
         tools:text="sip:123456789@123456789"
-        style="@style/item_tv1" />
+        style="@style/item_tv2" />
 
 </RelativeLayout>

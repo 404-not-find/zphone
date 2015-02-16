@@ -229,4 +229,7 @@
     <dimen name="three_list_avatar_with_text_icon_text_padding_bottom">14dp</dimen>
     <dimen name="three_list_avatar_with_text_icon_icon_padding_right">16dp</dimen>
 
+    <!--set item text size-->
+    <dimen name="item_tv_pri">16sp</dimen>
+    <dimen name="item_tv_sec">14sp</dimen>
 </resources>

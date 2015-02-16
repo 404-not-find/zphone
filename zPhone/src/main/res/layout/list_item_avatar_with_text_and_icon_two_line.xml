@@ -6,23 +6,25 @@
     android:orientation="vertical">
 
     <RelativeLayout
+        android:id="@+id/id_item_me_rl"
         style="@style/Avatar_with_text"
         android:layoutDirection="locale"
-        android:layout_width="match_parent"
-        android:id="@+id/id_item_me_rl">
+        android:layout_width="match_parent">
 
         <ImageView
             android:id="@+id/id_item_av_iv"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            style="@style/item_iv_start"
             android:tint="@color/light_blue"
-            android:src="@drawable/ic_settings_white" />
+            android:src="@drawable/ic_settings_white"
+            style="@style/item_iv_start"
+            />
 
         <ImageView
             android:id="@+id/id_item_icon_iv"
             style="@style/item_iv_end"
             android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:tint="@color/light_blue"
@@ -33,7 +35,7 @@
             android:id="@+id/id_item_name_tv"
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
-            android:layout_marginTop="16dp"
+            android:layout_alignTop="@id/id_item_av_iv"
             android:layout_toStartOf="@id/id_item_icon_iv"
             android:layout_toLeftOf="@id/id_item_icon_iv"
             tools:text="@string/setting"
@@ -49,15 +51,14 @@
             android:layout_toLeftOf="@id/id_item_icon_iv"
             style="@style/item_tv2"
             tools:text="@string/setting"/>
-
-
-
     </RelativeLayout>
 
     <TextView
         android:clickable="false"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
         android:id="@+id/id_item_divider_tv"
         android:background="@color/grey_300"
         android:layout_width="match_parent"

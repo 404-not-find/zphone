@@ -261,9 +261,9 @@ public class DialerFragment extends SuperAwesomeCardFragment implements OnClickL
         //关闭快速滚动
         autoCompleteList.setFastScrollEnabled(false);
         mFab.listenTo(this, autoCompleteList);
-	//java.lang.NoSuchMethodError: android.widget.ListView.setFastScrollAlwaysVisible
+        //java.lang.NoSuchMethodError: android.widget.ListView.setFastScrollAlwaysVisible
         if (Build.VERSION.SDK_INT >= 11) {
-        autoCompleteList.setFastScrollAlwaysVisible(false);
+            autoCompleteList.setFastScrollAlwaysVisible(false);
         }
         rewriteTextInfo = (TextView) view.findViewById(R.id.rewriteTextInfo);
 
@@ -627,10 +627,10 @@ public class DialerFragment extends SuperAwesomeCardFragment implements OnClickL
     }
 
 
-    public void setTextDialing(boolean textMode, boolean forceRefresh)
-    {
+    public void setTextDialing(boolean textMode, boolean forceRefresh) {
         setTextDialing(textMode, forceRefresh, true);
     }
+
     /**
      * Set the mode of the text/digit input.
      *
@@ -658,17 +658,27 @@ public class DialerFragment extends SuperAwesomeCardFragment implements OnClickL
         digits.setCursorVisible(!isDigit);
         digits.setIsDigit(isDigit, false);
 
+        //issue
+        //when SDK is 2.3, layout  have override
         if (isDigit) {
             dialPadLv.setVisibility(View.VISIBLE);
             mFab.hide(true);
-            YoYo.with(Techniques.SlideInUp)
-                    .duration(500)
-                    .playOn(dialPadLv);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+                YoYo.with(Techniques.SlideInUp)
+                        .duration(500)
+                        .playOn(dialPadLv);
+            } else {
+                dialPadLv.setVisibility(View.VISIBLE);
+            }
         } else {
             mFab.hide(false);
-            YoYo.with(Techniques.SlideOutDown)
-                    .duration(500)
-                    .playOn(dialPadLv);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+                YoYo.with(Techniques.SlideOutDown)
+                        .duration(500)
+                        .playOn(dialPadLv);
+            } else {
+                dialPadLv.setVisibility(View.GONE);
+            }
         }
         //autoCompleteList.setVisibility(hasAutocompleteList() ? View.VISIBLE : View.GONE);
         autoCompleteList.setVisibility(View.VISIBLE);

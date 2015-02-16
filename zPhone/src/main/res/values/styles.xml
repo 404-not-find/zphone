@@ -401,22 +401,22 @@
     </style>
 
     <style name="item_tv1" parent="item_tv_start">
-        <item name="android:textSize">16sp</item>
+        <item name="android:textSize">@dimen/item_tv_pri</item>
         <item name="android:textColor">@color/dark_grey</item>
     </style>
 
     <style name="item_tv2" parent="item_tv_start">
-        <item name="android:textSize">14sp</item>
+        <item name="android:textSize">@dimen/item_tv_sec</item>
         <item name="android:textColor">@color/grey_700</item>
     </style>
 
     <style name="item_tv3" parent="item_tv_end">
-        <item name="android:textSize">14sp</item>
+        <item name="android:textSize">@dimen/item_tv_sec</item>
         <item name="android:textColor">@color/grey_700</item>
     </style>
 
     <style name="item_tv4" parent="item_tv_end">
-        <item name="android:textSize">14sp</item>
+        <item name="android:textSize">@dimen/item_tv_sec</item>
         <item name="android:textColor">@color/grey_700</item>
     </style>
 

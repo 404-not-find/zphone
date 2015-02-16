@@ -927,13 +927,12 @@ public class ContactsListFragment extends SuperAwesomeCardFragment implements
 
             // Binds the contact's lookup Uri to the QuickContactBadge
             holder.icon.assignContactUri(contactUri);
-
-            if (null != photoUri) {
+            //TODO issue huawei phone return "content://com.android.contacts/contacts/4102/photo" even not phto
+            if (null != photoUri && photoUri.startsWith("content:")) {
                 // Loads the thumbnail image pointed to by photoUri into the QuickContactBadge in a
                 // background worker thread
                 mImageLoader.loadImage(photoUri, holder.icon);
             } else {
-
                 TextDrawable drawable = ZphoneApplication.getBuilderRect().build(getSectionFromCursor(cursor).toString(), Utils.getColorResourceId(context, cursor.getPosition()));
                 holder.icon.setImageDrawable(drawable);
             }
