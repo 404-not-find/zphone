@@ -104,7 +104,8 @@ public class NgnSipService extends NgnBaseService implements INgnSipService,
     private final DDebugCallback mDebugCallback;
     private final MySipCallback mSipCallback;
     private final NgnSipPrefrences mPreferences;
-
+    // add by tqc
+    private NgnSubscriptionSession mMWI;
     private final INgnConfigurationService mConfigurationService;
     private final INgnNetworkService mNetworkService;
 
@@ -565,6 +566,82 @@ public class NgnSipService extends NgnBaseService implements INgnSipService,
         NgnApplication.getContext().sendBroadcast(intent);
     }
 
+
+    /* ===================== Private functions ======================== */
+    public void doPostRegistrationOp() {
+        // guard
+        if (!this.isRegistered()) {
+            return;
+        }
+                /*
+                 * 3GPP TS 24.229 5.1.1.3 Subscription to registration-state event package
+                 * Upon receipt of a 2xx response to the initial registration, the UE shall subscribe to the reg event package for the public
+                 * user identity registered at the user's registrar (S-CSCF) as described in RFC 3680 [43].
+                 */
+        /*if (this.subReg == null) {
+            this.subReg = new MySubscriptionSession(this.sipStack, this.preferences.impu, EVENT_PACKAGE_TYPE.REG);
+        } else {
+            this.subReg.setToUri(this.preferences.impu);
+            this.subReg.setFromUri(this.preferences.impu);
+        }
+        this.subReg.subscribe();*/
+
+        // Message Waiting Indication
+        if (mPreferences.isMWI()) {
+            if ( mMWI== null) {
+                mMWI = NgnSubscriptionSession.createOutgoingSession(mSipStack, mPreferences.getIMPU(), EventPackageType.MessageSummary);
+            } else {
+                mMWI.setToUri(mPreferences.getIMPU());
+                mMWI.setFromUri(mPreferences.getIMPU());
+                mMWI.setSigCompId(mSipStack.getSigCompId());
+            }
+            if(mMWI.isConnected())
+            {
+                mMWI.unSubscribe();
+            }
+            else {
+                mMWI.subscribe();
+            }
+            //mMWI.unSubscribe();
+        }
+
+       /* // Presence
+        if (this.preferences.presence_enabled) {
+            // Subscribe to "watcher-info" and "presence"
+            if (this.preferences.xcap_enabled) {
+                // "watcher-info"
+                if (this.subWinfo == null) {
+                    this.subWinfo = new MySubscriptionSession(this.sipStack, this.preferences.impu, EVENT_PACKAGE_TYPE.WINFO);
+                } else {
+                    this.subWinfo.setToUri(this.preferences.impu);
+                    this.subWinfo.setFromUri(this.preferences.impu);
+                    this.subMwi.setSigCompId(this.sipStack.getSigCompId());
+                }
+                this.subWinfo.subscribe();
+                // "eventlist"
+            } else {
+
+            }
+
+            // Publish presence
+            if (this.pubPres == null) {
+                this.pubPres = new MyPublicationSession(this.sipStack, this.preferences.impu);
+            } else {
+                this.pubPres.setFromUri(this.preferences.impu);
+                this.pubPres.setToUri(this.preferences.impu);
+                this.subMwi.setSigCompId(this.sipStack.getSigCompId());
+            }
+
+            String freeText = this.configurationService.getString(CONFIGURATION_SECTION.RCS, CONFIGURATION_ENTRY.FREE_TEXT, Configuration.DEFAULT_RCS_FREE_TEXT);
+            PresenceStatus status = Enum.valueOf(PresenceStatus.class, this.configurationService.getString(
+                    CONFIGURATION_SECTION.RCS,
+                    CONFIGURATION_ENTRY.STATUS,
+                    Configuration.DEFAULT_RCS_STATUS.toString()));
+            this.pubPres.publish(status, freeText);
+        }*/
+    }
+
+
     /**
      * MySipCallback
      */
@@ -767,7 +844,7 @@ public class NgnSipService extends NgnBaseService implements INgnSipService,
                                         NgnRegistrationEventTypes.UNREGISTRATION_OK,
                                         sipCode, phrase));
                     /*
-					 * Stop the stack (as we are already in the stack-thread,
+                     * Stop the stack (as we are already in the stack-thread,
 					 * then do it in a new thread)
 					 */
                         new Thread(new Runnable() {
@@ -1315,7 +1392,6 @@ public class NgnSipService extends NgnBaseService implements INgnSipService,
         public int OnSubscriptionEvent(SubscriptionEvent e) {
             final tsip_subscribe_event_type_t type = e.getType();
             SubscriptionSession _session = e.getSession();
-
             switch (type) {
                 case tsip_i_notify: {
                     final short code = e.getCode();
@@ -1326,14 +1402,12 @@ public class NgnSipService extends NgnBaseService implements INgnSipService,
                     }
                     final String contentType = message.getSipHeaderValue("c");
                     final byte[] content = message.getSipContent();
-
                     if (NgnStringUtils.equals(contentType, NgnContentType.REG_INFO,
                             true)) {
                         // mReginfo = content;
                     } else if (NgnStringUtils.equals(contentType,
                             NgnContentType.WATCHER_INFO, true)) {
                         //mWInfo = content;
-                        Log.d("TQC", new String(content));
                     }
 
                     NgnSubscriptionSession ngnSession = NgnSubscriptionSession
@@ -1345,7 +1419,6 @@ public class NgnSipService extends NgnBaseService implements INgnSipService,
                             ngnSession == null ? EventPackageType.None : ngnSession
                                     .getEventPackage());
                     mSipService.broadcastSubscriptionEvent(eargs);
-
                     break;
                 }
 

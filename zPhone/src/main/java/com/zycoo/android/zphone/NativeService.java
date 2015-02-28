@@ -16,6 +16,7 @@ import android.os.PowerManager;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.google.common.base.Splitter;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.zycoo.android.zphone.task.RegisterTask;
@@ -38,13 +39,17 @@ import org.doubango.ngn.events.NgnMessagingEventArgs;
 import org.doubango.ngn.events.NgnMsrpEventArgs;
 import org.doubango.ngn.events.NgnRegistrationEventArgs;
 import org.doubango.ngn.events.NgnRegistrationEventTypes;
+import org.doubango.ngn.events.NgnSubscriptionEventArgs;
+import org.doubango.ngn.events.NgnSubscriptionEventTypes;
 import org.doubango.ngn.media.NgnMediaType;
 import org.doubango.ngn.model.NgnHistoryAVCallEvent;
 import org.doubango.ngn.model.NgnHistoryEvent;
 import org.doubango.ngn.services.INgnConfigurationService;
 import org.doubango.ngn.services.INgnHistoryService;
+import org.doubango.ngn.services.impl.NgnSipService;
 import org.doubango.ngn.sip.NgnAVSession;
 import org.doubango.ngn.utils.NgnConfigurationEntry;
+import org.doubango.tinyWRAP.SipMessage;
 import org.eclipse.paho.android.service.MqttAndroidClient;
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
@@ -57,6 +62,7 @@ import org.slf4j.LoggerFactory;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Observable;
@@ -150,6 +156,35 @@ public class NativeService extends NgnNativeService implements MqttCallback, Obs
                         new RegisterTask(false).execute();
                     }
                 }
+                //ACTION_SUBSCRIBTION_EVENT
+                if (NgnSubscriptionEventArgs.ACTION_SUBSCRIBTION_EVENT.equals(action)) {
+                    NgnSubscriptionEventArgs args = intent
+                            .getParcelableExtra(NgnSubscriptionEventArgs.EXTRA_EMBEDDED);
+                    final NgnSubscriptionEventTypes type;
+                    if (null == args) {
+                        mLogger.debug("Subscription event invalid event args");
+                        return;
+                    }
+
+                    switch (type = args.getEventType()) {
+                        case INCOMING_NOTIFY:
+                            byte[] content = args.getContent();
+
+                            if (null != content && content.length > 0) {
+                                String str = new String(content);
+                                mLogger.debug(str);
+                                Map<String, String> properties = Splitter.on("\r\n").omitEmptyStrings().withKeyValueSeparator(": ").split(str);
+                                if (properties.get("Messages-Waiting").equals("yes")) {
+                                    int newVoiceMail = Integer.parseInt(properties.get("Voice-Message").split(" ")[0].split("/")[0]);
+                                    if (newVoiceMail > 0) {
+                                        mEngine.showMissCallNotif(R.drawable.ic_voicemail_white, getResources().getString(R.string.voice_mail), String.valueOf(newVoiceMail), new java.util.Date().getTime());
+                                    }
+                                }
+                            }
+                            break;
+                    }
+                }
+
                 // Registration Events
                 if (NgnRegistrationEventArgs.ACTION_REGISTRATION_EVENT.equals(action)) {
                     NgnRegistrationEventArgs args = intent
@@ -161,6 +196,9 @@ public class NativeService extends NgnNativeService implements MqttCallback, Obs
                     }
                     switch ((type = args.getEventType())) {
                         case REGISTRATION_OK:
+                            // mwi
+                            //TODO add function to interface
+                            ((NgnSipService) mEngine.getSipService()).doPostRegistrationOp();
                             break;
                         case REGISTRATION_NOK:
                             Toast.makeText(ZphoneApplication.getContext(),
@@ -168,7 +206,10 @@ public class NativeService extends NgnNativeService implements MqttCallback, Obs
                                     .show();
                         case REGISTRATION_INPROGRESS:
                         case UNREGISTRATION_INPROGRESS:
+                            break;
                         case UNREGISTRATION_OK:
+                            ((NgnSipService) mEngine.getSipService()).doPostRegistrationOp();
+                            break;
                         case UNREGISTRATION_NOK:
                         default:
                             break;
@@ -265,7 +306,11 @@ public class NativeService extends NgnNativeService implements MqttCallback, Obs
         intentFilter.addAction(NgnInviteEventArgs.ACTION_INVITE_EVENT);
         intentFilter.addAction(NgnMessagingEventArgs.ACTION_MESSAGING_EVENT);
         intentFilter.addAction(NgnMsrpEventArgs.ACTION_MSRP_EVENT);
+        //SUBSCRIBTION
+        intentFilter.addAction(NgnSubscriptionEventArgs.ACTION_SUBSCRIBTION_EVENT);
+        //not use
         intentFilter.addAction(ConstantIntent.VOICEMAILCOUNTATION_INTENT);
+        // network
         intentFilter.addAction(ConstantIntent.CONNECTIVITY_CHANGE);
         registerReceiver(mBroadcastReceiver, intentFilter);
         final Bundle bundle = intent != null ? intent.getExtras() : null;
@@ -273,6 +318,7 @@ public class NativeService extends NgnNativeService implements MqttCallback, Obs
         new Thread() {
             @Override
             public void run() {
+
                 boolean isFirst = mEngine.getConfigurationService().getBoolean(ZycooConfigurationEntry.FIRST_LOGIN, ZycooConfigurationEntry.DEFAULT_FIRST_LOGIN);
                 if (bundle != null && bundle.getBoolean("autostarted") && !isFirst) {
                     if (new NetWorkUtils()
