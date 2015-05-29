@@ -13,18 +13,18 @@ android {
             storePassword 'forever'
         }
     }
-    compileSdkVersion 21
-    buildToolsVersion "21.1.2"
+    compileSdkVersion 22
+    buildToolsVersion "22.0.1"
     productFlavors {
         pro {
-            minSdkVersion 21
+            minSdkVersion 22
             applicationId = "com.zycoo.android.zphone.pro"
         }
         free {
             applicationId = "com.zycoo.android.zphone.free"
             minSdkVersion 10
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
-            targetSdkVersion 21
+            targetSdkVersion 22
             testInstrumentationRunner 'android.test.'
             testApplicationId 'com.zycoo.aInstrumentationTestRunnerndroid.zphone.test'
             versionName '1.0 Beta'
@@ -38,7 +38,7 @@ android {
         //applicationId "com.zycoo.android.zphone"
         manifestPlaceholders = [FLAVORS_VALUE: "pro"];
         minSdkVersion 10
-        targetSdkVersion 21
+        targetSdkVersion 22
         multiDexEnabled true
         testApplicationId "com.zycoo.android.zphone.test"
         testInstrumentationRunner "android.test.InstrumentationTestRunner"
