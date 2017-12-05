@@ -6,17 +6,17 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.SearchView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
-import com.actionbarsherlock.widget.SearchView;
 import com.zycoo.android.zphone.R;
 import com.zycoo.android.zphone.ZphoneApplication;
 import com.zycoo.android.zphone.ui.contacts.ContactsListFragment.ContactsQuery;
@@ -107,8 +107,7 @@ public class ContactsContainerFragment extends SuperAwesomeCardFragment implemen
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        SearchView sv = new SearchView(getSherlockActivity().getSupportActionBar()
-                .getThemedContext());
+        SearchView sv = new SearchView(getActivity().getActionBar().getThemedContext());
         switch (mCurrentlyShowingFragment) {
             case 0:
                 sv.setQueryHint(ZphoneApplication.getAppResources().getString(

@@ -201,7 +201,7 @@ public class ContactHistoryFragment extends SuperAwesomeCardFragment implements 
         if (mContactDisplayName != null) {
             Bundle bundle = new Bundle();
             bundle.putString("contactName", mContactDisplayName);
-            getSherlockActivity().getSupportLoaderManager().restartLoader(ContactCallLogQuery.QUERY_ID, bundle, this);
+            getActivity().getSupportLoaderManager().restartLoader(ContactCallLogQuery.QUERY_ID, bundle, this);
         }
     }
 

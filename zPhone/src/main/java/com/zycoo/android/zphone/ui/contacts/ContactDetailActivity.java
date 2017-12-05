@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.LoaderManager;
@@ -21,12 +22,11 @@ import android.support.v4.view.ViewPager;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.ContextMenu;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
 import com.hp.views.PagerSlidingTabStrip;
 import com.zycoo.android.zphone.BuildConfig;
 import com.zycoo.android.zphone.R;
@@ -37,7 +37,7 @@ import com.zycoo.android.zphone.widget.SuperAwesomeCardFragment;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-public class ContactDetailActivity extends SherlockFragmentActivity implements
+public class ContactDetailActivity extends FragmentActivity implements
         LoaderManager.LoaderCallbacks<Cursor> {
 
     public static final String EXTRA_CONTACT_URI =
@@ -64,7 +64,7 @@ public class ContactDetailActivity extends SherlockFragmentActivity implements
         }
         // This activity expects to receive an intent that contains the uri of a contact
         if (getIntent() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             // Fetch the data Uri from the intent provided to this activity
             final Uri uri = getIntent().getData();
 
@@ -177,7 +177,7 @@ public class ContactDetailActivity extends SherlockFragmentActivity implements
                     // ContactDetailQuery.DISPLAY_NAME maps to the appropriate display
                     // name field based on OS version.
                     final String contactName = data.getString(ContactDetailQuery.DISPLAY_NAME);
-                    getSupportActionBar().setTitle(contactName);
+                    //getSupportActionBar().setTitle(contactName);
                     ContactHistoryFragment fragment = (ContactHistoryFragment)getSupportFragmentManager()
                             .findFragmentByTag(
                                     "android:switcher:" + R.id.pager + ":0");
@@ -273,7 +273,7 @@ public class ContactDetailActivity extends SherlockFragmentActivity implements
            /* mEmptyView.setVisibility(View.VISIBLE);
             mDetailsLayout.removeAllViews();*/
 
-            getSupportActionBar().setTitle("");
+            //ßgetSupportActionBar().setTitle("");
             if (mEditContactMenuItem != null) {
                 mEditContactMenuItem.setVisible(false);
             }

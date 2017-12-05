@@ -13,16 +13,16 @@ android {
             storePassword 'forever'
         }
     }
-    compileSdkVersion 22
-    buildToolsVersion "22.0.1"
+    compileSdkVersion 24
+    buildToolsVersion '25.0.0'
     productFlavors {
         pro {
-            minSdkVersion 22
+            minSdkVersion 24
             applicationId = "com.zycoo.android.zphone.pro"
         }
         free {
             applicationId = "com.zycoo.android.zphone.free"
-            minSdkVersion 10
+            minSdkVersion 11
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
             targetSdkVersion 22
             testInstrumentationRunner 'android.test.'
@@ -61,6 +61,7 @@ android {
     }
     dexOptions {
         preDexLibraries = false
+        javaMaxHeapSize "4g"
     }
 }
 
@@ -68,19 +69,17 @@ dependencies {
     compile project(':library')
     compile project(':androidngnstack')
     compile project(':switchButton')
-    compile project(':VLCLibrary')
-    compile project(':paho')
     compile 'com.diegocarloslima:fgelv:0.1.+@aar'
     compile 'com.github.snowdream.android.util:log:1.0.4'
     compile 'com.github.snowdream.android.app:downloader:1.0'
     compile 'com.github.snowdream.android.util.concurrent:multithread:0.0.7'
     compile 'com.github.kevinsawicki:http-request:5.5'
     compile 'com.github.snowdream.android.app:updater:1.0@aar'
-    compile 'com.android.support:support-v4:22.2.0'
+    compile 'com.android.support:support-v4:24.2.0'
+    compile 'com.android.support:appcompat-v7:24.2.0'
     //compile 'com.android.support:recyclerview-v7:21.0.2'
     compile 'com.google.android.gms:play-services:6.5.87'
     compile 'com.google.code.gson:gson:2.3.1'
-    compile 'com.actionbarsherlock:actionbarsherlock:4.4.0@aar'
 
     //--------------------nineoldandroids-------------------
     //https://github.com/JakeWharton/NineOldAndroids/

@@ -17,6 +17,7 @@
 package com.zycoo.android.zphone.widget;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -26,14 +27,13 @@ import android.widget.FrameLayout;
 import android.widget.FrameLayout.LayoutParams;
 import android.widget.TextView;
 
-import com.actionbarsherlock.app.SherlockFragment;
 import com.zycoo.android.zphone.Engine;
 import com.zycoo.android.zphone.R;
 
 import org.doubango.ngn.NgnEngine;
 import org.doubango.ngn.services.INgnSipService;
 
-public class SuperAwesomeCardFragment extends SherlockFragment {
+public class SuperAwesomeCardFragment extends Fragment {
 
     protected static final String ARG_POSITION = "position";
     protected INgnSipService mSipService;

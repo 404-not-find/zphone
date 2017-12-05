@@ -34,22 +34,6 @@ public class SplashActivity extends Activity {
         setContentView(R.layout.activity_splash);
         ProgressBar progressBar = (ProgressBar) findViewById(R.id.id_launch_pgb);
         progressBar.setVisibility(View.VISIBLE);
-        //水波效果加载
-        /*
-        if (VERSION.SDK_INT < 14)
-        {
-            ProgressBar progressBar = (ProgressBar) findViewById(R.id.id_splash_pgb);
-            progressBar.setVisibility(View.VISIBLE);
-        }
-        else
-        {
-            TitanicTextView tv = (TitanicTextView) findViewById(R.id.my_text_view);
-            tv.setVisibility(View.VISIBLE);
-            // set fancy typeface
-            tv.setTypeface(Typefaces.get(this, "Satisfy-Regular.ttf"));
-            // start animation
-            //new Titanic().start(tv);
-        }*/
 
         mBroadCastRecv = new BroadcastReceiver() {
             @Override

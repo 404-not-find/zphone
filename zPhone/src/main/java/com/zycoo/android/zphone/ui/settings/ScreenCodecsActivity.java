@@ -57,7 +57,7 @@ public class ScreenCodecsActivity extends BaseScreen implements OnItemClickListe
         super.onCreate(savedInstanceState);
         mCodecs = mConfigurationService.getInt(NgnConfigurationEntry.MEDIA_CODECS, NgnConfigurationEntry.DEFAULT_MEDIA_CODECS);
         setContentView(R.layout.settings_listview);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getActionBar().setDisplayHomeAsUpEnabled(true);
         mListView = (ListView) findViewById(android.R.id.list);
         initData();
         adapter = new ScreenSettingsAdapter(this, items);

@@ -41,7 +41,7 @@ public class ScreenSecurityActivity extends BaseScreen {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.settings_listview);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getActionBar().setDisplayHomeAsUpEnabled(true);
         mListView = (ListView) findViewById(android.R.id.list);
         initData();
         adapter = new ScreenSettingsAdapter(this, items);

@@ -60,7 +60,7 @@ public class ScreenNattActivity extends BaseScreen {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.screen_natt);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getActionBar().setDisplayHomeAsUpEnabled(true);
         // get controls
         mCbHackAoR = (CheckBox) findViewById(R.id.screen_natt_checkBox_hack_aor);
         mCbEnableStunForSIP = (CheckBox) findViewById(R.id.screen_natt_checkBox_stun_for_sip);

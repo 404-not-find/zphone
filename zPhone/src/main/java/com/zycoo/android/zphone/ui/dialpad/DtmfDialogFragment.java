@@ -27,6 +27,7 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.graphics.Point;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.util.Log;
 import android.view.Display;
 import android.view.KeyEvent;
@@ -39,7 +40,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.actionbarsherlock.app.SherlockDialogFragment;
+
 import com.zycoo.android.zphone.R;
 import com.zycoo.android.zphone.ui.dialpad.Dialpad.OnDialKeyListener;
 import com.zycoo.android.zphone.utils.Utils;
@@ -47,7 +48,7 @@ import com.zycoo.android.zphone.utils.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class DtmfDialogFragment extends SherlockDialogFragment implements OnDialKeyListener {
+public class DtmfDialogFragment extends DialogFragment implements OnDialKeyListener {
 
     private Logger mLogger = LoggerFactory.getLogger(DtmfDialogFragment.class.getCanonicalName());
     private static final String EXTRA_CALL_ID = "call_id";
@@ -138,11 +139,11 @@ public class DtmfDialogFragment extends SherlockDialogFragment implements OnDial
             sb.append(nbr);
             dialPadTextView.setText(sb.toString());
         }
-        if (getSherlockActivity() instanceof OnDtmfListener) {
+        if (getActivity() instanceof OnDtmfListener) {
 
             Integer callId = getArguments().getInt(EXTRA_CALL_ID);
             if (callId != null) {
-                ((OnDtmfListener) getSherlockActivity()).OnDtmf(callId, keyCode, dialTone);
+                ((OnDtmfListener) getActivity()).OnDtmf(callId, keyCode, dialTone);
             } else {
                 Log.w(THIS_FILE, "Impossible to find the call associated to this view");
             }

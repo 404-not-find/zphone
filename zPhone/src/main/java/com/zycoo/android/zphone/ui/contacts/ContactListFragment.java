@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View.OnClickListener;
@@ -25,7 +26,6 @@ import android.widget.RelativeLayout;
 import android.widget.SectionIndexer;
 import android.widget.TextView;
 
-import com.actionbarsherlock.view.MenuItem;
 import com.amulyakhare.textdrawable.TextDrawable;
 import com.hp.views.PinnedSectionListView.PinnedSectionListAdapter;
 import com.zycoo.android.zphone.DatabaseHelper;

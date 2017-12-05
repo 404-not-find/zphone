@@ -1,5 +1,31 @@
 package com.zycoo.android.zphone.ui.message;
 
+import com.baoyz.swipemenulistview.SwipeMenu;
+import com.baoyz.swipemenulistview.SwipeMenuCreator;
+import com.baoyz.swipemenulistview.SwipeMenuItem;
+import com.diegocarloslima.fgelv.bak.FloatingGroupExpandableListView;
+import com.diegocarloslima.fgelv.bak.WrapperExpandableListAdapter;
+import com.github.kevinsawicki.http.HttpRequest;
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
+import com.zycoo.android.zphone.DatabaseHelper;
+import com.zycoo.android.zphone.Engine;
+import com.zycoo.android.zphone.NativeService;
+import com.zycoo.android.zphone.R;
+import com.zycoo.android.zphone.ZphoneApplication;
+import com.zycoo.android.zphone.ui.MainActivity;
+import com.zycoo.android.zphone.ui.dialpad.ScreenAV;
+import com.zycoo.android.zphone.ui.message.MessageAdapter.VoiceMailBean;
+import com.zycoo.android.zphone.utils.Utils;
+import com.zycoo.android.zphone.widget.SuperAwesomeCardFragment;
+import com.zycoo.android.zphonelib.PullToRefreshExpandableListView;
+import com.zycoo.android.zphonelib.SwipeMenuFloatingGroupExpandableListView;
+
+import org.doubango.ngn.media.NgnMediaType;
+import org.doubango.ngn.utils.NgnConfigurationEntry;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import android.app.Activity;
 import android.app.NotificationManager;
 import android.content.Context;
@@ -19,6 +45,7 @@ import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnCreateContextMenuListener;
@@ -30,35 +57,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.actionbarsherlock.view.Menu;
-import com.baoyz.swipemenulistview.SwipeMenu;
-import com.baoyz.swipemenulistview.SwipeMenuCreator;
-import com.baoyz.swipemenulistview.SwipeMenuItem;
-import com.diegocarloslima.fgelv.bak.FloatingGroupExpandableListView;
-import com.diegocarloslima.fgelv.bak.WrapperExpandableListAdapter;
-import com.github.kevinsawicki.http.HttpRequest;
-import com.handmark.pulltorefresh.library.PullToRefreshBase;
-import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
-import com.jensdriller.libs.undobar.UndoBar;
-import com.tqcenglish.vlcdemo.AudioPlayActivity;
-import com.zycoo.android.zphone.DatabaseHelper;
-import com.zycoo.android.zphone.Engine;
-import com.zycoo.android.zphone.ui.MainActivity;
-import com.zycoo.android.zphone.NativeService;
-import com.zycoo.android.zphone.R;
-import com.zycoo.android.zphone.ZphoneApplication;
-import com.zycoo.android.zphone.ui.dialpad.ScreenAV;
-import com.zycoo.android.zphone.ui.message.MessageAdapter.VoiceMailBean;
-import com.zycoo.android.zphone.utils.Utils;
-import com.zycoo.android.zphone.widget.SuperAwesomeCardFragment;
-import com.zycoo.android.zphonelib.PullToRefreshExpandableListView;
-import com.zycoo.android.zphonelib.SwipeMenuFloatingGroupExpandableListView;
-
-import org.doubango.ngn.media.NgnMediaType;
-import org.doubango.ngn.utils.NgnConfigurationEntry;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.File;
 import java.io.IOException;
 
@@ -68,11 +66,11 @@ import java.io.IOException;
 public class MessageFragment extends SuperAwesomeCardFragment implements OnChildClickListener,
         OnCreateContextMenuListener {
     public static final int HANDLE_WHAT = 99;
-    private static final int UNIQUE_FRAGMENT_GROUP_ID = 0;
     public static final String UPDATE_MESSAGE_FRAGMENT = MessageFragment.class.getName()
             + ".UPDATE_MESSAGE_FRAGMENT";
     public static final String RECORD_PATH = Environment.getExternalStorageDirectory().getPath() + "/zycoo/" + ZphoneApplication.getHost() + "/record/";
     public static final String VOICE_MAIL_PATH = Environment.getExternalStorageDirectory().getPath() + "/zycoo/" + ZphoneApplication.getHost() + "/voice_mail/";
+    private static final int UNIQUE_FRAGMENT_GROUP_ID = 0;
     private Logger mLogger = LoggerFactory.getLogger(MessageFragment.class);
     private PullToRefreshExpandableListView mPullToRefreshExpandableListView;
     private MessageAdapter messageAdapter;
@@ -277,7 +275,6 @@ public class MessageFragment extends SuperAwesomeCardFragment implements OnChild
     }
 
     /**
-     * @param childPosition
      * @return file_name, wd, inbox_old, extension
      */
     public String[] getVoiceMailFileNameAndWd(int childPosition) {
@@ -388,23 +385,17 @@ public class MessageFragment extends SuperAwesomeCardFragment implements OnChild
     public void onPrepareOptionsMenu(Menu menu) {
         menu.clear();
         if (Utils.isPro(getActivity())) {
-            if (null != mNativeService && mNativeService.isConnected()) {
-                getSherlockActivity().getSupportMenuInflater().inflate(R.menu.activity_mqtt, menu);
-            } else {
-                getSherlockActivity().getSupportMenuInflater().inflate(
-                        R.menu.activity_mqtt_disconnected, menu);
-            }
+
         }
     }
 
     @Override
-    public boolean onOptionsItemSelected(com.actionbarsherlock.view.MenuItem item) {
+    public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.disconnect:
-                mNativeService.disconnect();
                 break;
             case R.id.connect:
-                mNativeService.connectAction();
+                // mNativeService.connectAction();
                 break;
             default:
                 break;
@@ -501,12 +492,12 @@ public class MessageFragment extends SuperAwesomeCardFragment implements OnChild
                                     monitorBean.getFile_name()
                             );
                     if (1 == params[1]) {
-                    /* Intent it = new Intent(Intent.ACTION_VIEW);
-                    it.setDataAndType(
-                            Uri.parse(downloadURL), "audio/MP3");*/
-                        Intent it = new Intent(getActivity(), AudioPlayActivity.class);
-                        it.putExtra("path", downloadURL);
-                        startActivity(it);
+//                    /* Intent it = new Intent(Intent.ACTION_VIEW);
+//                    it.setDataAndType(
+//                            Uri.parse(downloadURL), "audio/MP3");*/
+//                        Intent it = new Intent(getActivity(), AudioPlayActivity.class);
+//                        it.putExtra("path", downloadURL);
+//                        startActivity(it);
                     }
                     if (3 == params[1]) {
                         String extension = monitorBean.getFrom().equals(ZphoneApplication.getUserName()) ? monitorBean.getTo() : monitorBean.getFrom();
@@ -587,9 +578,9 @@ public class MessageFragment extends SuperAwesomeCardFragment implements OnChild
                         String download_url = String.format("http://%s:4242/download_voicemail?wd=%s&file_name=%s", server, wd, wav_file_name);
                         //play
                         if (1 == params[1]) {
-                            Intent it = new Intent(getActivity(), AudioPlayActivity.class);
-                            it.putExtra("path", download_url);
-                            startActivity(it);
+//                            Intent it = new Intent(getActivity(), AudioPlayActivity.class);
+//                            it.putExtra("path", download_url);
+//                            startActivity(it);
                         }
                         //download
                         else if (6 == params[1]) {
@@ -691,8 +682,8 @@ public class MessageFragment extends SuperAwesomeCardFragment implements OnChild
      * //new DownloadTask().execute("http://google.com");
      */
     public class HttpDownloadTask extends AsyncTask<String, Long, File> {
-        private Logger mLogger = LoggerFactory.getLogger(HttpDownloadTask.class);
         public final String TAG = HttpDownloadTask.class.getCanonicalName();
+        private Logger mLogger = LoggerFactory.getLogger(HttpDownloadTask.class);
         private NotificationManager mNotifyManager;
         private NotificationCompat.Builder mBuilder;
         private boolean result = true;

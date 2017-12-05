@@ -17,7 +17,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.curioustechizen.ago.RelativeTimeTextView;
-import com.tqcenglish.vlcdemo.AudioPlayActivity;
 import com.zycoo.android.zphone.R;
 import com.zycoo.android.zphone.ui.message.MessageFragment;
 import com.zycoo.android.zphone.utils.Utils;
@@ -103,9 +102,9 @@ public class ContactVoiceFragment extends SuperAwesomeCardFragment implements Ad
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Intent it = new Intent(getActivity(), AudioPlayActivity.class);
-        it.putExtra("path", mVoiceItems.get(position).path);
-        startActivity(it);
+//        Intent it = new Intent(getActivity(), AudioPlayActivity.class);
+//        it.putExtra("path", mVoiceItems.get(position).path);
+//        startActivity(it);
     }
 
     class CheckVoiceTask extends AsyncTask<String, Integer, Boolean> {

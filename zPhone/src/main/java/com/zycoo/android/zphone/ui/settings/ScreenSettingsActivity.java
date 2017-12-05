@@ -2,13 +2,13 @@ package com.zycoo.android.zphone.ui.settings;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 
-import com.actionbarsherlock.view.MenuItem;
 import com.zycoo.android.zphone.R;
 import com.zycoo.android.zphone.ui.me.ListViewItem;
 import com.zycoo.android.zphone.ui.me.ListViewItemAvatarWithText;
@@ -32,7 +32,7 @@ public class ScreenSettingsActivity extends BaseScreen implements OnItemClickLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        //geActionBar().setDisplayHomeAsUpEnabled(true);
         mListView = (ListView) findViewById(R.id.setting_listView);
         isFreeVersion();
         items = new ListViewItem[mItemsSize];

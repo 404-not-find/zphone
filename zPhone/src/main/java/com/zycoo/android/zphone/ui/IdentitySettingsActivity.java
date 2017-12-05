@@ -10,10 +10,10 @@ import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.Preference;
+import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
+import android.view.MenuItem;
 
-import com.actionbarsherlock.app.SherlockPreferenceActivity;
-import com.actionbarsherlock.view.MenuItem;
 import com.zycoo.android.zphone.Engine;
 import com.zycoo.android.zphone.R;
 import com.zycoo.android.zphone.task.RegisterTask;
@@ -26,7 +26,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
-public class IdentitySettingsActivity extends SherlockPreferenceActivity implements
+public class IdentitySettingsActivity extends PreferenceActivity implements
         OnSharedPreferenceChangeListener {
 
     /**
@@ -54,7 +54,7 @@ public class IdentitySettingsActivity extends SherlockPreferenceActivity impleme
         super.onCreate(savedInstanceState);
         new RegisterTask(this, false).execute();
         // For OS versions honeycomb and higher use action bar
-        getSherlock().getActionBar().setDisplayHomeAsUpEnabled(true);
+        getActionBar().setDisplayHomeAsUpEnabled(true);
         getPreferenceManager().setSharedPreferencesName(NgnConfigurationEntry.SHARED_PREF_NAME);
         NgnApplication.getContext().getSharedPreferences(NgnConfigurationEntry.SHARED_PREF_NAME,
                 0).registerOnSharedPreferenceChangeListener(this);

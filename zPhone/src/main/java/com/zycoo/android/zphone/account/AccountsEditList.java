@@ -22,18 +22,18 @@
 package com.zycoo.android.zphone.account;
 
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.zycoo.android.zphone.R;
 
-public class AccountsEditList extends SherlockFragmentActivity {
+public class AccountsEditList extends FragmentActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.accounts_view);
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		getActionBar().setDisplayHomeAsUpEnabled(true);
 	}
 
 	/*@Override

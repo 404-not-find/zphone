@@ -41,6 +41,7 @@ import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -49,7 +50,6 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 
-import com.actionbarsherlock.view.Menu;
 import com.zycoo.android.zphone.R;
 import com.zycoo.android.zphone.account.AccountsEditListAdapter.AccountRowTag;
 import com.zycoo.android.zphone.account.AccountsEditListAdapter.OnCheckedRowListener;

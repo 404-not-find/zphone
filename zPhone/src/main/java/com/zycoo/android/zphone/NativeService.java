@@ -20,13 +20,6 @@ import com.google.common.base.Splitter;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.zycoo.android.zphone.task.RegisterTask;
-import com.zycoo.android.zphone.mqtt.ActionListener;
-import com.zycoo.android.zphone.mqtt.ActionListener.Action;
-import com.zycoo.android.zphone.mqtt.ActivityConstants;
-import com.zycoo.android.zphone.mqtt.Connection;
-import com.zycoo.android.zphone.mqtt.Connection.ConnectionStatus;
-import com.zycoo.android.zphone.mqtt.Connections;
-import com.zycoo.android.zphone.mqtt.Notify;
 import com.zycoo.android.zphone.ui.LaunchActivity;
 import com.zycoo.android.zphone.ui.message.MessageFragment;
 import com.zycoo.android.zphone.utils.NetWorkUtils;
@@ -50,13 +43,7 @@ import org.doubango.ngn.services.impl.NgnSipService;
 import org.doubango.ngn.sip.NgnAVSession;
 import org.doubango.ngn.utils.NgnConfigurationEntry;
 import org.doubango.tinyWRAP.SipMessage;
-import org.eclipse.paho.android.service.MqttAndroidClient;
-import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
-import org.eclipse.paho.client.mqttv3.MqttCallback;
-import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
-import org.eclipse.paho.client.mqttv3.MqttException;
-import org.eclipse.paho.client.mqttv3.MqttMessage;
-import org.eclipse.paho.client.mqttv3.MqttSecurityException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -71,7 +58,7 @@ import java.util.Observer;
 /**
  * @author tqcenglish Oct 8, 2014 11:10:26 AM
  */
-public class NativeService extends NgnNativeService implements MqttCallback, Observer {
+public class NativeService extends NgnNativeService implements Observer {
     private final static String LOG_TAG = NativeService.class.getCanonicalName();
     private Logger mLogger = LoggerFactory.getLogger(NativeService.class);
     public static final String ACTION_STATE_EVENT = LOG_TAG + ".ACTION_STATE_EVENT";
@@ -328,7 +315,6 @@ public class NativeService extends NgnNativeService implements MqttCallback, Obs
                 }
                 if (Utils.isPro(ZphoneApplication.getContext())) {
                     if (new NetWorkUtils().isNetworkConnected(ZphoneApplication.getContext())) {
-                        connectAction();
                     }
                 }
                 final Intent i = new Intent(ACTION_STATE_EVENT);
@@ -354,15 +340,7 @@ public class NativeService extends NgnNativeService implements MqttCallback, Obs
                 mWakeLock = null;
             }
         }
-        Map<String, Connection> connections = Connections.getInstance(
-                this)
-                .getConnections();
-        for (Connection connection : connections.values()) {
-            connection
-                    .registerChangeListener((this)
-                            .getChangeListener());
-            connection.getClient().unregisterResources();
-        }
+
         super.onDestroy();
     }
 
@@ -414,122 +392,6 @@ public class NativeService extends NgnNativeService implements MqttCallback, Obs
         mMainActivityHandler = handler;
     }
 
-    /**
-     * mqtt connect
-     *
-     * @author tqcenglish
-     */
-    public void connectAction() {
-        MqttConnectOptions conOpt = new MqttConnectOptions();
-        /*
-         * Mutal Auth connections could do something like this
-         * 
-         * 
-         * SSLContext context = SSLContext.getDefault();
-         * context.init({new CustomX509KeyManager()},null,null); //where CustomX509KeyManager proxies calls to keychain api
-         * SSLSocketFactory factory = context.getSSLSocketFactory();
-         * 
-         * MqttConnectOptions options = new MqttConnectOptions();
-         * options.setSocketFactory(factory);
-         * 
-         * client.connect(options);
-         * 
-         */
-
-        // The basic client information
-        //host
-        String server = mConfigurationService
-                .getString(NgnConfigurationEntry.NETWORK_PCSCF_HOST, "");
-        //account
-        String clientId = mConfigurationService.getString(NgnConfigurationEntry.IDENTITY_IMPI, "");
-        /* int port = Integer.parseInt(configurationService.getString(
-                 NgnConfigurationEntry.NETWORK_PCSCF_PORT, ""));*/
-        int port = 1883;
-        boolean cleanSession = true;
-
-        boolean ssl = false;
-        String uri = null;
-        if (ssl) {
-            Log.e("SSLConnection", "Doing an SSL Connect");
-            uri = "ssl://";
-
-        } else {
-            uri = "tcp://";
-        }
-
-        uri = uri + server + ":" + port;
-
-        MqttAndroidClient client;
-        client = Connections.getInstance(this).createClient(this, uri, clientId);
-        // create a client handle
-        clientHandle = uri + clientId;
-
-        // last will message
-        /*String message = (String) data.get(ActivityConstants.message);
-        String topic = (String) data.get(ActivityConstants.topic);
-        Integer qos = (Integer) data.get(ActivityConstants.qos);
-        Boolean retained = (Boolean) data.get(ActivityConstants.retained);*/
-
-        // connection options
-
-        /* String username = (String) data.get(ActivityConstants.username);
-         String password = (String) data.get(ActivityConstants.password);
-         int timeout = (Integer) data.get(ActivityConstants.timeout);
-         int keepalive = (Integer) data.get(ActivityConstants.keepalive);*/
-
-        Connection connection = new Connection(clientHandle, clientId, server, port,
-                this, client, ssl);
-
-        connection.registerChangeListener(changeListener);
-        // connect client
-
-        String[] actionArgs = new String[1];
-        actionArgs[0] = clientId;
-        connection.changeConnectionStatus(ConnectionStatus.CONNECTING);
-        conOpt.setCleanSession(cleanSession);
-        conOpt.setConnectionTimeout(60);
-        conOpt.setKeepAliveInterval(120);
-        //password username
-        /* if (!username.equals(ActivityConstants.empty)) {
-             conOpt.setUserName(username);
-         }
-         if (!password.equals(ActivityConstants.empty)) {
-             conOpt.setPassword(password.toCharArray());
-         }*/
-
-        final ActionListener callback = new ActionListener(this,
-                ActionListener.Action.CONNECT, clientHandle, actionArgs);
-
-        boolean doConnect = true;
-
-        //last will message
-        /* if ((!message.equals(ActivityConstants.empty))
-                 || (!topic.equals(ActivityConstants.empty))) {
-             // need to make a message since last will is set
-             try {
-                 conOpt.setWill(topic, message.getBytes(), qos.intValue(),
-                         retained.booleanValue());
-             } catch (Exception e) {
-                 Log.e(this.getClass().getCanonicalName(), "Exception Occured", e);
-                 doConnect = false;
-                 callback.onFailure(null, e);
-             }
-         }*/
-        //MqttCallbackHandler mqttCallbackHandler = new MqttCallbackHandler(getApplicationContext(), clientHandle);
-        //client.setCallback(mqttCallbackHandler);
-        client.setCallback(this);
-        connection.addConnectionOptions(conOpt);
-        Connections.getInstance(this).addConnection(connection);
-        if (doConnect) {
-            try {
-                client.connect(conOpt, null, callback);
-            } catch (MqttException e) {
-                Log.e(this.getClass().getCanonicalName(),
-                        "MqttException Occured", e);
-            }
-        }
-
-    }
 
     /**
      * This class ensures that the user interface is updated as the Connection
@@ -543,204 +405,12 @@ public class NativeService extends NgnNativeService implements MqttCallback, Obs
         @Override
         public void propertyChange(PropertyChangeEvent event) {
 
-            if (!event.getPropertyName().equals(ActivityConstants.ConnectionStatusProperty)) {
-                return;
-            }
         }
     }
 
-    /**
-     * Subscribe to a topic that the user has specified
-     */
-    public void subscribe() {
-        if (null == Connections
-                .getInstance(this)
-                .getConnection(clientHandle)
-                .getClient()) {
-            mLogger.error("getClient is null");
-            return;
-        }
-        /*
-        RadioGroup radio = (RadioGroup) connectionDetails.findViewById(R.id.qosSubRadio);
-         int checked = radio.getCheckedRadioButtonId();
-         int qos = ActivityConstants.defaultQos;
 
-         switch (checked) {
-           case R.id.qos0 :
-             qos = 0;
-             break;
-           case R.id.qos1 :
-             qos = 1;
-             break;
-           case R.id.qos2 :
-             qos = 2;
-             break;
-         }
-        */
-        String[] topics = new String[]{
-                mConfigurationService.getString(NgnConfigurationEntry.IDENTITY_IMPI, "")
-        };
-        try {
-            Connections
-                    .getInstance(this)
-                    .getConnection(clientHandle)
-                    .getClient()
-                    .subscribe(
-                            topics[0],
-                            1,
-                            null,
-                            new ActionListener(this, Action.SUBSCRIBE, clientHandle,
-                                    topics));
-
-        } catch (MqttSecurityException e) {
-            Log.e(this.getClass().getCanonicalName(), "Failed to subscribe to" + topics[0]
-                    + " the client with the handle " + clientHandle, e);
-        } catch (MqttException e) {
-            Log.e(this.getClass().getCanonicalName(), "Failed to subscribe to" + topics[0]
-                    + " the client with the handle " + clientHandle, e);
-        }
-    }
-
-    /**
-     * Disconnect the client
-     */
-    public void disconnect() {
-
-        Connection c = Connections.getInstance(this).getConnection(clientHandle);
-
-        //if the client is not connected, process the disconnect
-        if (!c.isConnected()) {
-            return;
-        }
-
-        try {
-            c.getClient().disconnect(null,
-                    new ActionListener(this, Action.DISCONNECT, clientHandle, null));
-            c.changeConnectionStatus(ConnectionStatus.DISCONNECTING);
-        } catch (MqttException e) {
-            Log.e(this.getClass().getCanonicalName(),
-                    "Failed to disconnect the client with the handle " + clientHandle, e);
-            c.addAction("Client failed to disconnect");
-        }
-    }
 
     public ChangeListener getChangeListener() {
         return changeListener;
-    }
-
-    /**
-     * @see org.eclipse.paho.client.mqttv3.MqttCallback#connectionLost(java.lang.Throwable)
-     */
-    @Override
-    public void connectionLost(Throwable cause) {
-        //    cause.printStackTrace();
-        if (cause != null) {
-            Connection c = Connections.getInstance(this).getConnection(clientHandle);
-            c.addAction("Connection Lost");
-            c.changeConnectionStatus(ConnectionStatus.DISCONNECTED);
-
-            //format string to use a notification text
-            Object[] args = new Object[2];
-            args[0] = c.getId();
-            args[1] = c.getHostName();
-
-            String message = this.getString(R.string.connection_lost, args[0], args[1]);
-
-            //build intent
-            Intent intent = new Intent();
-            intent.setClassName(this,
-                    "org.eclipse.paho.android.service.sample.ConnectionDetails");
-            intent.putExtra("handle", clientHandle);
-
-            //notify the user
-            //Notify.notifcation(context, message, intent, R.string.notifyTitle_connectionLost);
-
-            //reconnect
-            connectAction();
-        }
-    }
-
-    /**
-     * @see org.eclipse.paho.client.mqttv3.MqttCallback#messageArrived(java.lang.String,
-     * org.eclipse.paho.client.mqttv3.MqttMessage)
-     */
-    @Override
-    public void messageArrived(String topic, MqttMessage message) throws Exception {
-
-        //Get connection object associated with this object
-        Connection c = Connections.getInstance(this).getConnection(clientHandle);
-
-        //create arguments to format message arrived notifcation string
-        String[] args = new String[2];
-        args[0] = new String(message.getPayload());
-        args[1] = topic;
-
-        //get the string from strings.xml and format
-        String messageString = getString(R.string.messageRecieved, (Object[]) args);
-
-        //create intent to start activity
-        Intent intent = new Intent();
-        intent.setClassName(this, "org.eclipse.paho.android.service.sample.ConnectionDetails");
-        intent.putExtra("handle", clientHandle);
-
-        //format string args
-        Object[] notifyArgs = new String[3];
-        notifyArgs[0] = c.getId();
-        notifyArgs[1] = new String(message.getPayload());
-        notifyArgs[2] = topic;
-
-        JsonObject root = jsonparer.parse(new String(message.getPayload())).getAsJsonObject();
-        //insert DataBase
-        if (root.get("action").getAsString().equals("sql")
-                && root.get("type").getAsString().equals("voicemail")) {
-
-            SQLiteDatabase wSQLiteDatabase = new DatabaseHelper(this.getApplicationContext(),
-                    "SoftPhone.db", null, 1)
-                    .getWritableDatabase();
-            String sql = root.get("message").getAsString();
-            mLogger.debug(sql);
-            wSQLiteDatabase.execSQL(sql);
-            wSQLiteDatabase.close();
-            if (sql.contains("insert") && sql.contains("INBOX")) {
-                Notify.notifcation(this, "New Voice Mail", intent, R.string.notifyTitle);
-            }
-            mMainActivityHandler.sendEmptyMessage(MessageFragment.HANDLE_WHAT);
-            //intent.setAction(MessageFragment.UPDATE_MESSAGE_FRAGMENT);  
-
-        }
-        //notify the user 
-        //Notify.notifcation(context, context.getString(R.string.notification, notifyArgs), intent, R.string.notifyTitle);
-
-        //update client history
-        c.addAction(messageString);
-
-    }
-
-    /**
-     * @see org.eclipse.paho.client.mqttv3.MqttCallback#deliveryComplete(org.eclipse.paho.client.mqttv3.IMqttDeliveryToken)
-     */
-    @Override
-    public void deliveryComplete(IMqttDeliveryToken token) {
-        // Do nothing
-    }
-
-    public boolean isConnected() {
-        try {
-            if (null == Connections
-                    .getInstance(this)
-                    .getConnection(clientHandle)
-                    .getClient()) {
-                mLogger.error("getClient is null");
-                return false;
-            }
-            return Connections
-                    .getInstance(this)
-                    .getConnection(
-                            clientHandle).isConnected();
-        } catch (Exception e) {
-            mLogger.error("getClient is null" + e.getMessage());
-            return false;
-        }
-
     }
 }

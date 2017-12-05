@@ -38,6 +38,7 @@ import android.graphics.drawable.StateListDrawable;
 import android.graphics.drawable.TransitionDrawable;
 import android.os.Build;
 import android.os.Handler;
+import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -46,8 +47,6 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.actionbarsherlock.app.SherlockActivity;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.zycoo.android.zphone.R;
 import com.zycoo.android.zphone.ZphoneApplication;
 import com.zycoo.android.zphone.ZycooConfigurationEntry;
@@ -343,7 +342,7 @@ public class Theme {
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) {
                 ld.setCallback(drawableCallback);
             } else {
-                ((SherlockFragmentActivity) context).getSupportActionBar().setBackgroundDrawable(ld);
+                ((FragmentActivity) context).getActionBar().setBackgroundDrawable(ld);
             }
         } else {
             TransitionDrawable td = new TransitionDrawable(new Drawable[]{
@@ -355,21 +354,21 @@ public class Theme {
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) {
                 td.setCallback(drawableCallback);
             } else {
-                ((SherlockFragmentActivity) context).getSupportActionBar().setBackgroundDrawable(td);
+                ((FragmentActivity) context).getActionBar().setBackgroundDrawable(td);
             }
             td.startTransition(200);
         }
         oldBackground = ld;
         // http://stackoverflow.com/questions/11002691/actionbar-setbackgrounddrawable-nulling-background-from-thread-handler
-        ((SherlockFragmentActivity) context).getSupportActionBar().setDisplayShowTitleEnabled(false);
-        ((SherlockFragmentActivity) context).getSupportActionBar().setDisplayShowTitleEnabled(true);
+        ((FragmentActivity) context).getActionBar().setDisplayShowTitleEnabled(false);
+        ((FragmentActivity) context).getActionBar().setDisplayShowTitleEnabled(true);
     }
 
     private Drawable.Callback drawableCallback = new Drawable.Callback() {
 
         @Override
         public void invalidateDrawable(Drawable who) {
-            ((SherlockFragmentActivity) context).getSupportActionBar().setBackgroundDrawable(who);
+            ((FragmentActivity) context).getActionBar().setBackgroundDrawable(who);
         }
 
         @Override

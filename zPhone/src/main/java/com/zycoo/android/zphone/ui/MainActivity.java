@@ -1,30 +1,9 @@
 package com.zycoo.android.zphone.ui;
 
-import android.app.SearchManager;
-import android.content.BroadcastReceiver;
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.ServiceConnection;
-import android.graphics.Color;
-import android.net.Uri;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.IBinder;
-import android.os.Message;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
-import android.util.TypedValue;
-import android.view.View;
-import android.widget.Toast;
-
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.diegocarloslima.fgelv.bak.WrapperExpandableListAdapter;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
+
+import com.diegocarloslima.fgelv.bak.WrapperExpandableListAdapter;
 import com.hp.views.PagerSlidingTabStrip;
 import com.hp.views.PagerSlidingTabStrip.TitleIconTabProvider;
 import com.zycoo.android.zphone.BuildConfig;
@@ -32,16 +11,16 @@ import com.zycoo.android.zphone.NativeService;
 import com.zycoo.android.zphone.NativeService.NativeServiceBinder;
 import com.zycoo.android.zphone.R;
 import com.zycoo.android.zphone.ZphoneApplication;
+import com.zycoo.android.zphone.ZycooConfigurationEntry;
 import com.zycoo.android.zphone.ui.contacts.ContactDetailActivity;
 import com.zycoo.android.zphone.ui.contacts.ContactsContainerFragment;
 import com.zycoo.android.zphone.ui.contacts.ContactsListFragment;
 import com.zycoo.android.zphone.ui.dialpad.DialerFragment;
-import com.zycoo.android.zphone.ui.message.MessageFragment;
+import com.zycoo.android.zphone.ui.me.MeFragment;
 import com.zycoo.android.zphone.ui.message.MessageAdapter;
+import com.zycoo.android.zphone.ui.message.MessageFragment;
 import com.zycoo.android.zphone.utils.Theme;
 import com.zycoo.android.zphone.utils.Utils;
-import com.zycoo.android.zphone.ZycooConfigurationEntry;
-import com.zycoo.android.zphone.ui.me.MeFragment;
 import com.zycoo.android.zphone.widget.SuperAwesomeCardFragment;
 
 import org.doubango.ngn.events.NgnEventArgs;
@@ -50,12 +29,34 @@ import org.doubango.ngn.sip.NgnSubscriptionSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import android.app.ActivityManager;
+import android.app.SearchManager;
+import android.content.BroadcastReceiver;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.ServiceConnection;
+import android.net.Uri;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.IBinder;
+import android.os.Message;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.view.View;
+import android.widget.Toast;
+
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Field;
 
-public class MainActivity extends SherlockFragmentActivity implements
+public class MainActivity extends FragmentActivity implements
         ContactsListFragment.OnContactsInteractionListener {
-    private static final int DEFAULT_DISPLAY_ITEM = 2;
+    private static final int DEFAULT_DISPLAY_ITEM = 3;
+    private final MainHandler handler = new MainHandler(this);
     private Logger mLogger = LoggerFactory.getLogger(MainActivity.class);
     private BroadcastReceiver mBroadcastReceiver;
     private NativeService mNativeService;
@@ -71,43 +72,6 @@ public class MainActivity extends SherlockFragmentActivity implements
     // android 14以前版本将不同显示
     private boolean isSearchResultView = false;
 
-    private static class MainHandler extends Handler {
-        private final WeakReference<MainActivity> mMainActivity;
-
-        public MainHandler(MainActivity activity) {
-            mMainActivity = new WeakReference<MainActivity>(activity);
-        }
-
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            MainActivity activity = mMainActivity.get();
-            if (null != activity) {
-                switch (msg.what) {
-                    case MessageFragment.HANDLE_WHAT:
-                        MessageFragment messageFragment = (MessageFragment) activity.getSupportFragmentManager()
-                                .findFragmentByTag(
-                                        "android:switcher:" + R.id.pager + ":0");
-                        if (null != messageFragment) {
-                            MessageAdapter messageAdapter = messageFragment.getMessageAdapter();
-                            WrapperExpandableListAdapter wrapperAdapter = messageFragment
-                                    .getWrapperAdapter();
-                            if (null != messageAdapter) {
-                                messageAdapter.getVoiceMailsFromDB();
-                                messageAdapter.getMonitorsFromDB();
-                                messageAdapter.notifyDataSetChanged();
-                                wrapperAdapter.notifyDataSetChanged();
-                            }
-                        }
-                        break;
-                    default:
-                        break;
-                }
-            }
-        }
-    }
-
-    private final MainHandler handler = new MainHandler(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -160,25 +124,25 @@ public class MainActivity extends SherlockFragmentActivity implements
         setViewPagerScrollSpeed();
 
         // fade animation
-        mViewPagers.setPageTransformer(false, new ViewPager.PageTransformer() {
-            private float MIN_SCALE = 0.5f;
-            private float MIN_ALPHA = 0.4f;
-
-            @Override
-            public final void transformPage(final View view, final float position) {
-                if (position < -1) { // [-Infinity,-1)
-                    // This page is way off-screen to the left.
-                    Utils.CustomSetAlpha(view);
-                } else if (position <= 1) { // [-1,1]
-                    float scaleFactor = Math.max(MIN_SCALE, 1 - Math.abs(position));
-                    Utils.CustomSetAlpha(view, MIN_ALPHA + (scaleFactor - MIN_SCALE)
-                            / (1 - MIN_SCALE) * (1 - MIN_ALPHA));
-                } else { // (1,+Infinity]
-                    // This page is way off-screen to the right.
-                    Utils.CustomSetAlpha(view);
-                }
-            }
-        });
+//        mViewPagers.setPageTransformer(false, new ViewPager.PageTransformer() {
+//            private float MIN_SCALE = 0.5f;
+//            private float MIN_ALPHA = 0.4f;
+//
+//            @Override
+//            public final void transformPage(final View view, final float position) {
+//                if (position < -1) { // [-Infinity,-1)
+//                    // This page is way off-screen to the left.
+//                    Utils.CustomSetAlpha(view);
+//                } else if (position <= 1) { // [-1,1]
+//                    float scaleFactor = Math.max(MIN_SCALE, 1 - Math.abs(position));
+//                    Utils.CustomSetAlpha(view, MIN_ALPHA + (scaleFactor - MIN_SCALE)
+//                            / (1 - MIN_SCALE) * (1 - MIN_ALPHA));
+//                } else { // (1,+Infinity]
+//                    // This page is way off-screen to the right.
+//                    Utils.CustomSetAlpha(view);
+//                }
+//            }
+//        });
 
         //TODO setPageMargin
         //issue https://github.com/astuetz/PagerSlidingTabStrip/issues/27
@@ -224,13 +188,14 @@ public class MainActivity extends SherlockFragmentActivity implements
         };
         final IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(NgnRegistrationEventArgs.ACTION_REGISTRATION_EVENT);
-        intentFilter.addAction(MessageFragment.UPDATE_MESSAGE_FRAGMENT);
+        // intentFilter.addAction(MessageFragment.UPDATE_MESSAGE_FRAGMENT);
         registerReceiver(mBroadcastReceiver, intentFilter);
 
-        Intent intent = new Intent(ZphoneApplication.getContext(), NativeService.class);
-        bindService(intent, mServiceConnection = new ServiceConnection() {
+        Intent intent = new Intent(this, NativeService.class);
+        boolean result = bindService(intent, mServiceConnection = new ServiceConnection() {
             @Override
             public void onServiceDisconnected(ComponentName name) {
+                mLogger.debug("disconnected" + name);
             }
 
             @Override
@@ -245,6 +210,8 @@ public class MainActivity extends SherlockFragmentActivity implements
                 }
             }
         }, BIND_AUTO_CREATE); //BIND_ABOVE_CLIENT
+        mLogger.debug("bind result " + result);
+
 
     }
 
@@ -253,7 +220,6 @@ public class MainActivity extends SherlockFragmentActivity implements
         new Theme(this, handler).changeActionBarColor(newColor);
         mCurrentColor = newColor;
     }
-
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
@@ -267,56 +233,6 @@ public class MainActivity extends SherlockFragmentActivity implements
         super.onRestoreInstanceState(savedInstanceState);
         mCurrentColor = savedInstanceState.getInt(ZycooConfigurationEntry.CURRENT_COLOR);
         changeColor(mCurrentColor);
-    }
-
-    public class MyPagerAdapter extends FragmentPagerAdapter implements TitleIconTabProvider {
-        private final String[] TITLES = {
-                getResources().getString(R.string.message),
-                getResources().getString(R.string.contacts),
-                getResources().getString(R.string.dialer),
-                getResources().getString(R.string.me)
-        };
-        private final int[] ICONS = {
-                R.drawable.ic_message_grey600,
-                R.drawable.ic_contacts_grey600,
-                R.drawable.ic_dialer_sip_grey600,
-                R.drawable.ic_account_box_grey600
-        };
-
-        public MyPagerAdapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        @Override
-        public int getPageIconResId(int position) {
-            return ICONS[position];
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return TITLES[position];
-        }
-
-        @Override
-        public int getCount() {
-            return TITLES.length;
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            switch (position) {
-                case 0:
-                    return MessageFragment.newInstance(position);
-                case 1:
-                    return ContactsContainerFragment.newInstance(position);
-                case 2:
-                    return DialerFragment.newInstance(position);
-                case 3:
-                    return MeFragment.newInstance(position);
-                default:
-                    return SuperAwesomeCardFragment.newInstance(position);
-            }
-        }
     }
 
     /**
@@ -409,6 +325,92 @@ public class MainActivity extends SherlockFragmentActivity implements
             mScroller.set(mViewPagers, scroller);
         } catch (Exception e) {
             mLogger.error("setViewPagerScrollSpeed error " + e.getStackTrace());
+        }
+    }
+
+    private static class MainHandler extends Handler {
+        private final WeakReference<MainActivity> mMainActivity;
+
+        public MainHandler(MainActivity activity) {
+            mMainActivity = new WeakReference<MainActivity>(activity);
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            MainActivity activity = mMainActivity.get();
+            if (null != activity) {
+                switch (msg.what) {
+                    case MessageFragment.HANDLE_WHAT:
+                        MessageFragment messageFragment = (MessageFragment) activity.getSupportFragmentManager()
+                                .findFragmentByTag(
+                                        "android:switcher:" + R.id.pager + ":0");
+                        if (null != messageFragment) {
+                            MessageAdapter messageAdapter = messageFragment.getMessageAdapter();
+                            WrapperExpandableListAdapter wrapperAdapter = messageFragment
+                                    .getWrapperAdapter();
+                            if (null != messageAdapter) {
+                                messageAdapter.getVoiceMailsFromDB();
+                                messageAdapter.getMonitorsFromDB();
+                                messageAdapter.notifyDataSetChanged();
+                                wrapperAdapter.notifyDataSetChanged();
+                            }
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+    }
+
+    public class MyPagerAdapter extends FragmentPagerAdapter implements TitleIconTabProvider {
+        private final String[] TITLES = {
+                getResources().getString(R.string.message),
+                getResources().getString(R.string.contacts),
+                getResources().getString(R.string.dialer),
+                getResources().getString(R.string.me)
+        };
+        private final int[] ICONS = {
+                R.drawable.ic_message_grey600,
+                R.drawable.ic_contacts_grey600,
+                R.drawable.ic_dialer_sip_grey600,
+                R.drawable.ic_account_box_grey600
+        };
+
+        public MyPagerAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public int getPageIconResId(int position) {
+            return ICONS[position];
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return TITLES[position];
+        }
+
+        @Override
+        public int getCount() {
+            return TITLES.length;
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            switch (position) {
+                case 0:
+                    return MessageFragment.newInstance(position);
+                case 1:
+                    return ContactsContainerFragment.newInstance(position);
+                case 2:
+                    return DialerFragment.newInstance(position);
+                case 3:
+                    return MeFragment.newInstance(position);
+                default:
+                    return SuperAwesomeCardFragment.newInstance(position);
+            }
         }
     }
 }

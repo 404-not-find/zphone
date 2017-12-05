@@ -98,6 +98,7 @@ public class CrashHandler implements UncaughtExceptionHandler
              * Toast.LENGTH_LONG) .show(); Looper.loop(); super.run(); }
              * }.start(); //添加延时， Toast显示 SystemClock.sleep(1000);
              */
+            Log.e(LOG_TAG, ex.toString());
             try
             {
                 Log.d(LOG_TAG, "saveCrashInfo2File");

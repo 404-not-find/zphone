@@ -21,7 +21,7 @@ public class HelpActivity extends BaseScreen
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_help);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getActionBar().setDisplayHomeAsUpEnabled(true);
 		mProgressBar = (ProgressBar) findViewById(R.id.web_view_pb);
         mWebView = (WebView) findViewById(R.id.id_about_htlp_wv);
 

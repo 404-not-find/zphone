@@ -1,6 +1,7 @@
 
 package com.zycoo.android.zphone.ui.contacts;
 
+import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Context;
 import android.os.AsyncTask;
@@ -8,10 +9,13 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.support.v4.app.NavUtils;
+import android.support.v7.widget.SearchView;
 import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -25,10 +29,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.actionbarsherlock.app.SherlockActivity;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
-import com.actionbarsherlock.widget.SearchView;
+
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
@@ -58,7 +59,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class ContactsPBXActivity extends SherlockActivity implements OnClickListener,
+public class ContactsPBXActivity extends Activity implements OnClickListener,
         OnItemClickListener {
 
     private static String LOG_TAG = ContactsPBXActivity.class.getCanonicalName();
@@ -86,7 +87,7 @@ public class ContactsPBXActivity extends SherlockActivity implements OnClickList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contacts_pbx);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getActionBar().setDisplayHomeAsUpEnabled(true);
         currentColor = ZphoneApplication.getConfigurationService().getInt(
                 ZycooConfigurationEntry.CURRENT_COLOR,
                 getResources().getColor(R.color.light_blue));
@@ -129,7 +130,7 @@ public class ContactsPBXActivity extends SherlockActivity implements OnClickList
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        SearchView sv = new SearchView(getSupportActionBar()
+        SearchView sv = new SearchView(getActionBar()
                 .getThemedContext());
         sv.setQueryHint(getResources().getString(R.string.search_contacts_hint));
         //sv.setOnQueryTextListener(getActivity());

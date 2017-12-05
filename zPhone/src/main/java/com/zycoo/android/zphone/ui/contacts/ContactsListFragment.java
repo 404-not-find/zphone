@@ -40,6 +40,8 @@ import android.util.TypedValue;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -51,8 +53,7 @@ import android.widget.ListView;
 import android.widget.QuickContactBadge;
 import android.widget.TextView;
 
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
+
 import com.amulyakhare.textdrawable.TextDrawable;
 import com.hp.views.PinnedSectionListView.PinnedSectionListAdapter;
 import com.twotoasters.sectioncursoradapter.SectionCursorAdapter;
@@ -173,7 +174,7 @@ public class ContactsListFragment extends SuperAwesomeCardFragment implements
         // boolean from the application resource directories. This lets allows us to easily specify
         // which screen sizes should use a two-pane layout by setting this boolean in the
         // corresponding resource size-qualified directory.
-        mIsTwoPaneLayout = getResources().getBoolean(R.bool.has_two_panes);
+        mIsTwoPaneLayout = false;
 
         // Let this fragment contribute menu items
         setHasOptionsMenu(true);

@@ -43,6 +43,7 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.PowerManager;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.OrientationEventListener;
@@ -58,7 +59,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.zycoo.android.zphone.Engine;
 import com.zycoo.android.zphone.ui.LaunchActivity;
 import com.zycoo.android.zphone.ui.MainActivity;
@@ -92,7 +92,7 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.TimerTask;
 
-public class ScreenAV extends SherlockFragmentActivity implements OnClickListener, OnDtmfListener {
+public class ScreenAV extends FragmentActivity implements OnClickListener, OnDtmfListener {
     private static Logger mLogger = LoggerFactory.getLogger(ScreenAV.class.getCanonicalName());
     private static final String TAG = ScreenAV.class.getCanonicalName();
     private static final SimpleDateFormat sDurationTimerFormat = new SimpleDateFormat("mm:ss",

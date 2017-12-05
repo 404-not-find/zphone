@@ -80,20 +80,6 @@ public class Engine
                 PendingIntent.getActivity(ZphoneApplication.getContext(),
                         notifId/* requestCode */, intent,
                         PendingIntent.FLAG_UPDATE_CURRENT);
-        if (Build.VERSION.SDK_INT < 11) {
-            // Set the info for the views that show in the notification panel.
-            if(titleText == null)
-            {
-                notification.setLatestEventInfo(ZphoneApplication.getContext(),
-                        CONTENT_TITLE, tickerText, contentIntent);
-            }
-            else
-            {
-                notification.setLatestEventInfo(ZphoneApplication.getContext(),
-                        titleText, tickerText, contentIntent);
-            }
-
-        }
 
         // Send the notification.
         // We use a layout id because it is a unique number. We use it later to

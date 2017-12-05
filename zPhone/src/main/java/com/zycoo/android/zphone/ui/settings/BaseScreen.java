@@ -11,8 +11,10 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.support.v4.app.FragmentActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
@@ -23,8 +25,6 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.Spinner;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.MenuItem;
 import com.kyleduo.switchbutton.SwitchButton;
 import com.zycoo.android.zphone.Engine;
 import com.zycoo.android.zphone.R;
@@ -38,7 +38,7 @@ import org.doubango.ngn.utils.NgnStringUtils;
  * @author root
  */
 public class BaseScreen
-        extends SherlockFragmentActivity {
+        extends FragmentActivity {
 
     public static enum SCREEN_TYPE {
         // Well-Known

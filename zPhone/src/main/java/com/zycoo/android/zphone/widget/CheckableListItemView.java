@@ -71,8 +71,7 @@ public class CheckableListItemView extends LinearLayout implements Checkable {
             return;
         }
         checked = aChecked;
-        setBackgroundResource(checked ? R.drawable.abs__list_longpressed_holo
-                : R.drawable.transparent);
+        setBackgroundResource(R.drawable.transparent);
     }
 
     @Override

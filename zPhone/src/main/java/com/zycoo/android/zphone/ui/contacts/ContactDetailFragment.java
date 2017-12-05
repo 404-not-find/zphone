@@ -102,8 +102,8 @@ public class ContactDetailFragment extends SuperAwesomeCardFragment implements L
     public void setContact(Uri contactUri) {
         if (null != contactUri) {
             mContactUri = contactUri;
-            getSherlockActivity().getSupportLoaderManager().restartLoader(ContactPhoneQuery.QUERY_ID, null, this);
-            getSherlockActivity().getSupportLoaderManager().restartLoader(ContactAddressQuery.QUERY_ID, null, this);
+            getActivity().getSupportLoaderManager().restartLoader(ContactPhoneQuery.QUERY_ID, null, this);
+            getActivity().getSupportLoaderManager().restartLoader(ContactAddressQuery.QUERY_ID, null, this);
         }
     }
 
@@ -336,8 +336,8 @@ public class ContactDetailFragment extends SuperAwesomeCardFragment implements L
     @Override
     public void onResume() {
         mDetailLayout.removeAllViews();
-        getSherlockActivity().getSupportLoaderManager().restartLoader(ContactAddressQuery.QUERY_ID, null, this);
-        getSherlockActivity().getSupportLoaderManager().restartLoader(ContactPhoneQuery.QUERY_ID, null, this);
+        getActivity().getSupportLoaderManager().restartLoader(ContactAddressQuery.QUERY_ID, null, this);
+        getActivity().getSupportLoaderManager().restartLoader(ContactPhoneQuery.QUERY_ID, null, this);
         super.onResume();
     }
 

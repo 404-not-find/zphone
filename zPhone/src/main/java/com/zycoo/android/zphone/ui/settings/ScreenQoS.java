@@ -85,7 +85,7 @@ public class ScreenQoS  extends BaseScreen {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.screen_qos);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getActionBar().setDisplayHomeAsUpEnabled(true);
 		// get controls
 		mCbEnableZeroArtifacts = (CheckBox)findViewById(R.id.screen_qos_checkBox_zeroArtifacts);
 		mCbEnableSessionTimers = (CheckBox)findViewById(R.id.screen_qos_checkBox_sessiontimers);
