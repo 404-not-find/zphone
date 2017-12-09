@@ -31,7 +31,7 @@ package org.doubango.ngn.services;
 public interface INgnConfigurationService extends INgnBaseService{
 	/**
 	 * Puts a string value into the user storage space
-	 * @param entry the name of the preference to add_to_contacts
+	 * @param entry the name of the preference to save
 	 * @param value the value of the preference
 	 * @param commit whether to commit the changes
 	 * @return true if succeed and false otherwise
@@ -42,7 +42,7 @@ public interface INgnConfigurationService extends INgnBaseService{
 	 * Puts a string value into the user storage space without committing the change
 	 * You must call @ref commit() in order to commit the changes. You should only
 	 * use this function if you want to put many values before applying the changes.
-	 * @param entry the name of the preference to add_to_contacts
+	 * @param entry the name of the preference to save
 	 * @param value the value of the preference
 	 * @return true if succeed and false otherwise
 	 * @sa @ref getString() @ref commit()
@@ -50,7 +50,7 @@ public interface INgnConfigurationService extends INgnBaseService{
 	boolean putString(final String entry, String value);
 	/**
 	 * Puts a integer value into the user storage space
-	 * @param entry the name of the preference to add_to_contacts
+	 * @param entry the name of the preference to save
 	 * @param value the value of the preference
 	 * @param commit whether to commit the changes
 	 * @return true if succeed and false otherwise
@@ -61,7 +61,7 @@ public interface INgnConfigurationService extends INgnBaseService{
 	 * Puts an integer value into the user storage space without committing the change
 	 * You must call @ref commit() in order to commit the changes. You should only
 	 * use this function if you want to put many values before applying the changes.
-	 * @param entry the name of the preference to add_to_contacts
+	 * @param entry the name of the preference to save
 	 * @param value the value of the preference
 	 * @return true if succeed and false otherwise
 	 * @sa @ref getString() @ref commit()
@@ -69,7 +69,7 @@ public interface INgnConfigurationService extends INgnBaseService{
 	boolean putInt(final String entry, int value);
 	/**
 	 * Puts a float value into the user storage space
-	 * @param entry the name of the preference to add_to_contacts
+	 * @param entry the name of the preference to save
 	 * @param value the value of the preference
 	 * @param commit whether to commit the changes
 	 * @return true if succeed and false otherwise
@@ -80,7 +80,7 @@ public interface INgnConfigurationService extends INgnBaseService{
 	 * Puts a float value into the user storage space without committing the change
 	 * You must call @ref commit() in order to commit the changes. You should only
 	 * use this function if you want to put many values before applying the changes.
-	 * @param entry the name of the preference to add_to_contacts
+	 * @param entry the name of the preference to save
 	 * @param value the value of the preference
 	 * @return true if succeed and false otherwise
 	 * @sa @ref getString() @ref commit()
@@ -88,7 +88,7 @@ public interface INgnConfigurationService extends INgnBaseService{
 	boolean putFloat(final String entry, float value);
 	/**
 	 * Puts a boolean value into the user storage space
-	 * @param entry the name of the preference to add_to_contacts
+	 * @param entry the name of the preference to save
 	 * @param value the value of the preference
 	 * @param commit whether to commit the changes
 	 * @return true if succeed and false otherwise
@@ -99,7 +99,7 @@ public interface INgnConfigurationService extends INgnBaseService{
 	 * Puts a boolean value into the user storage space without committing the change
 	 * You must call @ref commit() in order to commit the changes. You should only
 	 * use this function if you want to put many values before applying the changes.
-	 * @param entry the name of the preference to add_to_contacts
+	 * @param entry the name of the preference to save
 	 * @param value the value of the preference
 	 * @return true if succeed and false otherwise
 	 * @sa @ref getString() @ref commit()

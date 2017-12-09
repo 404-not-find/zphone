@@ -549,7 +549,7 @@ public class NgnProxyVideoProducer extends NgnProxyPlugin{
 				}
 			  if(NgnProxyVideoProducer.sAddCallbackBufferSupported){
 				  // do not use "_data" which could be null (e.g. on GSII)
-				  NgnCameraProducer.addCallbackBuffer(_camera, mVideoCallbackData);
+				  NgnCameraProducer.addCallbackBuffer(_camera, _data == null ? mVideoCallbackData : _data);
 			  }
 		 }
 	 }
@@ -558,7 +558,7 @@ public class NgnProxyVideoProducer extends NgnProxyPlugin{
     /***
      * MyProxyVideoProducerPreview
      */
-	class MyProxyVideoProducerPreview extends SurfaceView implements SurfaceHolder.Callback {
+	public class MyProxyVideoProducerPreview extends SurfaceView implements SurfaceHolder.Callback {
 		private SurfaceHolder mHolder;
 		private final NgnProxyVideoProducer myProducer;
 		private Camera mCamera;
@@ -575,6 +575,10 @@ public class NgnProxyVideoProducer extends NgnProxyPlugin{
 		public Camera getCamera(){
 			return mCamera;
 		}
+		// Change the camera withour releasing
+		public void setCamera(final Camera camera) {
+			mCamera = camera;
+		}
 	
 		@Override
 		public void surfaceCreated(SurfaceHolder holder) {
@@ -583,7 +587,7 @@ public class NgnProxyVideoProducer extends NgnProxyPlugin{
 				mCamera = NgnCameraProducer.openCamera(myProducer.mFps, 
 						myProducer.mWidth, 
 						myProducer.mHeight, 
-						mHolder,
+						this,
 						myProducer.previewCallback
 						);
 				
@@ -595,8 +599,11 @@ public class NgnProxyVideoProducer extends NgnProxyPlugin{
 		@Override
 		public void surfaceDestroyed(SurfaceHolder holder) {
 			Log.d(TAG,"surfaceDestroyed()");
-			try{
-				NgnCameraProducer.releaseCamera(mCamera);
+			try {
+				if (mCamera != null) {
+					NgnCameraProducer.releaseCamera(mCamera);
+					mCamera = null;
+				}
 			}
 			catch (Exception exception) {
 				Log.e(TAG, exception.toString());
@@ -606,8 +613,8 @@ public class NgnProxyVideoProducer extends NgnProxyPlugin{
 		@Override
 		public void surfaceChanged(SurfaceHolder holder, int format, int w, int h) {
 			Log.d(TAG,"Surface Changed Callback");
-			try{
-				if(mCamera != null){
+			try {
+				if (mCamera != null){
 					myProducer.startCameraPreview(mCamera);
 				}
 			}
@@ -615,6 +622,8 @@ public class NgnProxyVideoProducer extends NgnProxyPlugin{
 				Log.e(TAG, exception.toString());
 			}
 		}
+
+
 	}
     
 	/**

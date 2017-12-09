@@ -248,8 +248,7 @@ public class NgnConfigurationEntry {
 	public static final boolean DEFAULT_RCS_USE_MSRP_FAILURE = true;
 	public static final boolean DEFAULT_RCS_USE_MSRP_SUCCESS = false;
 	public static final boolean DEFAULT_RCS_USE_BINARY_SMS = false;
-	//public static final boolean DEFAULT_RCS_USE_MWI = false;
-    public static final boolean DEFAULT_RCS_USE_MWI = true;  //TQC
+	public static final boolean DEFAULT_RCS_USE_MWI = false;
 	public static final boolean DEFAULT_RCS_USE_OMAFDR = false;
 	public static final boolean DEFAULT_RCS_USE_PARTIAL_PUB = false;
 	public static final boolean DEFAULT_RCS_USE_PRESENCE = false;

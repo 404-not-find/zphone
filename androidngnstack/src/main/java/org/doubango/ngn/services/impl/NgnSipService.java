@@ -22,12 +22,15 @@ package org.doubango.ngn.services.impl;
 import java.nio.ByteBuffer;
 import java.util.UUID;
 
+import android.content.BroadcastReceiver;
 import org.doubango.ngn.NgnApplication;
 import org.doubango.ngn.NgnEngine;
 import org.doubango.ngn.events.NgnInviteEventArgs;
 import org.doubango.ngn.events.NgnInviteEventTypes;
 import org.doubango.ngn.events.NgnMessagingEventArgs;
 import org.doubango.ngn.events.NgnMessagingEventTypes;
+import org.doubango.ngn.events.NgnNetworkEventArgs;
+import org.doubango.ngn.events.NgnNetworkEventTypes;
 import org.doubango.ngn.events.NgnPublicationEventArgs;
 import org.doubango.ngn.events.NgnPublicationEventTypes;
 import org.doubango.ngn.events.NgnRegistrationEventArgs;
@@ -56,6 +59,7 @@ import org.doubango.ngn.sip.NgnSubscriptionSession.EventPackageType;
 import org.doubango.ngn.utils.NgnConfigurationEntry;
 import org.doubango.ngn.utils.NgnContentType;
 import org.doubango.ngn.utils.NgnDateTimeUtils;
+import org.doubango.ngn.utils.NgnNetworkConnection;
 import org.doubango.ngn.utils.NgnStringUtils;
 import org.doubango.ngn.utils.NgnUriUtils;
 import org.doubango.tinyWRAP.CallSession;
@@ -90,1151 +94,1147 @@ import org.doubango.tinyWRAP.twrap_sms_type_t;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.ConditionVariable;
 import android.os.Looper;
 import android.util.Log;
 import android.widget.Toast;
 
 public class NgnSipService extends NgnBaseService implements INgnSipService,
-        tinyWRAPConstants {
-    private final static String TAG = NgnSipService.class.getCanonicalName();
+		tinyWRAPConstants {
+	private final static String TAG = NgnSipService.class.getCanonicalName();
 
-    private NgnRegistrationSession mRegSession;
-    private NgnSipStack mSipStack;
-    private final DDebugCallback mDebugCallback;
-    private final MySipCallback mSipCallback;
-    private final NgnSipPrefrences mPreferences;
-    // add by tqc
-    private NgnSubscriptionSession mMWI;
-    private final INgnConfigurationService mConfigurationService;
-    private final INgnNetworkService mNetworkService;
+	private NgnRegistrationSession mRegSession;
+	private NgnSipStack mSipStack;
+	private final DDebugCallback mDebugCallback;
+	private final MySipCallback mSipCallback;
 
-    private ConditionVariable mCondHackAoR;
+	private final INgnConfigurationService mConfigurationService;
+	private final INgnNetworkService mNetworkService;
 
-    public NgnSipService() {
-        super();
+	private NgnNetworkConnection mActiveConnection;
 
-        mDebugCallback = new DDebugCallback();
-        mSipCallback = new MySipCallback(this);
-        mPreferences = new NgnSipPrefrences();
+	private ConditionVariable mCondHackAoR;
 
-        mConfigurationService = NgnEngine.getInstance()
-                .getConfigurationService();
-        mNetworkService = NgnEngine.getInstance().getNetworkService();
-    }
+	private BroadcastReceiver mBroadCastRecv;
 
-    @Override
-    public boolean start() {
-        Log.d(TAG, "starting...");
-        return true;
-    }
+	private boolean mTerminateRequested;
 
-    @Override
-    public boolean stop() {
-        Log.d(TAG, "stopping...");
-        if (mSipStack != null && mSipStack.getState() == STACK_STATE.STARTED) {
-            return mSipStack.stop();
-        }
-        return true;
-    }
+	public NgnSipService() {
+		super();
 
-    @Override
-    public String getDefaultIdentity() {
-        // TODO Auto-generated method stub
-        return null;
-    }
+		mDebugCallback = new DDebugCallback();
+		mSipCallback = new MySipCallback(this);
 
-    @Override
-    public void setDefaultIdentity(String identity) {
-        // TODO Auto-generated method stub
+		mConfigurationService = NgnEngine.getInstance().getConfigurationService();
+		mNetworkService = NgnEngine.getInstance().getNetworkService();
+	}
 
-    }
+	@Override
+	public boolean start() {
+		Log.d(TAG, "starting...");
+		if (mBroadCastRecv == null) {
+			mBroadCastRecv = new BroadcastReceiver() {
+				@Override
+				public void onReceive(Context context, Intent intent) {
+					if (NgnNetworkEventArgs.ACTION_NETWORK_EVENT.equals(intent.getAction())) {
+						handleNetworkEvent(intent);
+					}
+				}
+			};
+			IntentFilter intentFilter = new IntentFilter();
+			intentFilter.addAction(NgnNetworkEventArgs.ACTION_NETWORK_EVENT);
+			NgnApplication.getContext().registerReceiver(mBroadCastRecv, intentFilter);
+		}
+		return true;
+	}
 
-    @Override
-    public NgnSipStack getSipStack() {
-        return mSipStack;
-    }
+	@Override
+	public boolean stop() {
+		Log.d(TAG, "stopping...");
+		mTerminateRequested = true;
+		boolean retBool = true;
+		if (mSipStack != null && mSipStack.isValid()) {
+			if (mSipStack.getState() == STACK_STATE.STARTED) {
+				retBool = mSipStack.stop();
+			}
+		}
+		if (mBroadCastRecv != null) {
+			NgnApplication.getContext().unregisterReceiver(mBroadCastRecv);
+			mBroadCastRecv = null;
+		}
+		return retBool;
+	}
 
-    @Override
-    public boolean isRegistered() {
-        if (mRegSession != null) {
-            return mRegSession.isConnected();
-        }
-        return false;
-    }
+	@Override
+	public String getDefaultIdentity() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
-    @Override
-    public ConnectionState getRegistrationState() {
-        if (mRegSession != null) {
-            return mRegSession.getConnectionState();
-        }
-        return ConnectionState.NONE;
-    }
+	@Override
+	public void setDefaultIdentity(String identity) {
+		// TODO Auto-generated method stub
 
-    @Override
-    public boolean isXcapEnabled() {
-        // TODO Auto-generated method stub
-        return false;
-    }
+	}
 
-    @Override
-    public boolean isPublicationEnabled() {
-        // TODO Auto-generated method stub
-        return false;
-    }
+	@Override
+	public NgnSipStack getSipStack() {
+		return mSipStack;
+	}
 
-    @Override
-    public boolean isSubscriptionEnabled() {
-        // TODO Auto-generated method stub
-        return false;
-    }
+	@Override
+	public NgnNetworkConnection getActiveConnection() { return mActiveConnection; }
 
-    @Override
-    public boolean isSubscriptionToRLSEnabled() {
-        // TODO Auto-generated method stub
-        return false;
-    }
+	@Override
+	public boolean isRegistered() {
+		if (mRegSession != null) {
+			return mRegSession.isConnected();
+		}
+		return false;
+	}
 
-    @Override
-    public int getCodecs() {
-        // TODO Auto-generated method stub
-        return 0;
-    }
+	@Override
+	public ConnectionState getRegistrationState() {
+		if (mRegSession != null) {
+			return mRegSession.getConnectionState();
+		}
+		return ConnectionState.NONE;
+	}
 
-    @Override
-    public void setCodecs(int coddecs) {
-        // TODO Auto-generated method stub
+	@Override
+	public boolean isXcapEnabled() {
+		// TODO Auto-generated method stub
+		return false;
+	}
 
-    }
+	@Override
+	public boolean isPublicationEnabled() {
+		// TODO Auto-generated method stub
+		return false;
+	}
 
-    @Override
-    public byte[] getSubRLSContent() {
-        // TODO Auto-generated method stub
-        return null;
-    }
+	@Override
+	public boolean isSubscriptionEnabled() {
+		// TODO Auto-generated method stub
+		return false;
+	}
 
-    @Override
-    public byte[] getSubRegContent() {
-        // TODO Auto-generated method stub
-        return null;
-    }
+	@Override
+	public boolean isSubscriptionToRLSEnabled() {
+		// TODO Auto-generated method stub
+		return false;
+	}
 
-    @Override
-    public byte[] getSubMwiContent() {
-        // TODO Auto-generated method stub
-        return null;
-    }
+	@Override
+	public int getCodecs() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 
-    @Override
-    public byte[] getSubWinfoContent() {
-        // TODO Auto-generated method stub
-        return null;
-    }
+	@Override
+	public void setCodecs(int coddecs) {
+		// TODO Auto-generated method stub
 
-    @Override
-    public boolean stopStack() {
-        if (mSipStack != null) {
-            mSipStack.stop();
-        }
-        return false;
-    }
+	}
 
-    @Override
-    public boolean register(Context context) {
-        Log.d(TAG, "register()");
-        mPreferences.setRealm(mConfigurationService.getString(
-                NgnConfigurationEntry.NETWORK_REALM,
-                NgnConfigurationEntry.DEFAULT_NETWORK_REALM));
-        mPreferences.setIMPI(mConfigurationService.getString(
-                NgnConfigurationEntry.IDENTITY_IMPI,
-                NgnConfigurationEntry.DEFAULT_IDENTITY_IMPI));
-        mPreferences.setIMPU(mConfigurationService.getString(
-                NgnConfigurationEntry.IDENTITY_IMPU,
-                NgnConfigurationEntry.DEFAULT_IDENTITY_IMPU));
+	@Override
+	public byte[] getSubRLSContent() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
-        Log.d(TAG, String.format("realm='%s', impu='%s', impi='%s'",
-                mPreferences.getRealm(), mPreferences.getIMPU(),
-                mPreferences.getIMPI()));
+	@Override
+	public byte[] getSubRegContent() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
-        if (mSipStack == null) {
-            mSipStack = new NgnSipStack(mSipCallback, mPreferences.getRealm(),
-                    mPreferences.getIMPI(), mPreferences.getIMPU());
-            mSipStack.setDebugCallback(mDebugCallback);
-            SipStack.setCodecs_2(mConfigurationService.getInt(
-                    NgnConfigurationEntry.MEDIA_CODECS,
-                    NgnConfigurationEntry.DEFAULT_MEDIA_CODECS));
-        } else {
-            if (!mSipStack.setRealm(mPreferences.getRealm())) {
-                Log.e(TAG, "Failed to set realm");
-                return false;
-            }
-            if (!mSipStack.setIMPI(mPreferences.getIMPI())) {
-                Log.e(TAG, "Failed to set IMPI");
-                return false;
-            }
-            if (!mSipStack.setIMPU(mPreferences.getIMPU())) {
-                Log.e(TAG, "Failed to set IMPU");
-                return false;
-            }
-        }
+	@Override
+	public byte[] getSubMwiContent() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
-        // set the Password
-        mSipStack.setPassword(mConfigurationService.getString(
-                NgnConfigurationEntry.IDENTITY_PASSWORD,
-                NgnConfigurationEntry.DEFAULT_IDENTITY_PASSWORD));
-        // Set AMF
-        mSipStack.setAMF(mConfigurationService.getString(
-                NgnConfigurationEntry.SECURITY_IMSAKA_AMF,
-                NgnConfigurationEntry.DEFAULT_SECURITY_IMSAKA_AMF));
-        // Set Operator Id
-        mSipStack.setOperatorId(mConfigurationService.getString(
-                NgnConfigurationEntry.SECURITY_IMSAKA_OPID,
-                NgnConfigurationEntry.DEFAULT_SECURITY_IMSAKA_OPID));
+	@Override
+	public byte[] getSubWinfoContent() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
-        // Check stack validity
-        if (!mSipStack.isValid()) {
-            Log.e(TAG, "Trying to use invalid stack");
-            return false;
-        }
+	@Override
+	public boolean stopStack() {
+		if (mSipStack != null) {
+			mSipStack.stop();
+		}
+		return false;
+	}
 
-        // Set STUN information
-        mSipStack.setSTUNEnabled(mConfigurationService.getBoolean(
-                NgnConfigurationEntry.NATT_USE_STUN_FOR_SIP,
-                NgnConfigurationEntry.DEFAULT_NATT_USE_STUN_FOR_SIP));
-        if (mConfigurationService.getBoolean(
-                NgnConfigurationEntry.NATT_STUN_DISCO,
-                NgnConfigurationEntry.DEFAULT_NATT_STUN_DISCO)) {
-            final String realm = mPreferences.getRealm();
-            String domain = realm.substring(realm.indexOf(':') + 1);
-            int[] port = new int[1];
-            String server = mSipStack.dnsSrv(
-                    String.format("_stun._udp.%s", domain), port);
-            if (server == null) {
-                Log.e(TAG, "STUN discovery has failed");
-            }
-            Log.d(TAG, String.format("STUN1 - server=%s and port=%d",
-                    server, port[0]));
-            mSipStack.setSTUNServer(server, port[0]);// Needed event if null
-        } else {
-            String server = mConfigurationService.getString(
-                    NgnConfigurationEntry.NATT_STUN_SERVER,
-                    NgnConfigurationEntry.DEFAULT_NATT_STUN_SERVER);
-            int port = mConfigurationService.getInt(
-                    NgnConfigurationEntry.NATT_STUN_PORT,
-                    NgnConfigurationEntry.DEFAULT_NATT_STUN_PORT);
-            Log.d(NgnSipService.TAG, String.format(
-                    "STUN2 - server=%s and port=%d", server, port));
-            mSipStack.setSTUNServer(server, port);
-        }
+	@Override
+	public boolean register(Context context) {
+		Log.d(TAG, "register()");
 
-        // Set Proxy-CSCF
-        mPreferences.setPcscfHost(mConfigurationService.getString(
-                NgnConfigurationEntry.NETWORK_PCSCF_HOST, null)); // null will trigger DNS NAPTR+SRV
-        mPreferences.setPcscfPort(mConfigurationService.getInt(
-                NgnConfigurationEntry.NETWORK_PCSCF_PORT,
-                NgnConfigurationEntry.DEFAULT_NETWORK_PCSCF_PORT));
-        mPreferences.setTransport(mConfigurationService.getString(
-                NgnConfigurationEntry.NETWORK_TRANSPORT,
-                NgnConfigurationEntry.DEFAULT_NETWORK_TRANSPORT));
-        mPreferences.setIPVersion(mConfigurationService.getString(
-                NgnConfigurationEntry.NETWORK_IP_VERSION,
-                NgnConfigurationEntry.DEFAULT_NETWORK_IP_VERSION));
+		mTerminateRequested = false;
 
-        Log.d(TAG,
-                String.format(
-                        "pcscf-host='%s', pcscf-port='%d', transport='%s', ipversion='%s'",
-                        mPreferences.getPcscfHost(),
-                        mPreferences.getPcscfPort(),
-                        mPreferences.getTransport(),
-                        mPreferences.getIPVersion()));
+		final String realm = mConfigurationService.getString(
+				NgnConfigurationEntry.NETWORK_REALM,
+				NgnConfigurationEntry.DEFAULT_NETWORK_REALM);
+		final String impi = mConfigurationService.getString(
+				NgnConfigurationEntry.IDENTITY_IMPI,
+				NgnConfigurationEntry.DEFAULT_IDENTITY_IMPI);
+		final String impu = mConfigurationService.getString(
+				NgnConfigurationEntry.IDENTITY_IMPU,
+				NgnConfigurationEntry.DEFAULT_IDENTITY_IMPU);
 
-        if (!mSipStack.setProxyCSCF(mPreferences.getPcscfHost(),
-                mPreferences.getPcscfPort(), mPreferences.getTransport(),
-                mPreferences.getIPVersion())) {
-            Log.e(NgnSipService.TAG, "Failed to set Proxy-CSCF parameters");
-            return false;
-        }
+		Log.d(TAG, String.format("realm='%s', impu='%s', impi='%s'", realm, impu, impi));
 
-        // Set local IP (If your reusing this code on non-Android platforms
-        // (iOS, Symbian, WinPhone, ...),
-        // let Doubango retrieve the best IP address)
-        boolean ipv6 = NgnStringUtils.equals(mPreferences.getIPVersion(),
-                "ipv6", true);
-        mPreferences.setLocalIP(mNetworkService.getLocalIP(ipv6));
-        if (mPreferences.getLocalIP() == null) {
-            // if(fromNetworkService){
-            // this.preferences.localIP = ipv6 ? "::" : "10.0.2.15"; /* Probably
-            // on the emulator */
-            // }
-            // else{
-            // Log.e(TAG, "IP address is Null. Trying to start network");
-            // this.networkService.setNetworkEnabledAndRegister();
-            // return false;
-            // }
-        }
-        if (!mSipStack.setLocalIP(mPreferences.getLocalIP())) {
-            Log.e(TAG, "Failed to set the local IP");
-            return false;
-        }
-        Log.d(TAG, String.format("Local IP='%s'", mPreferences.getLocalIP()));
+		if (mSipStack == null) {
+			mSipStack = new NgnSipStack(mSipCallback, realm, impi, impu);
+			mSipStack.setDebugCallback(mDebugCallback);
+			SipStack.setCodecs_2(mConfigurationService.getInt(
+					NgnConfigurationEntry.MEDIA_CODECS,
+					NgnConfigurationEntry.DEFAULT_MEDIA_CODECS));
+		} else {
+			if (!mSipStack.setRealm(realm)) {
+				Log.e(TAG, "Failed to set realm");
+				return false;
+			}
+			if (!mSipStack.setIMPI(impi)) {
+				Log.e(TAG, "Failed to set IMPI");
+				return false;
+			}
+			if (!mSipStack.setIMPU(impu)) {
+				Log.e(TAG, "Failed to set IMPU");
+				return false;
+			}
+		}
 
-        // Whether to use DNS NAPTR+SRV for the Proxy-CSCF discovery (even if
-        // the DNS requests are sent only when the stack starts,
-        // should be done after setProxyCSCF())
-        String discoverType = mConfigurationService.getString(
-                NgnConfigurationEntry.NETWORK_PCSCF_DISCOVERY,
-                NgnConfigurationEntry.DEFAULT_NETWORK_PCSCF_DISCOVERY);
-        mSipStack.setDnsDiscovery(NgnStringUtils.equals(discoverType,
-                NgnConfigurationEntry.PCSCF_DISCOVERY_DNS_SRV, true));
+		// set the Password
+		mSipStack.setPassword(mConfigurationService.getString(
+				NgnConfigurationEntry.IDENTITY_PASSWORD,
+				NgnConfigurationEntry.DEFAULT_IDENTITY_PASSWORD));
+		// Set AMF
+		mSipStack.setAMF(mConfigurationService.getString(
+				NgnConfigurationEntry.SECURITY_IMSAKA_AMF,
+				NgnConfigurationEntry.DEFAULT_SECURITY_IMSAKA_AMF));
+		// Set Operator Id
+		mSipStack.setOperatorId(mConfigurationService.getString(
+				NgnConfigurationEntry.SECURITY_IMSAKA_OPID,
+				NgnConfigurationEntry.DEFAULT_SECURITY_IMSAKA_OPID));
 
-        // enable/disable 3GPP early IMS
-        mSipStack.setEarlyIMS(mConfigurationService.getBoolean(
-                NgnConfigurationEntry.NETWORK_USE_EARLY_IMS,
-                NgnConfigurationEntry.DEFAULT_NETWORK_USE_EARLY_IMS));
+		// Check stack validity
+		if (!mSipStack.isValid()) {
+			Log.e(TAG, "Trying to use invalid stack");
+			return false;
+		}
 
-        // SigComp (only update compartment Id if changed)
-        if (mConfigurationService.getBoolean(
-                NgnConfigurationEntry.NETWORK_USE_SIGCOMP,
-                NgnConfigurationEntry.DEFAULT_NETWORK_USE_SIGCOMP)) {
-            String compId = String.format("urn:uuid:%s", UUID.randomUUID()
-                    .toString());
-            mSipStack.setSigCompId(compId);
-        } else {
-            mSipStack.setSigCompId(null);
-        }
+		// Set STUN information
+		mSipStack.setSTUNEnabled(mConfigurationService.getBoolean(
+				NgnConfigurationEntry.NATT_USE_STUN_FOR_SIP,
+				NgnConfigurationEntry.DEFAULT_NATT_USE_STUN_FOR_SIP));
+		if (mConfigurationService.getBoolean(
+				NgnConfigurationEntry.NATT_STUN_DISCO,
+				NgnConfigurationEntry.DEFAULT_NATT_STUN_DISCO)) {
+			String domain = realm.substring(realm.indexOf(':') + 1);
+			int[] port = new int[1];
+			String server = mSipStack.dnsSrv(
+					String.format("_stun._udp.%s", domain), port);
+			if (server == null) {
+				Log.e(TAG, "STUN discovery has failed");
+			}
+			Log.d(TAG, String.format("STUN1 - server=%s and port=%d",
+					server, port[0]));
+			mSipStack.setSTUNServer(server, port[0]);// Needed event if null
+		} else {
+			final String server = mConfigurationService.getString(
+					NgnConfigurationEntry.NATT_STUN_SERVER,
+					NgnConfigurationEntry.DEFAULT_NATT_STUN_SERVER);
+			final int port = mConfigurationService.getInt(
+					NgnConfigurationEntry.NATT_STUN_PORT,
+					NgnConfigurationEntry.DEFAULT_NATT_STUN_PORT);
+			Log.d(NgnSipService.TAG, String.format("STUN2 - server=%s and port=%d", server, port));
+			mSipStack.setSTUNServer(server, port);
+		}
 
-        // TLS
-        final String pvFilePath = mConfigurationService.getString(
-                NgnConfigurationEntry.SECURITY_TLS_PRIVKEY_FILE_PATH,
-                NgnConfigurationEntry.DEFAULT_SECURITY_TLS_PRIVKEY_FILE_PATH);
-        final String pbFilePath = mConfigurationService.getString(
-                NgnConfigurationEntry.SECURITY_TLS_PUBKEY_FILE_PATH,
-                NgnConfigurationEntry.DEFAULT_SECURITY_TLS_PUBKEY_FILE_PATH);
-        final String caFilePath = mConfigurationService.getString(
-                NgnConfigurationEntry.SECURITY_TLS_CA_FILE_PATH,
-                NgnConfigurationEntry.DEFAULT_SECURITY_TLS_CA_FILE_PATH);
-        final boolean verifyCerts = mConfigurationService.getBoolean(
-                NgnConfigurationEntry.SECURITY_TLS_VERIFY_CERTS,
-                NgnConfigurationEntry.DEFAULT_SECURITY_TLS_VERIFY_CERTS);
-        Log.d(TAG, String.format("TLS - pvk='%s' pbk='%s' ca='%s' verify=%s",
-                pvFilePath, pbFilePath, caFilePath, verifyCerts));
-        if (!mSipStack.setSSLCertificates(pvFilePath, pbFilePath, caFilePath,
-                verifyCerts)) {
-            Log.e(TAG, "Failed to set TLS certificates");
-            return false;
-        }
+		// Set Proxy-CSCF
+		final String pcscf_host = mConfigurationService.getString(
+				NgnConfigurationEntry.NETWORK_PCSCF_HOST, null); // null will trigger DNS NAPTR+SRV
+		final int pcscf_port = mConfigurationService.getInt(
+				NgnConfigurationEntry.NETWORK_PCSCF_PORT,
+				NgnConfigurationEntry.DEFAULT_NETWORK_PCSCF_PORT);
+		final String transport = mConfigurationService.getString(
+				NgnConfigurationEntry.NETWORK_TRANSPORT,
+				NgnConfigurationEntry.DEFAULT_NETWORK_TRANSPORT);
+		final String ipversion = mConfigurationService.getString(
+				NgnConfigurationEntry.NETWORK_IP_VERSION,
+				NgnConfigurationEntry.DEFAULT_NETWORK_IP_VERSION); // "ipv6", "ipv4", "ipv46", "ipv64"
 
-        // Start the Stack
-        if (!mSipStack.start()) {
-            if (context != null
-                    && Thread.currentThread() == Looper.getMainLooper()
-                    .getThread()) {
-                Toast.makeText(context, "Failed to start the SIP stack",
-                        Toast.LENGTH_LONG).show();
-            }
-            Log.e(TAG, "Failed to start the SIP stack");
-            return false;
-        }
+		Log.d(TAG, String.format("pcscf-host='%s', pcscf-port='%d', transport='%s', ipversion='%s'", pcscf_host, pcscf_port, transport, ipversion));
 
-        // Preference values
-        mPreferences.setXcapEnabled(mConfigurationService.getBoolean(
-                NgnConfigurationEntry.XCAP_ENABLED,
-                NgnConfigurationEntry.DEFAULT_XCAP_ENABLED));
-        mPreferences.setPresenceEnabled(mConfigurationService.getBoolean(
-                NgnConfigurationEntry.RCS_USE_PRESENCE,
-                NgnConfigurationEntry.DEFAULT_RCS_USE_PRESENCE));
-        mPreferences.setMWI(mConfigurationService.getBoolean(
-                NgnConfigurationEntry.RCS_USE_MWI,
-                NgnConfigurationEntry.DEFAULT_RCS_USE_MWI));
-        // Create registration session
-        if (mRegSession == null) {
-            mRegSession = new NgnRegistrationSession(mSipStack);
-        } else {
-            mRegSession.setSigCompId(mSipStack.getSigCompId());
-        }
+		// Set Proxy-CSCF
+		if (!mNetworkService.setProxyCSCF(transport, ipversion, pcscf_host, pcscf_port)) {
+			Log.e(TAG, "Failed to set Proxy-CSCF parameters on network service");
+			return false;
+		}
+		if (!mSipStack.setProxyCSCF(pcscf_host, pcscf_port, transport, ipversion)) {
+			Log.e(TAG, "Failed to set Proxy-CSCF parameters on SIP stack");
+			return false;
+		}
 
-        // Set/update From URI. For Registration ToUri should be equals to realm
-        // (done by the stack)
-        mRegSession.setFromUri(mPreferences.getIMPU());
+		// Set default connection
+		final boolean ipv6 = NgnStringUtils.equals(ipversion, "ipv6", true); // "ipv46" and "ipv64" use "IPv4" as default transport
+		final NgnNetworkConnection defaultConnection = mNetworkService.getBestConnection(ipv6);
+		if (defaultConnection == null) {
+			Log.e(TAG, "Failed to find default connection");
+			return false;
+		}
+		Log.d(TAG, "SIP service using default connection ->" + defaultConnection);
+		// Bind process to connection
+		//mNetworkService.bindProcessToConnection(defaultConnection);
+		// Set local IP
+		if (!mSipStack.setLocalIP(defaultConnection.getLocalIP())) {
+			Log.e(TAG, "Failed to set the local IP");
+			return false;
+		}
+
+		// Whether to use DNS NAPTR+SRV for the Proxy-CSCF discovery (even if
+		// the DNS requests are sent only when the stack starts,
+		// should be done after setProxyCSCF())
+		String discoverType = mConfigurationService.getString(
+				NgnConfigurationEntry.NETWORK_PCSCF_DISCOVERY,
+				NgnConfigurationEntry.DEFAULT_NETWORK_PCSCF_DISCOVERY);
+		mSipStack.setDnsDiscovery(NgnStringUtils.equals(discoverType,
+				NgnConfigurationEntry.PCSCF_DISCOVERY_DNS_SRV, true));
+
+		// enable/disable 3GPP early IMS
+		mSipStack.setEarlyIMS(mConfigurationService.getBoolean(
+				NgnConfigurationEntry.NETWORK_USE_EARLY_IMS,
+				NgnConfigurationEntry.DEFAULT_NETWORK_USE_EARLY_IMS));
+
+		// SigComp (only update compartment Id if changed)
+		if (mConfigurationService.getBoolean(
+				NgnConfigurationEntry.NETWORK_USE_SIGCOMP,
+				NgnConfigurationEntry.DEFAULT_NETWORK_USE_SIGCOMP)) {
+			String compId = String.format("urn:uuid:%s", UUID.randomUUID().toString());
+			mSipStack.setSigCompId(compId);
+		} else {
+			mSipStack.setSigCompId(null);
+		}
+
+		// TLS
+		final String pvFilePath = mConfigurationService.getString(
+				NgnConfigurationEntry.SECURITY_TLS_PRIVKEY_FILE_PATH,
+				NgnConfigurationEntry.DEFAULT_SECURITY_TLS_PRIVKEY_FILE_PATH);
+		final String pbFilePath = mConfigurationService.getString(
+				NgnConfigurationEntry.SECURITY_TLS_PUBKEY_FILE_PATH,
+				NgnConfigurationEntry.DEFAULT_SECURITY_TLS_PUBKEY_FILE_PATH);
+		final String caFilePath = mConfigurationService.getString(
+				NgnConfigurationEntry.SECURITY_TLS_CA_FILE_PATH,
+				NgnConfigurationEntry.DEFAULT_SECURITY_TLS_CA_FILE_PATH);
+		final boolean verifyCerts = mConfigurationService.getBoolean(
+				NgnConfigurationEntry.SECURITY_TLS_VERIFY_CERTS,
+				NgnConfigurationEntry.DEFAULT_SECURITY_TLS_VERIFY_CERTS);
+		Log.d(TAG, String.format("TLS - pvk='%s' pbk='%s' ca='%s' verify=%s",
+				pvFilePath, pbFilePath, caFilePath, verifyCerts));
+		if (!mSipStack.setSSLCertificates(pvFilePath, pbFilePath, caFilePath,
+				verifyCerts)) {
+			Log.e(TAG, "Failed to set TLS certificates");
+			return false;
+		}
+
+		// Start the Stack
+		if (!mSipStack.start()) {
+			if (context != null
+					&& Thread.currentThread() == Looper.getMainLooper()
+					.getThread()) {
+				Toast.makeText(context, "Failed to start the SIP stack",
+						Toast.LENGTH_LONG).show();
+			}
+			Log.e(TAG, "Failed to start the SIP stack");
+			return false;
+		}
+
+		// Update active connection
+		mActiveConnection = defaultConnection;
+
+		// Preference values
+		final boolean xcapEnabled = mConfigurationService.getBoolean(
+				NgnConfigurationEntry.XCAP_ENABLED,
+				NgnConfigurationEntry.DEFAULT_XCAP_ENABLED);
+		final boolean presenceEnabled = mConfigurationService.getBoolean(
+				NgnConfigurationEntry.RCS_USE_PRESENCE,
+				NgnConfigurationEntry.DEFAULT_RCS_USE_PRESENCE);
+		final boolean mwiEnabled = mConfigurationService.getBoolean(
+				NgnConfigurationEntry.RCS_USE_MWI,
+				NgnConfigurationEntry.DEFAULT_RCS_USE_MWI);
+
+		// Create registration session
+		if (mRegSession == null) {
+			mRegSession = new NgnRegistrationSession(mSipStack);
+		} else {
+			mRegSession.setSigCompId(mSipStack.getSigCompId());
+		}
+
+		// Set/update From URI. For Registration ToUri should be equals to realm
+		// (done by the stack)
+		mRegSession.setFromUri(impu);
 
 		/* Before registering, check if AoR hacking id enabled */
-        mPreferences.setHackAoR(mConfigurationService.getBoolean(
-                NgnConfigurationEntry.NATT_HACK_AOR,
-                NgnConfigurationEntry.DEFAULT_NATT_HACK_AOR));
-        if (mPreferences.isHackAoR()) {
-            if (mCondHackAoR == null) {
-                mCondHackAoR = new ConditionVariable();
-            }
-            final OptionsSession optSession = new OptionsSession(mSipStack);
-            // optSession.setToUri(String.format("sip:%s@%s", "hacking_the_aor",
-            // this.preferences.realm));
-            optSession.send();
-            try {
-                synchronized (mCondHackAoR) {
-                    mCondHackAoR
-                            .wait(mConfigurationService
-                                    .getInt(NgnConfigurationEntry.NATT_HACK_AOR_TIMEOUT,
-                                            NgnConfigurationEntry.DEFAULT_NATT_HACK_AOR_TIMEOUT));
-                }
-            } catch (InterruptedException e) {
-                Log.e(TAG, e.getMessage());
-            }
-            mCondHackAoR = null;
-            optSession.delete();
-        }
-        if (!mRegSession.register()) {
-            Log.e(TAG, "Failed to send REGISTER request");
-            return false;
-        }
+		final boolean hackAoR = mConfigurationService.getBoolean(
+				NgnConfigurationEntry.NATT_HACK_AOR,
+				NgnConfigurationEntry.DEFAULT_NATT_HACK_AOR);
+		if (hackAoR) {
+			if (mCondHackAoR == null) {
+				mCondHackAoR = new ConditionVariable();
+			}
+			final OptionsSession optSession = new OptionsSession(mSipStack);
+			// optSession.setToUri(String.format("sip:%s@%s", "hacking_the_aor",
+			// this.preferences.realm));
+			optSession.send();
+			try {
+				synchronized (mCondHackAoR) {
+					mCondHackAoR
+							.wait(mConfigurationService
+									.getInt(NgnConfigurationEntry.NATT_HACK_AOR_TIMEOUT,
+											NgnConfigurationEntry.DEFAULT_NATT_HACK_AOR_TIMEOUT));
+				}
+			} catch (InterruptedException e) {
+				Log.e(TAG, e.getMessage());
+			}
+			mCondHackAoR = null;
+			optSession.delete();
+		}
 
-        return true;
-    }
+		if (!mRegSession.register()) {
+			Log.e(TAG, "Failed to send REGISTER request");
+			return false;
+		}
 
-    @Override
-    public boolean unRegister() {
-        if (isRegistered()) {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    mSipStack.stop();
-                }
-            }).start();
-        }
-        return true;
-    }
+		return true;
+	}
 
-    @Override
-    public boolean PresencePublish() {
-        return false;
-    }
+	@Override
+	public boolean unRegister() {
+		Log.d(TAG, "unRegister()");
+		if (isRegistered()) {
+			mTerminateRequested = true;
+			new Thread(new Runnable() {
+				@Override
+				public void run() {
+					mSipStack.stop();
+				}
+			}).start();
+		}
+		return true;
+	}
 
-    @Override
-    public boolean PresencePublish(NgnPresenceStatus status) {
-        // TODO Auto-generated method stub
-        return false;
-    }
+	@Override
+	public boolean PresencePublish() {
+		return false;
+	}
 
-    private void broadcastRegistrationEvent(NgnRegistrationEventArgs args) {
-        final Intent intent = new Intent(
-                NgnRegistrationEventArgs.ACTION_REGISTRATION_EVENT);
-        intent.putExtra(NgnRegistrationEventArgs.EXTRA_EMBEDDED, args);
-        NgnApplication.getContext().sendBroadcast(intent);
-    }
+	@Override
+	public boolean PresencePublish(NgnPresenceStatus status) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 
-    private void broadcastInviteEvent(NgnInviteEventArgs args, short sipCode) {
-        final Intent intent = new Intent(NgnInviteEventArgs.ACTION_INVITE_EVENT);
-        intent.putExtra(NgnInviteEventArgs.EXTRA_EMBEDDED, args);
-        intent.putExtra(NgnInviteEventArgs.EXTRA_SIPCODE, sipCode);
-        NgnApplication.getContext().sendBroadcast(intent);
-    }
+	private void broadcastRegistrationEvent(NgnRegistrationEventArgs args) {
+		final Intent intent = new Intent(
+				NgnRegistrationEventArgs.ACTION_REGISTRATION_EVENT);
+		intent.putExtra(NgnRegistrationEventArgs.EXTRA_EMBEDDED, args);
+		NgnApplication.getContext().sendBroadcast(intent);
+	}
 
-    private void broadcastTransferRequestEvent(NgnInviteEventArgs args, String referToUri) {
-        final Intent intent = new Intent(NgnInviteEventArgs.ACTION_INVITE_EVENT);
-        intent.putExtra(NgnInviteEventArgs.EXTRA_EMBEDDED, args);
-        intent.putExtra(NgnInviteEventArgs.EXTRA_REFERTO_URI, referToUri);
-        NgnApplication.getContext().sendBroadcast(intent);
-    }
+	private void broadcastInviteEvent(NgnInviteEventArgs args, short sipCode) {
+		final Intent intent = new Intent(NgnInviteEventArgs.ACTION_INVITE_EVENT);
+		intent.putExtra(NgnInviteEventArgs.EXTRA_EMBEDDED, args);
+		intent.putExtra(NgnInviteEventArgs.EXTRA_SIPCODE, sipCode);
+		NgnApplication.getContext().sendBroadcast(intent);
+	}
+	
+	private void broadcastTransferRequestEvent(NgnInviteEventArgs args, String referToUri) {
+		final Intent intent = new Intent(NgnInviteEventArgs.ACTION_INVITE_EVENT);
+		intent.putExtra(NgnInviteEventArgs.EXTRA_EMBEDDED, args);
+		intent.putExtra(NgnInviteEventArgs.EXTRA_REFERTO_URI, referToUri);
+		NgnApplication.getContext().sendBroadcast(intent);
+	}
 
-    private void broadcastInviteEvent(NgnInviteEventArgs args) {
-        final Intent intent = new Intent(NgnInviteEventArgs.ACTION_INVITE_EVENT);
-        intent.putExtra(NgnInviteEventArgs.EXTRA_EMBEDDED, args);
-        intent.putExtra(NgnInviteEventArgs.EXTRA_SIPCODE, 0);
-        NgnApplication.getContext().sendBroadcast(intent);
-    }
+	private void broadcastInviteEvent(NgnInviteEventArgs args) {
+		final Intent intent = new Intent(NgnInviteEventArgs.ACTION_INVITE_EVENT);
+		intent.putExtra(NgnInviteEventArgs.EXTRA_EMBEDDED, args);
+		intent.putExtra(NgnInviteEventArgs.EXTRA_SIPCODE, 0);
+		NgnApplication.getContext().sendBroadcast(intent);
+	}
 
-    private void broadcastMessagingEvent(NgnMessagingEventArgs args,
-                                         String remoteParty, String date) {
-        final Intent intent = new Intent(
-                NgnMessagingEventArgs.ACTION_MESSAGING_EVENT);
-        intent.putExtra(NgnMessagingEventArgs.EXTRA_REMOTE_PARTY, remoteParty);
-        intent.putExtra(NgnMessagingEventArgs.EXTRA_DATE, date);
-        intent.putExtra(NgnMessagingEventArgs.EXTRA_EMBEDDED, args);
-        NgnApplication.getContext().sendBroadcast(intent);
-    }
+	private void broadcastMessagingEvent(NgnMessagingEventArgs args,
+			String remoteParty, String date) {
+		final Intent intent = new Intent(
+				NgnMessagingEventArgs.ACTION_MESSAGING_EVENT);
+		intent.putExtra(NgnMessagingEventArgs.EXTRA_REMOTE_PARTY, remoteParty);
+		intent.putExtra(NgnMessagingEventArgs.EXTRA_DATE, date);
+		intent.putExtra(NgnMessagingEventArgs.EXTRA_EMBEDDED, args);
+		NgnApplication.getContext().sendBroadcast(intent);
+	}
 
-    private void broadcastPublicationEvent(NgnPublicationEventArgs args) {
-        final Intent intent = new Intent(
-                NgnPublicationEventArgs.ACTION_PUBLICATION_EVENT);
-        intent.putExtra(NgnPublicationEventArgs.EXTRA_EMBEDDED, args);
-        NgnApplication.getContext().sendBroadcast(intent);
-    }
+	private void broadcastPublicationEvent(NgnPublicationEventArgs args) {
+		final Intent intent = new Intent(
+				NgnPublicationEventArgs.ACTION_PUBLICATION_EVENT);
+		intent.putExtra(NgnPublicationEventArgs.EXTRA_EMBEDDED, args);
+		NgnApplication.getContext().sendBroadcast(intent);
+	}
 
-    private void broadcastSubscriptionEvent(NgnSubscriptionEventArgs args) {
-        final Intent intent = new Intent(
-                NgnSubscriptionEventArgs.ACTION_SUBSCRIBTION_EVENT);
-        intent.putExtra(NgnSubscriptionEventArgs.EXTRA_EMBEDDED, args);
-        NgnApplication.getContext().sendBroadcast(intent);
-    }
+	private void broadcastSubscriptionEvent(NgnSubscriptionEventArgs args) {
+		final Intent intent = new Intent(
+				NgnSubscriptionEventArgs.ACTION_SUBSCRIBTION_EVENT);
+		intent.putExtra(NgnSubscriptionEventArgs.EXTRA_EMBEDDED, args);
+		NgnApplication.getContext().sendBroadcast(intent);
+	}
 
+	private void handleNetworkEvent(Intent intent) {
+		final NgnNetworkEventArgs args = intent.getParcelableExtra(NgnNetworkEventArgs.EXTRA_EMBEDDED);
+		if (args == null) {
+			Log.e(TAG, "Invalid event args");
+			return;
+		}
+		final NgnNetworkEventTypes eventType = args.getEventType();
+		switch (eventType) {
+			case DISCONNECTED:
+				break;
+			case CONNECTED:
+				//if (!mTerminateRequested && !isRegistered()) {
+					//final NgnNetworkConnection bestConnection = mNetworkService.getBestConnection(
+					//		NgnStringUtils.equals(mConfigurationService.getString(
+					//				NgnConfigurationEntry.NETWORK_IP_VERSION,
+					//				NgnConfigurationEntry.DEFAULT_NETWORK_IP_VERSION), "ipv6", true));
+					//if (bestConnection != null && bestConnection.isUp()) {
+						//register();
+					//}
+				//}
+				break;
+		}
+	}
 
-    /* ===================== Private functions ======================== */
-    public void doPostRegistrationOp() {
-        // guard
-        if (!this.isRegistered()) {
-            return;
-        }
-                /*
-                 * 3GPP TS 24.229 5.1.1.3 Subscription to registration-state event package
-                 * Upon receipt of a 2xx response to the initial registration, the UE shall subscribe to the reg event package for the public
-                 * user identity registered at the user's registrar (S-CSCF) as described in RFC 3680 [43].
-                 */
-        /*if (this.subReg == null) {
-            this.subReg = new MySubscriptionSession(this.sipStack, this.preferences.impu, EVENT_PACKAGE_TYPE.REG);
-        } else {
-            this.subReg.setToUri(this.preferences.impu);
-            this.subReg.setFromUri(this.preferences.impu);
-        }
-        this.subReg.subscribe();*/
+	/**
+	 * MySipCallback
+	 */
+	static class MySipCallback extends SipCallback {
+		private final NgnSipService mSipService;
 
-        // Message Waiting Indication
-        if (mPreferences.isMWI()) {
-            if ( mMWI== null) {
-                mMWI = NgnSubscriptionSession.createOutgoingSession(mSipStack, mPreferences.getIMPU(), EventPackageType.MessageSummary);
-            } else {
-                mMWI.setToUri(mPreferences.getIMPU());
-                mMWI.setFromUri(mPreferences.getIMPU());
-                mMWI.setSigCompId(mSipStack.getSigCompId());
-            }
-            if(mMWI.isConnected())
-            {
-                mMWI.unSubscribe();
-            }
-            else {
-                mMWI.subscribe();
-            }
-            //mMWI.unSubscribe();
-        }
+		private MySipCallback(NgnSipService sipService) {
+			super();
 
-       /* // Presence
-        if (this.preferences.presence_enabled) {
-            // Subscribe to "watcher-info" and "presence"
-            if (this.preferences.xcap_enabled) {
-                // "watcher-info"
-                if (this.subWinfo == null) {
-                    this.subWinfo = new MySubscriptionSession(this.sipStack, this.preferences.impu, EVENT_PACKAGE_TYPE.WINFO);
-                } else {
-                    this.subWinfo.setToUri(this.preferences.impu);
-                    this.subWinfo.setFromUri(this.preferences.impu);
-                    this.subMwi.setSigCompId(this.sipStack.getSigCompId());
-                }
-                this.subWinfo.subscribe();
-                // "eventlist"
-            } else {
+			mSipService = sipService;
+		}
 
-            }
+		@Override
+		public int OnDialogEvent(DialogEvent e) {
+			final String phrase = e.getPhrase();
+			final short eventCode = e.getCode();
+			final short sipCode;
+			final SipSession session = e.getBaseSession();
 
-            // Publish presence
-            if (this.pubPres == null) {
-                this.pubPres = new MyPublicationSession(this.sipStack, this.preferences.impu);
-            } else {
-                this.pubPres.setFromUri(this.preferences.impu);
-                this.pubPres.setToUri(this.preferences.impu);
-                this.subMwi.setSigCompId(this.sipStack.getSigCompId());
-            }
+			if (session == null) {
+				return 0;
+			}
 
-            String freeText = this.configurationService.getString(CONFIGURATION_SECTION.RCS, CONFIGURATION_ENTRY.FREE_TEXT, Configuration.DEFAULT_RCS_FREE_TEXT);
-            PresenceStatus status = Enum.valueOf(PresenceStatus.class, this.configurationService.getString(
-                    CONFIGURATION_SECTION.RCS,
-                    CONFIGURATION_ENTRY.STATUS,
-                    Configuration.DEFAULT_RCS_STATUS.toString()));
-            this.pubPres.publish(status, freeText);
-        }*/
-    }
+			final long sessionId = session.getId();
+			final SipMessage message = e.getSipMessage();
+			NgnSipSession mySession = null;
 
+			sipCode = (message != null && message.isResponse()) ? message
+					.getResponseCode() : eventCode;
 
-    /**
-     * MySipCallback
-     */
-    static class MySipCallback extends SipCallback {
-        private final NgnSipService mSipService;
+			Log.d(TAG,
+					String.format("OnDialogEvent (%s,%d)", phrase, sessionId));
 
-        private MySipCallback(NgnSipService sipService) {
-            super();
+			switch (eventCode) {
+			// == Connecting ==
+			case tinyWRAPConstants.tsip_event_code_dialog_connecting: {
+				// Registration
+				if (mSipService.mRegSession != null
+						&& mSipService.mRegSession.getId() == sessionId) {
+					mSipService.mRegSession
+							.setConnectionState(ConnectionState.CONNECTING);
+					mSipService
+							.broadcastRegistrationEvent(new NgnRegistrationEventArgs(
+									sessionId,
+									NgnRegistrationEventTypes.REGISTRATION_INPROGRESS,
+									eventCode, phrase));
+				}
+				// Audio/Video/MSRP(Chat, FileTransfer)
+				else if (((mySession = NgnAVSession.getSession(sessionId)) != null)
+						|| ((mySession = NgnMsrpSession.getSession(sessionId)) != null)) {
+					mySession.setConnectionState(ConnectionState.CONNECTING);
+					((NgnInviteSession) mySession)
+							.setState(InviteState.INPROGRESS);
+					mSipService.broadcastInviteEvent(new NgnInviteEventArgs(
+							sessionId, NgnInviteEventTypes.INPROGRESS,
+							((NgnInviteSession) mySession).getMediaType(),
+							phrase), sipCode);
+				}
+				// Publication
+				else if (((mySession = NgnPublicationSession
+						.getSession(sessionId)) != null)) {
+					mySession.setConnectionState(ConnectionState.CONNECTING);
+					mSipService
+							.broadcastPublicationEvent(new NgnPublicationEventArgs(
+									sessionId,
+									NgnPublicationEventTypes.PUBLICATION_INPROGRESS,
+									eventCode, phrase));
+				}
+				// Subscription
+				else if (((mySession = NgnSubscriptionSession
+						.getSession(sessionId)) != null)) {
+					mySession.setConnectionState(ConnectionState.CONNECTING);
+					mSipService
+							.broadcastSubscriptionEvent(new NgnSubscriptionEventArgs(
+									sessionId,
+									NgnSubscriptionEventTypes.SUBSCRIPTION_INPROGRESS,
+									eventCode, phrase, null, null,
+									((NgnSubscriptionSession) mySession)
+											.getEventPackage()));
+				}
 
-            mSipService = sipService;
-        }
+				break;
+			}
 
-        @Override
-        public int OnDialogEvent(DialogEvent e) {
-            final String phrase = e.getPhrase();
-            final short eventCode = e.getCode();
-            final short sipCode;
-            final SipSession session = e.getBaseSession();
+			// == Connected == //
+			case tinyWRAPConstants.tsip_event_code_dialog_connected: {
+				// Registration
+				if (mSipService.mRegSession != null
+						&& mSipService.mRegSession.getId() == sessionId) {
+					mSipService.mRegSession
+							.setConnectionState(ConnectionState.CONNECTED);
+					// Update default identity (vs barred)
+					String _defaultIdentity = mSipService.mSipStack
+							.getPreferredIdentity();
+					if (!NgnStringUtils.isNullOrEmpty(_defaultIdentity)) {
+						mSipService.setDefaultIdentity(_defaultIdentity);
+					}
+					mSipService
+							.broadcastRegistrationEvent(new NgnRegistrationEventArgs(
+									sessionId,
+									NgnRegistrationEventTypes.REGISTRATION_OK,
+									sipCode, phrase));
+				}
+				// Audio/Video/MSRP(Chat, FileTransfer)
+				else if (((mySession = NgnAVSession.getSession(sessionId)) != null)
+						|| ((mySession = NgnMsrpSession.getSession(sessionId)) != null)) {
+					mySession.setConnectionState(ConnectionState.CONNECTED);
+					((NgnInviteSession) mySession).setState(InviteState.INCALL);
+					mSipService.broadcastInviteEvent(new NgnInviteEventArgs(
+							sessionId, NgnInviteEventTypes.CONNECTED,
+							((NgnInviteSession) mySession).getMediaType(),
+							phrase), sipCode);
+				}
+				// Publication
+				else if (((mySession = NgnPublicationSession
+						.getSession(sessionId)) != null)) {
+					mySession.setConnectionState(ConnectionState.CONNECTED);
+					mSipService
+							.broadcastPublicationEvent(new NgnPublicationEventArgs(
+									sessionId,
+									NgnPublicationEventTypes.PUBLICATION_OK,
+									sipCode, phrase));
+				}
+				// Subscription
+				else if (((mySession = NgnSubscriptionSession
+						.getSession(sessionId)) != null)) {
+					mySession.setConnectionState(ConnectionState.CONNECTED);
+					mSipService
+							.broadcastSubscriptionEvent(new NgnSubscriptionEventArgs(
+									sessionId,
+									NgnSubscriptionEventTypes.SUBSCRIPTION_OK,
+									sipCode, phrase, null, null,
+									((NgnSubscriptionSession) mySession)
+											.getEventPackage()));
+				}
 
-            if (session == null) {
-                return 0;
-            }
+				break;
+			}
 
-            final long sessionId = session.getId();
-            final SipMessage message = e.getSipMessage();
-            NgnSipSession mySession = null;
+			// == Terminating == //
+			case tinyWRAPConstants.tsip_event_code_dialog_terminating: {
+				// Registration
+				if (mSipService.mRegSession != null
+						&& mSipService.mRegSession.getId() == sessionId) {
+					mSipService.mRegSession
+							.setConnectionState(ConnectionState.TERMINATING);
+					mSipService
+							.broadcastRegistrationEvent(new NgnRegistrationEventArgs(
+									sessionId,
+									NgnRegistrationEventTypes.UNREGISTRATION_INPROGRESS,
+									eventCode, phrase));
+				}
+				// Audio/Video/MSRP(Chat, FileTransfer)
+				else if (((mySession = NgnAVSession.getSession(sessionId)) != null)
+						|| ((mySession = NgnMsrpSession.getSession(sessionId)) != null)) {
+					mySession.setConnectionState(ConnectionState.TERMINATING);
+					((NgnInviteSession) mySession)
+							.setState(InviteState.TERMINATING);
+					mSipService.broadcastInviteEvent(new NgnInviteEventArgs(
+							sessionId, NgnInviteEventTypes.TERMWAIT,
+							((NgnInviteSession) mySession).getMediaType(),
+							phrase), sipCode);
+				}
+				// Publication
+				else if (((mySession = NgnPublicationSession
+						.getSession(sessionId)) != null)) {
+					mySession.setConnectionState(ConnectionState.TERMINATING);
+					mSipService
+							.broadcastPublicationEvent(new NgnPublicationEventArgs(
+									sessionId,
+									NgnPublicationEventTypes.UNPUBLICATION_INPROGRESS,
+									eventCode, phrase));
+				}
+				// Subscription
+				else if (((mySession = NgnSubscriptionSession
+						.getSession(sessionId)) != null)) {
+					mySession.setConnectionState(ConnectionState.TERMINATING);
+					mSipService
+							.broadcastSubscriptionEvent(new NgnSubscriptionEventArgs(
+									sessionId,
+									NgnSubscriptionEventTypes.UNSUBSCRIPTION_INPROGRESS,
+									eventCode, phrase, null, null,
+									((NgnSubscriptionSession) mySession)
+											.getEventPackage()));
+				}
 
-            sipCode = (message != null && message.isResponse()) ? message
-                    .getResponseCode() : eventCode;
+				break;
+			}
 
-            Log.d(TAG,
-                    String.format("OnDialogEvent (%s,%d)", phrase, sessionId));
-
-            switch (eventCode) {
-                // == Connecting ==
-                case tinyWRAPConstants.tsip_event_code_dialog_connecting: {
-                    // Registration
-                    if (mSipService.mRegSession != null
-                            && mSipService.mRegSession.getId() == sessionId) {
-                        mSipService.mRegSession
-                                .setConnectionState(ConnectionState.CONNECTING);
-                        mSipService
-                                .broadcastRegistrationEvent(new NgnRegistrationEventArgs(
-                                        sessionId,
-                                        NgnRegistrationEventTypes.REGISTRATION_INPROGRESS,
-                                        eventCode, phrase));
-                    }
-                    // Audio/Video/MSRP(Chat, FileTransfer)
-                    else if (((mySession = NgnAVSession.getSession(sessionId)) != null)
-                            || ((mySession = NgnMsrpSession.getSession(sessionId)) != null)) {
-                        mySession.setConnectionState(ConnectionState.CONNECTING);
-                        ((NgnInviteSession) mySession)
-                                .setState(InviteState.INPROGRESS);
-                        mSipService.broadcastInviteEvent(new NgnInviteEventArgs(
-                                sessionId, NgnInviteEventTypes.INPROGRESS,
-                                ((NgnInviteSession) mySession).getMediaType(),
-                                phrase), sipCode);
-                    }
-                    // Publication
-                    else if (((mySession = NgnPublicationSession
-                            .getSession(sessionId)) != null)) {
-                        mySession.setConnectionState(ConnectionState.CONNECTING);
-                        mSipService
-                                .broadcastPublicationEvent(new NgnPublicationEventArgs(
-                                        sessionId,
-                                        NgnPublicationEventTypes.PUBLICATION_INPROGRESS,
-                                        eventCode, phrase));
-                    }
-                    // Subscription
-                    else if (((mySession = NgnSubscriptionSession
-                            .getSession(sessionId)) != null)) {
-                        mySession.setConnectionState(ConnectionState.CONNECTING);
-                        mSipService
-                                .broadcastSubscriptionEvent(new NgnSubscriptionEventArgs(
-                                        sessionId,
-                                        NgnSubscriptionEventTypes.SUBSCRIPTION_INPROGRESS,
-                                        eventCode, phrase, null, null,
-                                        ((NgnSubscriptionSession) mySession)
-                                                .getEventPackage()));
-                    }
-
-                    break;
-                }
-
-                // == Connected == //
-                case tinyWRAPConstants.tsip_event_code_dialog_connected: {
-                    // Registration
-                    if (mSipService.mRegSession != null
-                            && mSipService.mRegSession.getId() == sessionId) {
-                        mSipService.mRegSession
-                                .setConnectionState(ConnectionState.CONNECTED);
-                        // Update default identity (vs barred)
-                        String _defaultIdentity = mSipService.mSipStack
-                                .getPreferredIdentity();
-                        if (!NgnStringUtils.isNullOrEmpty(_defaultIdentity)) {
-                            mSipService.setDefaultIdentity(_defaultIdentity);
-                        }
-                        mSipService
-                                .broadcastRegistrationEvent(new NgnRegistrationEventArgs(
-                                        sessionId,
-                                        NgnRegistrationEventTypes.REGISTRATION_OK,
-                                        sipCode, phrase));
-                    }
-                    // Audio/Video/MSRP(Chat, FileTransfer)
-                    else if (((mySession = NgnAVSession.getSession(sessionId)) != null)
-                            || ((mySession = NgnMsrpSession.getSession(sessionId)) != null)) {
-                        mySession.setConnectionState(ConnectionState.CONNECTED);
-                        ((NgnInviteSession) mySession).setState(InviteState.INCALL);
-                        mSipService.broadcastInviteEvent(new NgnInviteEventArgs(
-                                sessionId, NgnInviteEventTypes.CONNECTED,
-                                ((NgnInviteSession) mySession).getMediaType(),
-                                phrase), sipCode);
-                    }
-                    // Publication
-                    else if (((mySession = NgnPublicationSession
-                            .getSession(sessionId)) != null)) {
-                        mySession.setConnectionState(ConnectionState.CONNECTED);
-                        mSipService
-                                .broadcastPublicationEvent(new NgnPublicationEventArgs(
-                                        sessionId,
-                                        NgnPublicationEventTypes.PUBLICATION_OK,
-                                        sipCode, phrase));
-                    }
-                    // Subscription
-                    else if (((mySession = NgnSubscriptionSession
-                            .getSession(sessionId)) != null)) {
-                        mySession.setConnectionState(ConnectionState.CONNECTED);
-                        mSipService
-                                .broadcastSubscriptionEvent(new NgnSubscriptionEventArgs(
-                                        sessionId,
-                                        NgnSubscriptionEventTypes.SUBSCRIPTION_OK,
-                                        sipCode, phrase, null, null,
-                                        ((NgnSubscriptionSession) mySession)
-                                                .getEventPackage()));
-                    }
-
-                    break;
-                }
-
-                // == Terminating == //
-                case tinyWRAPConstants.tsip_event_code_dialog_terminating: {
-                    // Registration
-                    if (mSipService.mRegSession != null
-                            && mSipService.mRegSession.getId() == sessionId) {
-                        mSipService.mRegSession
-                                .setConnectionState(ConnectionState.TERMINATING);
-                        mSipService
-                                .broadcastRegistrationEvent(new NgnRegistrationEventArgs(
-                                        sessionId,
-                                        NgnRegistrationEventTypes.UNREGISTRATION_INPROGRESS,
-                                        eventCode, phrase));
-                    }
-                    // Audio/Video/MSRP(Chat, FileTransfer)
-                    else if (((mySession = NgnAVSession.getSession(sessionId)) != null)
-                            || ((mySession = NgnMsrpSession.getSession(sessionId)) != null)) {
-                        mySession.setConnectionState(ConnectionState.TERMINATING);
-                        ((NgnInviteSession) mySession)
-                                .setState(InviteState.TERMINATING);
-                        mSipService.broadcastInviteEvent(new NgnInviteEventArgs(
-                                sessionId, NgnInviteEventTypes.TERMWAIT,
-                                ((NgnInviteSession) mySession).getMediaType(),
-                                phrase), sipCode);
-                    }
-                    // Publication
-                    else if (((mySession = NgnPublicationSession
-                            .getSession(sessionId)) != null)) {
-                        mySession.setConnectionState(ConnectionState.TERMINATING);
-                        mSipService
-                                .broadcastPublicationEvent(new NgnPublicationEventArgs(
-                                        sessionId,
-                                        NgnPublicationEventTypes.UNPUBLICATION_INPROGRESS,
-                                        eventCode, phrase));
-                    }
-                    // Subscription
-                    else if (((mySession = NgnSubscriptionSession
-                            .getSession(sessionId)) != null)) {
-                        mySession.setConnectionState(ConnectionState.TERMINATING);
-                        mSipService
-                                .broadcastSubscriptionEvent(new NgnSubscriptionEventArgs(
-                                        sessionId,
-                                        NgnSubscriptionEventTypes.UNSUBSCRIPTION_INPROGRESS,
-                                        eventCode, phrase, null, null,
-                                        ((NgnSubscriptionSession) mySession)
-                                                .getEventPackage()));
-                    }
-
-                    break;
-                }
-
-                // == Terminated == //
-                case tinyWRAPConstants.tsip_event_code_dialog_terminated: {
-                    // Registration
-                    if (mSipService.mRegSession != null
-                            && mSipService.mRegSession.getId() == sessionId) {
-                        mSipService.mRegSession
-                                .setConnectionState(ConnectionState.TERMINATED);
-                        mSipService
-                                .broadcastRegistrationEvent(new NgnRegistrationEventArgs(
-                                        sessionId,
-                                        NgnRegistrationEventTypes.UNREGISTRATION_OK,
-                                        sipCode, phrase));
-                    /*
-                     * Stop the stack (as we are already in the stack-thread,
+			// == Terminated == //
+			case tinyWRAPConstants.tsip_event_code_dialog_terminated: {
+				// Registration
+				if (mSipService.mRegSession != null
+						&& mSipService.mRegSession.getId() == sessionId) {
+					mSipService.mRegSession
+							.setConnectionState(ConnectionState.TERMINATED);
+					mSipService
+							.broadcastRegistrationEvent(new NgnRegistrationEventArgs(
+									sessionId,
+									NgnRegistrationEventTypes.UNREGISTRATION_OK,
+									sipCode, phrase));
+					/*
+					 * Stop the stack (as we are already in the stack-thread,
 					 * then do it in a new thread)
 					 */
-                        new Thread(new Runnable() {
-                            public void run() {
-                                if (mSipService.mSipStack.getState() == STACK_STATE.STARTING
-                                        || mSipService.mSipStack.getState() == STACK_STATE.STARTED) {
-                                    mSipService.mSipStack.stop();
-                                }
-                            }
-                        }).start();
-                    }
-                    // PagerMode IM
-                    else if (NgnMessagingSession.hasSession(sessionId)) {
-                        NgnMessagingSession.releaseSession(sessionId);
-                    }
-                    // Audio/Video/MSRP(Chat, FileTransfer)
-                    else if (((mySession = NgnAVSession.getSession(sessionId)) != null)
-                            || ((mySession = NgnMsrpSession.getSession(sessionId)) != null)) {
-                        mySession.setConnectionState(ConnectionState.TERMINATED);
-                        ((NgnInviteSession) mySession)
-                                .setState(InviteState.TERMINATED);
-                        mSipService.broadcastInviteEvent(new NgnInviteEventArgs(
-                                sessionId, NgnInviteEventTypes.TERMINATED,
-                                ((NgnInviteSession) mySession).getMediaType(),
-                                phrase), sipCode);
-                        if (mySession instanceof NgnAVSession) {
-                            NgnAVSession.releaseSession((NgnAVSession) mySession);
-                        } else if (mySession instanceof NgnMsrpSession) {
-                            NgnMsrpSession
-                                    .releaseSession((NgnMsrpSession) mySession);
-                        }
-                    }
-                    // Publication
-                    else if (((mySession = NgnPublicationSession
-                            .getSession(sessionId)) != null)) {
-                        ConnectionState previousConnState = mySession
-                                .getConnectionState();
-                        mySession.setConnectionState(ConnectionState.TERMINATED);
-                        mSipService
-                                .broadcastPublicationEvent(new NgnPublicationEventArgs(
-                                        sessionId,
-                                        (previousConnState == ConnectionState.TERMINATING) ? NgnPublicationEventTypes.UNPUBLICATION_OK
-                                                : NgnPublicationEventTypes.PUBLICATION_NOK,
-                                        sipCode, phrase));
-                    }
-                    // Subscription
-                    else if (((mySession = NgnSubscriptionSession
-                            .getSession(sessionId)) != null)) {
-                        ConnectionState previousConnState = mySession
-                                .getConnectionState();
+					new Thread(new Runnable() {
+						public void run() {
+							if (mSipService.mSipStack.getState() == STACK_STATE.STARTING
+									|| mSipService.mSipStack.getState() == STACK_STATE.STARTED) {
+								mSipService.mSipStack.stop();
+							}
+						}
+					}).start();
+				}
+				// PagerMode IM
+				else if (NgnMessagingSession.hasSession(sessionId)) {
+					NgnMessagingSession.releaseSession(sessionId);
+				}
+				// Audio/Video/MSRP(Chat, FileTransfer)
+				else if (((mySession = NgnAVSession.getSession(sessionId)) != null)
+						|| ((mySession = NgnMsrpSession.getSession(sessionId)) != null)) {
+					mySession.setConnectionState(ConnectionState.TERMINATED);
+					((NgnInviteSession) mySession)
+							.setState(InviteState.TERMINATED);
+					mSipService.broadcastInviteEvent(new NgnInviteEventArgs(
+							sessionId, NgnInviteEventTypes.TERMINATED,
+							((NgnInviteSession) mySession).getMediaType(),
+							phrase), sipCode);
+					if (mySession instanceof NgnAVSession) {
+						NgnAVSession.releaseSession((NgnAVSession) mySession);
+					} else if (mySession instanceof NgnMsrpSession) {
+						NgnMsrpSession
+								.releaseSession((NgnMsrpSession) mySession);
+					}
+				}
+				// Publication
+				else if (((mySession = NgnPublicationSession
+						.getSession(sessionId)) != null)) {
+					ConnectionState previousConnState = mySession
+							.getConnectionState();
+					mySession.setConnectionState(ConnectionState.TERMINATED);
+					mSipService
+							.broadcastPublicationEvent(new NgnPublicationEventArgs(
+									sessionId,
+									(previousConnState == ConnectionState.TERMINATING) ? NgnPublicationEventTypes.UNPUBLICATION_OK
+											: NgnPublicationEventTypes.PUBLICATION_NOK,
+									sipCode, phrase));
+				}
+				// Subscription
+				else if (((mySession = NgnSubscriptionSession
+						.getSession(sessionId)) != null)) {
+					ConnectionState previousConnState = mySession
+							.getConnectionState();
 
-                        mySession.setConnectionState(ConnectionState.TERMINATED);
-                        mSipService
-                                .broadcastSubscriptionEvent(new NgnSubscriptionEventArgs(
-                                        sessionId,
-                                        (previousConnState == ConnectionState.TERMINATING) ? NgnSubscriptionEventTypes.UNSUBSCRIPTION_OK
-                                                : NgnSubscriptionEventTypes.SUBSCRIPTION_NOK,
-                                        sipCode, phrase, null, null,
-                                        ((NgnSubscriptionSession) mySession)
-                                                .getEventPackage()));
-                    }
-                    break;
-                }
-            }
+					mySession.setConnectionState(ConnectionState.TERMINATED);
+					mSipService
+							.broadcastSubscriptionEvent(new NgnSubscriptionEventArgs(
+									sessionId,
+									(previousConnState == ConnectionState.TERMINATING) ? NgnSubscriptionEventTypes.UNSUBSCRIPTION_OK
+											: NgnSubscriptionEventTypes.SUBSCRIPTION_NOK,
+									sipCode, phrase, null, null,
+									((NgnSubscriptionSession) mySession)
+											.getEventPackage()));
+				}
+				break;
+			}
+			}
 
-            return 0;
-        }
+			return 0;
+		}
 
-        @Override
-        public int OnInviteEvent(InviteEvent e) {
-            final tsip_invite_event_type_t type = e.getType();
-            final short code = e.getCode();
-            final String phrase = e.getPhrase();
-            InviteSession session = e.getSession();
-            NgnSipSession mySession = null;
-
-            switch (type) {
+		@Override
+		public int OnInviteEvent(InviteEvent e) {
+			 final tsip_invite_event_type_t type = e.getType();
+			 final short code = e.getCode();
+			 final String phrase = e.getPhrase();
+			 InviteSession session = e.getSession();
+			 NgnSipSession mySession = null;
+			
+			switch (type){
                 case tsip_i_newcall:
                 case tsip_i_ect_newcall:
-                    if (session != null) /* As we are not the owner, then the session MUST be null */ {
+                    if (session != null) /* As we are not the owner, then the session MUST be null */{
                         Log.e(TAG, "Invalid incoming session");
                         session.hangup(); // To avoid another callback event
                         return -1;
                     }
 
                     SipMessage message = e.getSipMessage();
-                    if (message == null) {
-                        Log.e(TAG, "Invalid message");
+                    if (message == null){
+                        Log.e(TAG,"Invalid message");
                         return -1;
                     }
-                    final twrap_media_type_t sessionType = e.getMediaType();
+                    final twrap_media_type_t sessionType = e.getMediaType();                    
                     if (sessionType == twrap_media_type_t.twrap_media_msrp) {
-                        if ((session = e.takeMsrpSessionOwnership()) == null) {
-                            Log.e(TAG, "Failed to take MSRP session ownership");
+                    	if ((session = e.takeMsrpSessionOwnership()) == null){
+                            Log.e(TAG,"Failed to take MSRP session ownership");
                             return -1;
                         }
-
-                        NgnMsrpSession msrpSession = NgnMsrpSession.takeIncomingSession(mSipService.getSipStack(),
-                                (MsrpSession) session, message);
-                        if (msrpSession == null) {
-                            Log.e(TAG, "Failed to create new session");
+                    	
+                        NgnMsrpSession msrpSession = NgnMsrpSession.takeIncomingSession(mSipService.getSipStack(), 
+                        		(MsrpSession)session, message);
+                        if (msrpSession == null){
+                        	Log.e(TAG,"Failed to create new session");
                             session.hangup();
                             session.delete();
                             return 0;
                         }
                         mSipService.broadcastInviteEvent(new NgnInviteEventArgs(msrpSession.getId(), NgnInviteEventTypes.INCOMING, msrpSession.getMediaType(), phrase));
-                    } else if ((sessionType == twrap_media_type_t.twrap_media_audio) ||
-                            (sessionType == twrap_media_type_t.twrap_media_audio_video) ||
-                            (sessionType == twrap_media_type_t.twrap_media_audiovideo) ||
-                            (sessionType == twrap_media_type_t.twrap_media_video) ||
-                            (sessionType.swigValue() == (twrap_media_type_t.twrap_media_audio.swigValue() | twrap_media_type_t.twrap_media_t140.swigValue())) ||
-                            (sessionType.swigValue() == (twrap_media_type_t.twrap_media_audio.swigValue() | twrap_media_type_t.twrap_media_video.swigValue() | twrap_media_type_t.twrap_media_t140.swigValue())) ||
-                            (sessionType == twrap_media_type_t.twrap_media_t140)) {
-                        if ((session = e.takeCallSessionOwnership()) == null) {
-                            Log.e(TAG, "Failed to take audio/video session ownership");
-                            return -1;
-                        }
-                        final NgnInviteEventTypes eType = type == tsip_invite_event_type_t.tsip_i_newcall ? NgnInviteEventTypes.INCOMING : NgnInviteEventTypes.REMOTE_TRANSFER_INPROGESS;
-                        final NgnAVSession avSession = NgnAVSession.takeIncomingSession(mSipService.getSipStack(), (CallSession) session, sessionType, message);
-                        mSipService.broadcastInviteEvent(new NgnInviteEventArgs(avSession.getId(), eType, avSession.getMediaType(), phrase));
-                    } else {
-                        Log.e(TAG, "Invalid media type");
-                        return 0;
                     }
+                    else if ((sessionType == twrap_media_type_t.twrap_media_audio) ||
+                    		(sessionType == twrap_media_type_t.twrap_media_audio_video) ||
+                    		(sessionType == twrap_media_type_t.twrap_media_audiovideo) ||
+                    		(sessionType == twrap_media_type_t.twrap_media_video) ||
+		                    (sessionType.swigValue() == (twrap_media_type_t.twrap_media_audio.swigValue() | twrap_media_type_t.twrap_media_t140.swigValue())) ||
+		                    (sessionType.swigValue() == (twrap_media_type_t.twrap_media_audio.swigValue() | twrap_media_type_t.twrap_media_video.swigValue() | twrap_media_type_t.twrap_media_t140.swigValue())) ||
+		                    (sessionType == twrap_media_type_t.twrap_media_t140)) {
+                            if ((session = e.takeCallSessionOwnership()) == null) {
+                                Log.e(TAG,"Failed to take audio/video session ownership");
+                                return -1;
+                            }
+                            final NgnInviteEventTypes eType = type == tsip_invite_event_type_t.tsip_i_newcall ? NgnInviteEventTypes.INCOMING : NgnInviteEventTypes.REMOTE_TRANSFER_INPROGESS;
+                            final NgnAVSession avSession = NgnAVSession.takeIncomingSession(mSipService.getSipStack(), (CallSession)session, sessionType, message); 
+                            mSipService.broadcastInviteEvent(new NgnInviteEventArgs(avSession.getId(), eType, avSession.getMediaType(), phrase));
+                        }
+
+                    else {
+                        Log.e(TAG,"Invalid media type");
+                        return 0;
+                    }  
                     break;
 
                 case tsip_ao_request:
-                    // For backward compatibility keep both "RINGING" and "SIP_RESPONSE"
-                    if (code == 180 && session != null) {
-                        if (((mySession = NgnAVSession.getSession(session.getId())) != null) || ((mySession = NgnMsrpSession.getSession(session.getId())) != null)) {
-                            mSipService.broadcastInviteEvent(new NgnInviteEventArgs(mySession.getId(), NgnInviteEventTypes.RINGING, ((NgnInviteSession) mySession).getMediaType(), phrase), code);
-                        }
+                	// For backward compatibility keep both "RINGING" and "SIP_RESPONSE"
+                    if (code == 180 && session != null){
+                    	if (((mySession = NgnAVSession.getSession(session.getId())) != null) || ((mySession = NgnMsrpSession.getSession(session.getId())) != null)){
+                    		mSipService.broadcastInviteEvent(new NgnInviteEventArgs(mySession.getId(), NgnInviteEventTypes.RINGING, ((NgnInviteSession)mySession).getMediaType(), phrase), code);
+                    	}
                     }
-                    if (session != null) {
-                        if (((mySession = NgnAVSession.getSession(session.getId())) != null) || ((mySession = NgnMsrpSession.getSession(session.getId())) != null)) {
-                            mSipService.broadcastInviteEvent(new NgnInviteEventArgs(mySession.getId(), NgnInviteEventTypes.SIP_RESPONSE, ((NgnInviteSession) mySession).getMediaType(), phrase), code);
-                        }
+                    if(session != null){
+                    	if (((mySession = NgnAVSession.getSession(session.getId())) != null) || ((mySession = NgnMsrpSession.getSession(session.getId())) != null)){
+                    		mSipService.broadcastInviteEvent(new NgnInviteEventArgs(mySession.getId(), NgnInviteEventTypes.SIP_RESPONSE, ((NgnInviteSession)mySession).getMediaType(), phrase), code);
+                    	}
                     }
                     break;
 
-                case tsip_i_request: {
-                    final SipMessage sipMessage = e.getSipMessage();
-                    if (sipMessage != null && session != null && ((mySession = NgnAVSession.getSession(session.getId())) != null)) {
-                        if (sipMessage.getRequestType() == tsip_request_type_t.tsip_INFO) {
-                            final String contentType = sipMessage.getSipHeaderValue("c");
-                            if (NgnStringUtils.equals(contentType, NgnContentType.DOUBANGO_DEVICE_INFO, true)) {
-                                final byte content[] = sipMessage.getSipContent();
-                                if (content != null) {
-                                    final String values[] = new String(content).split("\r\n");
-                                    for (String value : values) {
-                                        if (value == null) continue;
-                                        final String kvp[] = value.split(":");
-                                        if (kvp.length == 2) {
-                                            if (NgnStringUtils.equals(kvp[0], "orientation", true)) {
-                                                if (NgnStringUtils.equals(kvp[1], "landscape", true)) {
-                                                    ((NgnInviteSession) mySession).getRemoteDeviceInfo().setOrientation(Orientation.LANDSCAPE);
-                                                } else if (NgnStringUtils.equals(kvp[1], "portrait", true)) {
-                                                    ((NgnInviteSession) mySession).getRemoteDeviceInfo().setOrientation(Orientation.PORTRAIT);
-                                                }
-                                            } else if (NgnStringUtils.equals(kvp[0], "lang", true)) {
-                                                ((NgnInviteSession) mySession).getRemoteDeviceInfo().setLang(kvp[1]);
-                                            }
-                                        }
-                                    }
-                                    mSipService.broadcastInviteEvent(new NgnInviteEventArgs(session.getId(), NgnInviteEventTypes.REMOTE_DEVICE_INFO_CHANGED, ((NgnInviteSession) mySession).getMediaType(), phrase));
-                                }
-                            }
-                        }
+                case tsip_i_request:
+                    {
+                    	final SipMessage sipMessage = e.getSipMessage();
+                    	if(sipMessage != null && session != null && ((mySession = NgnAVSession.getSession(session.getId())) != null)){
+                    		if(sipMessage.getRequestType() == tsip_request_type_t.tsip_INFO){
+                    			final String contentType = sipMessage.getSipHeaderValue("c");
+                    			if(NgnStringUtils.equals(contentType, NgnContentType.DOUBANGO_DEVICE_INFO, true)){
+                    				final byte content[] = sipMessage.getSipContent();
+                    				if(content != null){
+                    					final String values[] = new String(content).split("\r\n");
+                    					for(String value : values){
+                    						if(value == null) continue;
+                    						final String kvp[] = value.split(":");
+                    						if(kvp.length == 2){
+                    							if(NgnStringUtils.equals(kvp[0], "orientation", true)){
+                    								if(NgnStringUtils.equals(kvp[1], "landscape", true)){
+                    									((NgnInviteSession)mySession).getRemoteDeviceInfo().setOrientation(Orientation.LANDSCAPE);
+                    								}
+                    								else if(NgnStringUtils.equals(kvp[1], "portrait", true)){
+                    									((NgnInviteSession)mySession).getRemoteDeviceInfo().setOrientation(Orientation.PORTRAIT);
+                    								}
+                    							}
+                    							else if(NgnStringUtils.equals(kvp[0], "lang", true)){
+                    								((NgnInviteSession)mySession).getRemoteDeviceInfo().setLang(kvp[1]);
+                    							}
+                    						}
+                    					}
+                    					mSipService.broadcastInviteEvent(new NgnInviteEventArgs(session.getId(), NgnInviteEventTypes.REMOTE_DEVICE_INFO_CHANGED, ((NgnInviteSession)mySession).getMediaType(), phrase));
+                    				}
+                    			}
+                    		}
+                    	}
+                        break;
                     }
-                    break;
-                }
-                case tsip_o_ect_trying: {
-                    if (((mySession = NgnAVSession.getSession(session.getId())) != null) || ((mySession = NgnMsrpSession.getSession(session.getId())) != null)) {
-                        mSipService.broadcastInviteEvent(new NgnInviteEventArgs(session.getId(), NgnInviteEventTypes.LOCAL_TRANSFER_TRYING, ((NgnInviteSession) mySession).getMediaType(), phrase));
+                case tsip_o_ect_trying:
+	                {
+	                	if (((mySession = NgnAVSession.getSession(session.getId())) != null) || ((mySession = NgnMsrpSession.getSession(session.getId())) != null)){
+	                		mSipService.broadcastInviteEvent(new NgnInviteEventArgs(session.getId(), NgnInviteEventTypes.LOCAL_TRANSFER_TRYING, ((NgnInviteSession)mySession).getMediaType(), phrase));
+	                	}
+	                	break;
+	                }
+	            case tsip_o_ect_accepted:
+	                {
+	                	if (((mySession = NgnAVSession.getSession(session.getId())) != null) || ((mySession = NgnMsrpSession.getSession(session.getId())) != null)){
+	                		mSipService.broadcastInviteEvent(new NgnInviteEventArgs(session.getId(), NgnInviteEventTypes.LOCAL_TRANSFER_ACCEPTED, ((NgnInviteSession)mySession).getMediaType(), phrase));
+	                	}
+	                    break;
+	                }
+	            case tsip_o_ect_completed:
+	                {
+	                	if (((mySession = NgnAVSession.getSession(session.getId())) != null) || ((mySession = NgnMsrpSession.getSession(session.getId())) != null)){
+	                		mSipService.broadcastInviteEvent(new NgnInviteEventArgs(session.getId(), NgnInviteEventTypes.LOCAL_TRANSFER_COMPLETED, ((NgnInviteSession)mySession).getMediaType(), phrase));
+	                	}
+	                    break;
+	                }
+	            case tsip_o_ect_failed:
+	                {
+	                	if (((mySession = NgnAVSession.getSession(session.getId())) != null) || ((mySession = NgnMsrpSession.getSession(session.getId())) != null)){
+	                		mSipService.broadcastInviteEvent(new NgnInviteEventArgs(session.getId(), NgnInviteEventTypes.LOCAL_TRANSFER_FAILED, ((NgnInviteSession)mySession).getMediaType(), phrase));
+	                	}
+	                    break;
+	                }
+	            case tsip_o_ect_notify:
+	            case tsip_i_ect_notify:
+	                {
+	                	if (((mySession = NgnAVSession.getSession(session.getId())) != null) || ((mySession = NgnMsrpSession.getSession(session.getId())) != null)){
+	                		NgnInviteEventTypes eType = (type == tsip_invite_event_type_t.tsip_o_ect_notify ? NgnInviteEventTypes.LOCAL_TRANSFER_NOTIFY : NgnInviteEventTypes.REMOTE_TRANSFER_NOTIFY);
+	                		NgnInviteEventArgs args = new NgnInviteEventArgs(session.getId(), eType, ((NgnInviteSession)mySession).getMediaType(), phrase);
+	                		mSipService.broadcastInviteEvent(args, code);
+	                	}
+	                	break;
+	                }
+	            case tsip_i_ect_requested:
+	                {
+	                	if (((mySession = NgnAVSession.getSession(session.getId())) != null) || ((mySession = NgnMsrpSession.getSession(session.getId())) != null)){
+		                	final SipMessage sipMessage = e.getSipMessage();
+		                    if (sipMessage != null)
+		                    {
+		                        if (sipMessage.getRequestType() == tsip_request_type_t.tsip_REFER)
+		                        {
+		                            String referToUri = sipMessage.getSipHeaderValue("refer-to");
+		                            if (!NgnStringUtils.isNullOrEmpty(referToUri))
+		                            {
+		                            	NgnInviteEventArgs args = new NgnInviteEventArgs(session.getId(), NgnInviteEventTypes.REMOTE_TRANSFER_REQUESTED, ((NgnInviteSession)mySession).getMediaType(), phrase);
+		                            	mSipService.broadcastTransferRequestEvent(args, referToUri);
+		                            }
+		                        }
+		                    }
+	                	}
+	                    
+	                    break;
+	                }
+	            case tsip_i_ect_failed:
+	                {
+	                	if (((mySession = NgnAVSession.getSession(session.getId())) != null) || ((mySession = NgnMsrpSession.getSession(session.getId())) != null)){
+	                		mSipService.broadcastInviteEvent(new NgnInviteEventArgs(session.getId(), NgnInviteEventTypes.REMOTE_TRANSFER_FAILED, ((NgnInviteSession)mySession).getMediaType(), phrase));
+	                	}
+	                	break;
+	                }
+	            case tsip_i_ect_completed:
+	                {
+	                	if (((mySession = NgnAVSession.getSession(session.getId())) != null) || ((mySession = NgnMsrpSession.getSession(session.getId())) != null)){
+	                		mSipService.broadcastInviteEvent(new NgnInviteEventArgs(session.getId(), NgnInviteEventTypes.REMOTE_TRANSFER_COMPLETED, ((NgnInviteSession)mySession).getMediaType(), phrase));
+	                	}
+	                	break;
+	                }
+                case tsip_m_early_media:
+                    {
+                    	if (((mySession = NgnAVSession.getSession(session.getId())) != null) || ((mySession = NgnMsrpSession.getSession(session.getId())) != null)){
+                    		((NgnInviteSession)mySession).setState(InviteState.EARLY_MEDIA);
+                    		mSipService.broadcastInviteEvent(new NgnInviteEventArgs(session.getId(), NgnInviteEventTypes.EARLY_MEDIA, ((NgnInviteSession)mySession).getMediaType(), phrase));
+                    	}
+                        break;
                     }
-                    break;
-                }
-                case tsip_o_ect_accepted: {
-                    if (((mySession = NgnAVSession.getSession(session.getId())) != null) || ((mySession = NgnMsrpSession.getSession(session.getId())) != null)) {
-                        mSipService.broadcastInviteEvent(new NgnInviteEventArgs(session.getId(), NgnInviteEventTypes.LOCAL_TRANSFER_ACCEPTED, ((NgnInviteSession) mySession).getMediaType(), phrase));
+                case tsip_m_local_hold_ok:
+                    {
+                    	if (((mySession = NgnAVSession.getSession(session.getId())) != null) || ((mySession = NgnMsrpSession.getSession(session.getId())) != null)){
+                    		((NgnInviteSession)mySession).setLocalHold(true);
+                    		mSipService.broadcastInviteEvent(new NgnInviteEventArgs(session.getId(), NgnInviteEventTypes.LOCAL_HOLD_OK, ((NgnInviteSession)mySession).getMediaType(), phrase));
+                    	}
+                        break;
                     }
-                    break;
-                }
-                case tsip_o_ect_completed: {
-                    if (((mySession = NgnAVSession.getSession(session.getId())) != null) || ((mySession = NgnMsrpSession.getSession(session.getId())) != null)) {
-                        mSipService.broadcastInviteEvent(new NgnInviteEventArgs(session.getId(), NgnInviteEventTypes.LOCAL_TRANSFER_COMPLETED, ((NgnInviteSession) mySession).getMediaType(), phrase));
+                case tsip_m_updating:
+	                {
+	                	if (((mySession = NgnAVSession.getSession(session.getId())) != null) || ((mySession = NgnMsrpSession.getSession(session.getId())) != null)){
+                    		mSipService.broadcastInviteEvent(new NgnInviteEventArgs(session.getId(), NgnInviteEventTypes.MEDIA_UPDATING, ((NgnInviteSession)mySession).getMediaType(), phrase));
+                    	}
+	                	break;
+	                }
+                case tsip_m_updated:
+	                {
+	                	if (((mySession = NgnAVSession.getSession(session.getId())) != null) || ((mySession = NgnMsrpSession.getSession(session.getId())) != null)){
+	                		if(mySession instanceof NgnAVSession){
+	                			NgnAVSession.handleMediaUpdate(mySession.getId(), e.getMediaType());
+	                		}
+	                		mSipService.broadcastInviteEvent(new NgnInviteEventArgs(session.getId(), NgnInviteEventTypes.MEDIA_UPDATED, ((NgnInviteSession)mySession).getMediaType(), phrase));
+	                	}
+	                	break;
+	                }
+                case tsip_m_local_hold_nok:
+                    {
+                    	if (((mySession = NgnAVSession.getSession(session.getId())) != null) || ((mySession = NgnMsrpSession.getSession(session.getId())) != null)){
+                    		mSipService.broadcastInviteEvent(new NgnInviteEventArgs(session.getId(), NgnInviteEventTypes.LOCAL_HOLD_NOK, ((NgnInviteSession)mySession).getMediaType(), phrase));
+                    	}
+                        break;
                     }
-                    break;
-                }
-                case tsip_o_ect_failed: {
-                    if (((mySession = NgnAVSession.getSession(session.getId())) != null) || ((mySession = NgnMsrpSession.getSession(session.getId())) != null)) {
-                        mSipService.broadcastInviteEvent(new NgnInviteEventArgs(session.getId(), NgnInviteEventTypes.LOCAL_TRANSFER_FAILED, ((NgnInviteSession) mySession).getMediaType(), phrase));
+                case tsip_m_local_resume_ok:
+                    {
+                    	if (((mySession = NgnAVSession.getSession(session.getId())) != null) || ((mySession = NgnMsrpSession.getSession(session.getId())) != null)){
+                    		((NgnInviteSession)mySession).setLocalHold(false);
+                    		mSipService.broadcastInviteEvent(new NgnInviteEventArgs(session.getId(), NgnInviteEventTypes.LOCAL_RESUME_OK, ((NgnInviteSession)mySession).getMediaType(), phrase));
+                    	}
+                        break;
                     }
-                    break;
-                }
-                case tsip_o_ect_notify:
-                case tsip_i_ect_notify: {
-                    if (((mySession = NgnAVSession.getSession(session.getId())) != null) || ((mySession = NgnMsrpSession.getSession(session.getId())) != null)) {
-                        NgnInviteEventTypes eType = (type == tsip_invite_event_type_t.tsip_o_ect_notify ? NgnInviteEventTypes.LOCAL_TRANSFER_NOTIFY : NgnInviteEventTypes.REMOTE_TRANSFER_NOTIFY);
-                        NgnInviteEventArgs args = new NgnInviteEventArgs(session.getId(), eType, ((NgnInviteSession) mySession).getMediaType(), phrase);
-                        mSipService.broadcastInviteEvent(args, code);
+                case tsip_m_local_resume_nok:
+                    {
+                    	if (((mySession = NgnAVSession.getSession(session.getId())) != null) || ((mySession = NgnMsrpSession.getSession(session.getId())) != null)){
+                    		mSipService.broadcastInviteEvent(new NgnInviteEventArgs(session.getId(), NgnInviteEventTypes.LOCAL_RESUME_NOK, ((NgnInviteSession)mySession).getMediaType(), phrase));
+                    	}
+                        break;
                     }
-                    break;
-                }
-                case tsip_i_ect_requested: {
-                    if (((mySession = NgnAVSession.getSession(session.getId())) != null) || ((mySession = NgnMsrpSession.getSession(session.getId())) != null)) {
-                        final SipMessage sipMessage = e.getSipMessage();
-                        if (sipMessage != null) {
-                            if (sipMessage.getRequestType() == tsip_request_type_t.tsip_REFER) {
-                                String referToUri = sipMessage.getSipHeaderValue("refer-to");
-                                if (!NgnStringUtils.isNullOrEmpty(referToUri)) {
-                                    NgnInviteEventArgs args = new NgnInviteEventArgs(session.getId(), NgnInviteEventTypes.REMOTE_TRANSFER_REQUESTED, ((NgnInviteSession) mySession).getMediaType(), phrase);
-                                    mSipService.broadcastTransferRequestEvent(args, referToUri);
-                                }
-                            }
-                        }
+                case tsip_m_remote_hold:
+                    {
+                    	if (((mySession = NgnAVSession.getSession(session.getId())) != null) || ((mySession = NgnMsrpSession.getSession(session.getId())) != null)){
+                    		((NgnInviteSession)mySession).setRemoteHold(true);
+                    		mSipService.broadcastInviteEvent(new NgnInviteEventArgs(session.getId(), NgnInviteEventTypes.REMOTE_HOLD, ((NgnInviteSession)mySession).getMediaType(), phrase));
+                    	}
+                        break;
                     }
-
-                    break;
-                }
-                case tsip_i_ect_failed: {
-                    if (((mySession = NgnAVSession.getSession(session.getId())) != null) || ((mySession = NgnMsrpSession.getSession(session.getId())) != null)) {
-                        mSipService.broadcastInviteEvent(new NgnInviteEventArgs(session.getId(), NgnInviteEventTypes.REMOTE_TRANSFER_FAILED, ((NgnInviteSession) mySession).getMediaType(), phrase));
+                case tsip_m_remote_resume:
+                    {
+                    	if (((mySession = NgnAVSession.getSession(session.getId())) != null) || ((mySession = NgnMsrpSession.getSession(session.getId())) != null)){
+                    		((NgnInviteSession)mySession).setRemoteHold(false);
+                    		mSipService.broadcastInviteEvent(new NgnInviteEventArgs(session.getId(), NgnInviteEventTypes.REMOTE_RESUME, ((NgnInviteSession)mySession).getMediaType(), phrase));
+                    	}
+                        break;
                     }
-                    break;
-                }
-                case tsip_i_ect_completed: {
-                    if (((mySession = NgnAVSession.getSession(session.getId())) != null) || ((mySession = NgnMsrpSession.getSession(session.getId())) != null)) {
-                        mSipService.broadcastInviteEvent(new NgnInviteEventArgs(session.getId(), NgnInviteEventTypes.REMOTE_TRANSFER_COMPLETED, ((NgnInviteSession) mySession).getMediaType(), phrase));
+                default:
+                    {
+                    	break;
                     }
-                    break;
-                }
-                case tsip_m_early_media: {
-                    if (((mySession = NgnAVSession.getSession(session.getId())) != null) || ((mySession = NgnMsrpSession.getSession(session.getId())) != null)) {
-                        ((NgnInviteSession) mySession).setState(InviteState.EARLY_MEDIA);
-                        mSipService.broadcastInviteEvent(new NgnInviteEventArgs(session.getId(), NgnInviteEventTypes.EARLY_MEDIA, ((NgnInviteSession) mySession).getMediaType(), phrase));
-                    }
-                    break;
-                }
-                case tsip_m_local_hold_ok: {
-                    if (((mySession = NgnAVSession.getSession(session.getId())) != null) || ((mySession = NgnMsrpSession.getSession(session.getId())) != null)) {
-                        ((NgnInviteSession) mySession).setLocalHold(true);
-                        mSipService.broadcastInviteEvent(new NgnInviteEventArgs(session.getId(), NgnInviteEventTypes.LOCAL_HOLD_OK, ((NgnInviteSession) mySession).getMediaType(), phrase));
-                    }
-                    break;
-                }
-                case tsip_m_updating: {
-                    if (((mySession = NgnAVSession.getSession(session.getId())) != null) || ((mySession = NgnMsrpSession.getSession(session.getId())) != null)) {
-                        mSipService.broadcastInviteEvent(new NgnInviteEventArgs(session.getId(), NgnInviteEventTypes.MEDIA_UPDATING, ((NgnInviteSession) mySession).getMediaType(), phrase));
-                    }
-                    break;
-                }
-                case tsip_m_updated: {
-                    if (((mySession = NgnAVSession.getSession(session.getId())) != null) || ((mySession = NgnMsrpSession.getSession(session.getId())) != null)) {
-                        if (mySession instanceof NgnAVSession) {
-                            NgnAVSession.handleMediaUpdate(mySession.getId(), e.getMediaType());
-                        }
-                        mSipService.broadcastInviteEvent(new NgnInviteEventArgs(session.getId(), NgnInviteEventTypes.MEDIA_UPDATED, ((NgnInviteSession) mySession).getMediaType(), phrase));
-                    }
-                    break;
-                }
-                case tsip_m_local_hold_nok: {
-                    if (((mySession = NgnAVSession.getSession(session.getId())) != null) || ((mySession = NgnMsrpSession.getSession(session.getId())) != null)) {
-                        mSipService.broadcastInviteEvent(new NgnInviteEventArgs(session.getId(), NgnInviteEventTypes.LOCAL_HOLD_NOK, ((NgnInviteSession) mySession).getMediaType(), phrase));
-                    }
-                    break;
-                }
-                case tsip_m_local_resume_ok: {
-                    if (((mySession = NgnAVSession.getSession(session.getId())) != null) || ((mySession = NgnMsrpSession.getSession(session.getId())) != null)) {
-                        ((NgnInviteSession) mySession).setLocalHold(false);
-                        mSipService.broadcastInviteEvent(new NgnInviteEventArgs(session.getId(), NgnInviteEventTypes.LOCAL_RESUME_OK, ((NgnInviteSession) mySession).getMediaType(), phrase));
-                    }
-                    break;
-                }
-                case tsip_m_local_resume_nok: {
-                    if (((mySession = NgnAVSession.getSession(session.getId())) != null) || ((mySession = NgnMsrpSession.getSession(session.getId())) != null)) {
-                        mSipService.broadcastInviteEvent(new NgnInviteEventArgs(session.getId(), NgnInviteEventTypes.LOCAL_RESUME_NOK, ((NgnInviteSession) mySession).getMediaType(), phrase));
-                    }
-                    break;
-                }
-                case tsip_m_remote_hold: {
-                    if (((mySession = NgnAVSession.getSession(session.getId())) != null) || ((mySession = NgnMsrpSession.getSession(session.getId())) != null)) {
-                        ((NgnInviteSession) mySession).setRemoteHold(true);
-                        mSipService.broadcastInviteEvent(new NgnInviteEventArgs(session.getId(), NgnInviteEventTypes.REMOTE_HOLD, ((NgnInviteSession) mySession).getMediaType(), phrase));
-                    }
-                    break;
-                }
-                case tsip_m_remote_resume: {
-                    if (((mySession = NgnAVSession.getSession(session.getId())) != null) || ((mySession = NgnMsrpSession.getSession(session.getId())) != null)) {
-                        ((NgnInviteSession) mySession).setRemoteHold(false);
-                        mSipService.broadcastInviteEvent(new NgnInviteEventArgs(session.getId(), NgnInviteEventTypes.REMOTE_RESUME, ((NgnInviteSession) mySession).getMediaType(), phrase));
-                    }
-                    break;
-                }
-                default: {
-                    break;
-                }
             }
+			
+			return 0;
+		}
 
-            return 0;
-        }
+		@Override
+		public int OnMessagingEvent(MessagingEvent e) {
+			final tsip_message_event_type_t type = e.getType();
+			MessagingSession _session;
+			final SipMessage message;
 
-        @Override
-        public int OnMessagingEvent(MessagingEvent e) {
-            final tsip_message_event_type_t type = e.getType();
-            MessagingSession _session;
-            final SipMessage message;
-
-            switch (type) {
-                case tsip_ao_message:
-                    _session = e.getSession();
-                    message = e.getSipMessage();
-                    short code = e.getCode();
-                    if (_session != null && code >= 200 && message != null) {
-                        mSipService
-                                .broadcastMessagingEvent(
-                                        new NgnMessagingEventArgs(
-                                                _session.getId(),
-                                                (code >= 200 && code <= 299) ? NgnMessagingEventTypes.SUCCESS
-                                                        : NgnMessagingEventTypes.FAILURE,
-                                                e.getPhrase(), new byte[0], null),
-                                        message.getSipHeaderValue("f"),
-                                        NgnDateTimeUtils.now());
-                    }
-                    break;
-                case tsip_i_message:
-                    message = e.getSipMessage();
-                    _session = e.getSession();
-                    NgnMessagingSession imSession;
-                    if (_session == null) {
+			switch (type) {
+			case tsip_ao_message:
+				_session = e.getSession();
+				message = e.getSipMessage();
+				short code = e.getCode();
+				if (_session != null && code >= 200 && message != null) {
+					mSipService
+							.broadcastMessagingEvent(
+									new NgnMessagingEventArgs(
+											_session.getId(),
+											(code >= 200 && code <= 299) ? NgnMessagingEventTypes.SUCCESS
+													: NgnMessagingEventTypes.FAILURE,
+											e.getPhrase(), new byte[0], null),
+									message.getSipHeaderValue("f"),
+									NgnDateTimeUtils.now());
+				}
+				break;
+			case tsip_i_message:
+				message = e.getSipMessage();
+				_session = e.getSession();
+				NgnMessagingSession imSession;
+				if (_session == null) {
 					/*
 					 * "Server-side-session" e.g. Initial MESSAGE sent by the
 					 * remote party
 					 */
-                        _session = e.takeSessionOwnership();
-                    }
+					_session = e.takeSessionOwnership();
+				}
 
-                    if (_session == null) {
-                        Log.e(NgnSipService.TAG, "Failed to take session ownership");
-                        return -1;
-                    }
-                    imSession = NgnMessagingSession.takeIncomingSession(
-                            mSipService.mSipStack, _session, message);
-                    if (message == null) {
-                        imSession.reject();
-                        imSession.decRef();
-                        return 0;
-                    }
+				if (_session == null) {
+					Log.e(NgnSipService.TAG, "Failed to take session ownership");
+					return -1;
+				}
+				imSession = NgnMessagingSession.takeIncomingSession(
+						mSipService.mSipStack, _session, message);
+				if (message == null) {
+					imSession.reject();
+					imSession.decRef();
+					return 0;
+				}
 
-                    String from = message.getSipHeaderValue("f");
-                    final String contentType = message.getSipHeaderValue("c");
-                    final byte[] bytes = message.getSipContent();
-                    byte[] content = null;
+				String from = message.getSipHeaderValue("f");
+				final String contentType = message.getSipHeaderValue("c");
+				final byte[] bytes = message.getSipContent();
+				byte[] content = null;
 
-                    if (bytes == null || bytes.length == 0) {
-                        Log.e(NgnSipService.TAG, "Invalid MESSAGE");
-                        imSession.reject();
-                        imSession.decRef();
-                        return 0;
-                    }
+				if (bytes == null || bytes.length == 0) {
+					Log.e(NgnSipService.TAG, "Invalid MESSAGE");
+					imSession.reject();
+					imSession.decRef();
+					return 0;
+				}
 
-                    imSession.accept();
+				imSession.accept();
 
-                    if (NgnStringUtils.equals(contentType, NgnContentType.SMS_3GPP,
-                            true)) {
+				if (NgnStringUtils.equals(contentType, NgnContentType.SMS_3GPP,
+						true)) {
 					/* ==== 3GPP SMSIP === */
-                        ByteBuffer buffer = ByteBuffer.allocateDirect(bytes.length);
-                        buffer.put(bytes);
-                        SMSData smsData = SMSEncoder.decode(buffer,
-                                buffer.capacity(), false);
-                        if (smsData != null) {
-                            twrap_sms_type_t smsType = smsData.getType();
-                            if (smsType == twrap_sms_type_t.twrap_sms_type_rpdata) {
+					ByteBuffer buffer = ByteBuffer.allocateDirect(bytes.length);
+					buffer.put(bytes);
+					SMSData smsData = SMSEncoder.decode(buffer,
+							buffer.capacity(), false);
+					if (smsData != null) {
+						twrap_sms_type_t smsType = smsData.getType();
+						if (smsType == twrap_sms_type_t.twrap_sms_type_rpdata) {
 							/* === We have received a RP-DATA message === */
-                                long payLength = smsData.getPayloadLength();
-                                String SMSC = message
-                                        .getSipHeaderValue("P-Asserted-Identity");
-                                String SMSCPhoneNumber;
-                                String origPhoneNumber = smsData.getOA();
+							long payLength = smsData.getPayloadLength();
+							String SMSC = message
+									.getSipHeaderValue("P-Asserted-Identity");
+							String SMSCPhoneNumber;
+							String origPhoneNumber = smsData.getOA();
 
 							/* Destination address */
-                                if (origPhoneNumber != null) {
-                                    from = NgnUriUtils
-                                            .makeValidSipUri(origPhoneNumber);
-                                } else if ((origPhoneNumber = NgnUriUtils
-                                        .getValidPhoneNumber(from)) == null) {
-                                    Log.e(NgnSipService.TAG,
-                                            "Invalid destination address");
-                                    return 0;
-                                }
+							if (origPhoneNumber != null) {
+								from = NgnUriUtils
+										.makeValidSipUri(origPhoneNumber);
+							} else if ((origPhoneNumber = NgnUriUtils
+									.getValidPhoneNumber(from)) == null) {
+								Log.e(NgnSipService.TAG,
+										"Invalid destination address");
+								return 0;
+							}
 
 							/*
 							 * SMS Center 3GPP TS 24.341 - 5.3.2.4 Sending a
@@ -1243,217 +1243,226 @@ public class NgnSipService extends NgnBaseService implements INgnSipService,
 							 * SIP MESSAGE request including the delivered short
 							 * message.
 							 */
-                                if ((SMSCPhoneNumber = NgnUriUtils
-                                        .getValidPhoneNumber(SMSC)) == null) {
-                                    SMSC = NgnEngine
-                                            .getInstance()
-                                            .getConfigurationService()
-                                            .getString(
-                                                    NgnConfigurationEntry.RCS_SMSC,
-                                                    NgnConfigurationEntry.DEFAULT_RCS_SMSC);
-                                    if ((SMSCPhoneNumber = NgnUriUtils
-                                            .getValidPhoneNumber(SMSC)) == null) {
-                                        Log.e(NgnSipService.TAG,
-                                                "Invalid IP-SM-GW address");
-                                        return 0;
-                                    }
-                                }
+							if ((SMSCPhoneNumber = NgnUriUtils
+									.getValidPhoneNumber(SMSC)) == null) {
+								SMSC = NgnEngine
+										.getInstance()
+										.getConfigurationService()
+										.getString(
+												NgnConfigurationEntry.RCS_SMSC,
+												NgnConfigurationEntry.DEFAULT_RCS_SMSC);
+								if ((SMSCPhoneNumber = NgnUriUtils
+										.getValidPhoneNumber(SMSC)) == null) {
+									Log.e(NgnSipService.TAG,
+											"Invalid IP-SM-GW address");
+									return 0;
+								}
+							}
 
-                                if (payLength > 0) {
+							if (payLength > 0) {
 								/* Send RP-ACK */
-                                    RPMessage rpACK = SMSEncoder.encodeACK(
-                                            smsData.getMR(), SMSCPhoneNumber,
-                                            origPhoneNumber, false);
-                                    if (rpACK != null) {
-                                        long ack_len = rpACK.getPayloadLength();
-                                        if (ack_len > 0) {
-                                            buffer = ByteBuffer
-                                                    .allocateDirect((int) ack_len);
-                                            long len = rpACK.getPayload(buffer,
-                                                    buffer.capacity());
-                                            MessagingSession m = new MessagingSession(
-                                                    mSipService.getSipStack());
-                                            m.setToUri(SMSC);
-                                            m.addHeader("Content-Type",
-                                                    NgnContentType.SMS_3GPP);
-                                            m.addHeader(
-                                                    "Content-Transfer-Encoding",
-                                                    "binary");
-                                            m.addCaps("+g.3gpp.smsip");
-                                            m.send(buffer, len);
-                                            m.delete();
-                                        }
-                                        rpACK.delete();
-                                    }
+								RPMessage rpACK = SMSEncoder.encodeACK(
+										smsData.getMR(), SMSCPhoneNumber,
+										origPhoneNumber, false);
+								if (rpACK != null) {
+									long ack_len = rpACK.getPayloadLength();
+									if (ack_len > 0) {
+										buffer = ByteBuffer
+												.allocateDirect((int) ack_len);
+										long len = rpACK.getPayload(buffer,
+												buffer.capacity());
+										MessagingSession m = new MessagingSession(
+												mSipService.getSipStack());
+										m.setToUri(SMSC);
+										m.addHeader("Content-Type",
+												NgnContentType.SMS_3GPP);
+										m.addHeader(
+												"Content-Transfer-Encoding",
+												"binary");
+										m.addCaps("+g.3gpp.smsip");
+										m.send(buffer, len);
+										m.delete();
+									}
+									rpACK.delete();
+								}
 
 								/* Get ascii content */
-                                    buffer = ByteBuffer
-                                            .allocateDirect((int) payLength);
-                                    content = new byte[(int) payLength];
-                                    smsData.getPayload(buffer, buffer.capacity());
-                                    buffer.get(content);
-                                } else {
+								buffer = ByteBuffer
+										.allocateDirect((int) payLength);
+								content = new byte[(int) payLength];
+								smsData.getPayload(buffer, buffer.capacity());
+								buffer.get(content);
+							} else {
 								/* Send RP-ERROR */
-                                    RPMessage rpError = SMSEncoder.encodeError(
-                                            smsData.getMR(), SMSCPhoneNumber,
-                                            origPhoneNumber, false);
-                                    if (rpError != null) {
-                                        long err_len = rpError.getPayloadLength();
-                                        if (err_len > 0) {
-                                            buffer = ByteBuffer
-                                                    .allocateDirect((int) err_len);
-                                            long len = rpError.getPayload(buffer,
-                                                    buffer.capacity());
+								RPMessage rpError = SMSEncoder.encodeError(
+										smsData.getMR(), SMSCPhoneNumber,
+										origPhoneNumber, false);
+								if (rpError != null) {
+									long err_len = rpError.getPayloadLength();
+									if (err_len > 0) {
+										buffer = ByteBuffer
+												.allocateDirect((int) err_len);
+										long len = rpError.getPayload(buffer,
+												buffer.capacity());
 
-                                            MessagingSession m = new MessagingSession(
-                                                    mSipService.getSipStack());
-                                            m.setToUri(SMSC);
-                                            m.addHeader("Content-Type",
-                                                    NgnContentType.SMS_3GPP);
-                                            m.addHeader("Transfer-Encoding",
-                                                    "binary");
-                                            m.addCaps("+g.3gpp.smsip");
-                                            m.send(buffer, len);
-                                            m.delete();
-                                        }
-                                        rpError.delete();
-                                    }
-                                }
-                            } else {
+										MessagingSession m = new MessagingSession(
+												mSipService.getSipStack());
+										m.setToUri(SMSC);
+										m.addHeader("Content-Type",
+												NgnContentType.SMS_3GPP);
+										m.addHeader("Transfer-Encoding",
+												"binary");
+										m.addCaps("+g.3gpp.smsip");
+										m.send(buffer, len);
+										m.delete();
+									}
+									rpError.delete();
+								}
+							}
+						} else {
 							/* === We have received any non-RP-DATA message === */
-                                if (smsType == twrap_sms_type_t.twrap_sms_type_ack) {
+							if (smsType == twrap_sms_type_t.twrap_sms_type_ack) {
 								/*
 								 * Find message from the history (by MR) an
 								 * update it's status
 								 */
-                                    Log.d(NgnSipService.TAG, "RP-ACK");
-                                } else if (smsType == twrap_sms_type_t.twrap_sms_type_error) {
+								Log.d(NgnSipService.TAG, "RP-ACK");
+							} else if (smsType == twrap_sms_type_t.twrap_sms_type_error) {
 								/*
 								 * Find message from the history (by MR) an
 								 * update it's status
 								 */
-                                    Log.d(NgnSipService.TAG, "RP-ERROR");
-                                }
-                            }
-                        }
-                    } else {
+								Log.d(NgnSipService.TAG, "RP-ERROR");
+							}
+						}
+					}
+				} else {
 					/* ==== text/plain or any other === */
-                        content = bytes;
-                    }
+					content = bytes;
+				}
 
 				/* Alert the user and add the message to the history */
-                    if (content != null) {
-                        mSipService
-                                .broadcastMessagingEvent(
-                                        new NgnMessagingEventArgs(_session.getId(),
-                                                NgnMessagingEventTypes.INCOMING, e
-                                                .getPhrase(), content,
-                                                contentType), from,
-                                        NgnDateTimeUtils.now());
-                    }
+				if (content != null) {
+					mSipService
+							.broadcastMessagingEvent(
+									new NgnMessagingEventArgs(_session.getId(),
+											NgnMessagingEventTypes.INCOMING, e
+													.getPhrase(), content,
+											contentType), from,
+									NgnDateTimeUtils.now());
+				}
 
-                    break;
-            }
+				break;
+			}
 
-            return 0;
-        }
+			return 0;
+		}
 
-        @Override
-        public int OnStackEvent(StackEvent e) {
-            // final String phrase = e.getPhrase();
-            final short code = e.getCode();
-            switch (code) {
-                case tinyWRAPConstants.tsip_event_code_stack_started:
-                    mSipService.mSipStack.setState(STACK_STATE.STARTED);
-                    Log.d(NgnSipService.TAG, "Stack started");
-                    break;
-                case tinyWRAPConstants.tsip_event_code_stack_failed_to_start:
-                    final String phrase = e.getPhrase();
-                    Log.e(TAG, String.format(
-                            "Failed to start the stack. \nAdditional info:\n%s",
-                            phrase));
-                    break;
-                case tinyWRAPConstants.tsip_event_code_stack_failed_to_stop:
-                    Log.e(TAG, "Failed to stop the stack");
-                    break;
-                case tinyWRAPConstants.tsip_event_code_stack_stopped:
-                    mSipService.mSipStack.setState(STACK_STATE.STOPPED);
-                    Log.d(TAG, "Stack stopped");
-                    break;
-                case tinyWRAPConstants.tsip_event_code_stack_disconnected:
-                    mSipService.mSipStack.setState(STACK_STATE.DISCONNECTED);
-                    Log.d(TAG, "Stack disconnected");
-                    break;
-            }
-            return 0;
-        }
+		@Override
+		public int OnStackEvent(StackEvent e) {
+			// final String phrase = e.getPhrase();
+			final short code = e.getCode();
+			switch (code) {
+			case tinyWRAPConstants.tsip_event_code_stack_started:
+				mSipService.mSipStack.setState(STACK_STATE.STARTED);
+				Log.d(NgnSipService.TAG, "Stack started");
+				break;
+			case tinyWRAPConstants.tsip_event_code_stack_failed_to_start:
+				final String phrase = e.getPhrase();
+				Log.e(TAG, String.format(
+						"Failed to start the stack. \nAdditional info:\n%s",
+						phrase));
+				break;
+			case tinyWRAPConstants.tsip_event_code_stack_failed_to_stop:
+				Log.e(TAG, "Failed to stop the stack");
+				break;
+			case tinyWRAPConstants.tsip_event_code_stack_stopped:
+				mSipService.mSipStack.setState(STACK_STATE.STOPPED);
+				if (mSipService.mTerminateRequested) {
+					mSipService.mActiveConnection = null;
+				}
+				mSipService.mNetworkService.bindProcessToConnection(null);
+				Log.d(TAG, "Stack stopped");
+				break;
+			case tinyWRAPConstants.tsip_event_code_stack_disconnected:
+				mSipService.mSipStack.setState(STACK_STATE.DISCONNECTED);
+				if (mSipService.mTerminateRequested) {
+					mSipService.mActiveConnection = null;
+				}
+				Log.d(TAG, "Stack disconnected");
+				break;
+			}
+			return 0;
+		}
 
-        @Override
-        public int OnSubscriptionEvent(SubscriptionEvent e) {
-            final tsip_subscribe_event_type_t type = e.getType();
-            SubscriptionSession _session = e.getSession();
-            switch (type) {
-                case tsip_i_notify: {
-                    final short code = e.getCode();
-                    final String phrase = e.getPhrase();
-                    final SipMessage message = e.getSipMessage();
-                    if (message == null || _session == null) {
-                        return 0;
-                    }
-                    final String contentType = message.getSipHeaderValue("c");
-                    final byte[] content = message.getSipContent();
-                    if (NgnStringUtils.equals(contentType, NgnContentType.REG_INFO,
-                            true)) {
-                        // mReginfo = content;
-                    } else if (NgnStringUtils.equals(contentType,
-                            NgnContentType.WATCHER_INFO, true)) {
-                        //mWInfo = content;
-                    }
+		@Override
+		public int OnSubscriptionEvent(SubscriptionEvent e) {
+			final tsip_subscribe_event_type_t type = e.getType();
+			SubscriptionSession _session = e.getSession();
 
-                    NgnSubscriptionSession ngnSession = NgnSubscriptionSession
-                            .getSession(_session.getId());
-                    NgnSubscriptionEventArgs eargs = new NgnSubscriptionEventArgs(
-                            _session.getId(),
-                            NgnSubscriptionEventTypes.INCOMING_NOTIFY, code,
-                            phrase, content, contentType,
-                            ngnSession == null ? EventPackageType.None : ngnSession
-                                    .getEventPackage());
-                    mSipService.broadcastSubscriptionEvent(eargs);
-                    break;
-                }
+			switch (type) {
+			case tsip_i_notify: {
+				final short code = e.getCode();
+				final String phrase = e.getPhrase();
+				final SipMessage message = e.getSipMessage();
+				if (message == null || _session == null) {
+					return 0;
+				}
+				final String contentType = message.getSipHeaderValue("c");
+				final byte[] content = message.getSipContent();
 
-                case tsip_ao_notify:
-                case tsip_i_subscribe:
-                case tsip_ao_subscribe:
-                case tsip_i_unsubscribe:
-                case tsip_ao_unsubscribe:
-                default: {
-                    break;
-                }
-            }
+				if (NgnStringUtils.equals(contentType, NgnContentType.REG_INFO,
+						true)) {
+					// mReginfo = content;
+				} else if (NgnStringUtils.equals(contentType,
+						NgnContentType.WATCHER_INFO, true)) {
+					// mWInfo = content;
+				}
 
-            return 0;
-        }
+				NgnSubscriptionSession ngnSession = NgnSubscriptionSession
+						.getSession(_session.getId());
+				NgnSubscriptionEventArgs eargs = new NgnSubscriptionEventArgs(
+						_session.getId(),
+						NgnSubscriptionEventTypes.INCOMING_NOTIFY, code,
+						phrase, content, contentType,
+						ngnSession == null ? EventPackageType.None : ngnSession
+								.getEventPackage());
+				mSipService.broadcastSubscriptionEvent(eargs);
 
-        @Override
-        public int OnOptionsEvent(OptionsEvent e) {
-            final tsip_options_event_type_t type = e.getType();
-            OptionsSession ptSession = e.getSession();
+				break;
+			}
 
-            switch (type) {
-                case tsip_i_options:
-                    if (ptSession == null) { // New session
-                        if ((ptSession = e.takeSessionOwnership()) != null) {
-                            ptSession.accept();
-                            ptSession.delete();
-                        }
-                    }
-                    break;
-                default:
-                    break;
-            }
-            return 0;
-        }
+			case tsip_ao_notify:
+			case tsip_i_subscribe:
+			case tsip_ao_subscribe:
+			case tsip_i_unsubscribe:
+			case tsip_ao_unsubscribe:
+			default: {
+				break;
+			}
+			}
 
-    }
+			return 0;
+		}
+
+		@Override
+		public int OnOptionsEvent(OptionsEvent e) {
+			final tsip_options_event_type_t type = e.getType();
+			OptionsSession ptSession = e.getSession();
+
+			switch (type) {
+			case tsip_i_options:
+				if (ptSession == null) { // New session
+					if ((ptSession = e.takeSessionOwnership()) != null) {
+						ptSession.accept();
+						ptSession.delete();
+					}
+				}
+				break;
+			default:
+				break;
+			}
+			return 0;
+		}
+	}
 }

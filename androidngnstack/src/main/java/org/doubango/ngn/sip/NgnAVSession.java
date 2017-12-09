@@ -22,6 +22,7 @@
 package org.doubango.ngn.sip;
 
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Field;
 import java.nio.ByteBuffer;
 import java.util.Collection;
 import java.util.Map;
@@ -53,6 +54,7 @@ import org.doubango.tinyWRAP.CallSession;
 import org.doubango.tinyWRAP.Codec;
 import org.doubango.tinyWRAP.MediaSessionMgr;
 import org.doubango.tinyWRAP.ProxyPlugin;
+import org.doubango.tinyWRAP.QoS;
 import org.doubango.tinyWRAP.SipMessage;
 import org.doubango.tinyWRAP.SipSession;
 import org.doubango.tinyWRAP.T140Callback;
@@ -94,6 +96,19 @@ public class NgnAVSession extends NgnInviteSession{
 	private boolean mSpeakerOn;
 	
     private final static NgnObservableHashMap<Long, NgnAVSession> sSessions = new NgnObservableHashMap<Long, NgnAVSession>(true);
+	private static int AudioManager_MODE_IN_COMMUNICATION = AudioManager.MODE_IN_CALL;
+
+	static {
+		if (NgnApplication.getSDKVersion() >= 11) {
+			try {
+				final Field f = AudioManager.class.getDeclaredField("MODE_IN_COMMUNICATION");
+				AudioManager_MODE_IN_COMMUNICATION = f.getInt(null);
+			}
+			catch(Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
     
     public static NgnAVSession takeIncomingSession(NgnSipStack sipStack, CallSession session, twrap_media_type_t mediaType, SipMessage sipMessage){
         NgnMediaType media = NgnMediaType.ConvertFromNative(mediaType);
@@ -292,7 +307,7 @@ public class NgnAVSession extends NgnInviteSession{
 
         return ret;
     }
-
+    
     /**
      * Starts video sharing session
      * @param remoteUri  the remote party uri. Could be a SIP/TEL uri, nomadic number, MSISDN number, ...
@@ -563,15 +578,25 @@ public class NgnAVSession extends NgnInviteSession{
 	 * @param rot rotation angle in degree
 	 */
 	public void setRotation(int rot){
-		if(mVideoProducer != null){
+		if (mVideoProducer != null) {
 			mVideoProducer.setRotation(rot);
+		}
+	}
+	
+	/**
+	 * Sets whether to mirror the outgoing video
+	 * @param mirror
+	 */
+	public void setMirror(boolean mirror){
+		if(mVideoProducer != null){
+			mVideoProducer.setMirror(mirror);
 		}
 	}
 	
 	public boolean setProducerFlipped(boolean flipped){
 		final MediaSessionMgr mediaMgr;
 		if((mediaMgr = super.getMediaSessionMgr()) != null){
-			return mediaMgr.producerSetInt32(twrap_media_type_t.twrap_media_video, "flip", flipped?1:0);
+			return mediaMgr.producerSetInt32(twrap_media_type_t.twrap_media_video, "flip", flipped ? 1 : 0);
 		}
 		return false;
 	}
@@ -579,7 +604,7 @@ public class NgnAVSession extends NgnInviteSession{
 	public boolean setConsumerFlipped(boolean flipped){
 		final MediaSessionMgr mediaMgr;
 		if((mediaMgr = super.getMediaSessionMgr()) != null){
-			return mediaMgr.consumerSetInt32(twrap_media_type_t.twrap_media_video, "flip", flipped?1:0);
+			return mediaMgr.consumerSetInt32(twrap_media_type_t.twrap_media_video, "flip", flipped ? 1 : 0);
 		}
 		return false;
 	}
@@ -597,6 +622,27 @@ public class NgnAVSession extends NgnInviteSession{
 		final MediaSessionMgr mediaMgr;
 		if((mediaMgr = super.getMediaSessionMgr()) != null){
 			return mediaMgr.sessionSetInt32(twrap_media_type_t.twrap_media_audio, "echo-supp", enabled ? 1 : 0);
+		}
+		return false;
+	}
+	
+	public boolean setVideoFps(int fps) {
+		if (mSession != null) {
+			return mSession.setVideoFps(fps);
+		}
+		return false;
+	}
+	
+	public boolean setVideoBandwidthUploadMax(int bw_max_kbps) {
+		if (mSession != null) {
+			return mSession.setVideoBandwidthUploadMax(bw_max_kbps);
+		}
+		return false;
+	}
+	
+	public boolean setVideoBandwidthDownloadMax(int bw_max_kbps) {
+		if (mSession != null) {
+			return mSession.setVideoBandwidthDownloadMax(bw_max_kbps);
 		}
 		return false;
 	}
@@ -695,7 +741,7 @@ public class NgnAVSession extends NgnInviteSession{
 						break;
 					case INCALL:
 					case EARLY_MEDIA:
-						audiomanager.setMode(NgnApplication.getSDKVersion() >= 11 ? AudioManager.MODE_IN_COMMUNICATION : AudioManager.MODE_IN_CALL);
+						audiomanager.setMode(NgnApplication.getSDKVersion() >= 11 ? AudioManager_MODE_IN_COMMUNICATION : AudioManager.MODE_IN_CALL);
 						break;
 					case TERMINATED:
 					case TERMINATING:
@@ -747,6 +793,31 @@ public class NgnAVSession extends NgnInviteSession{
 	public long getStartTime(){
 		return mHistoryEvent.getStartTime();
 	}
+	
+	public int getVideoWidthNegotiated() {
+		return (mVideoConsumer != null) ? mVideoConsumer.getVideoWidthNegotiated() : 0;
+	}
+	
+	public int getVideoHeightNegotiated() {
+		return (mVideoConsumer != null) ? mVideoConsumer.getVideoHeightNegotiated() : 0;
+	}
+	
+	public int getVideoWidthReceived() {
+		return (mVideoConsumer != null) ? mVideoConsumer.getVideoWidthReceived() : 0;
+	}
+	
+	public int getVideoHeightReceived() {
+		return (mVideoConsumer != null) ? mVideoConsumer.getVideoHeightReceived() : 0;
+	}
+
+	public QoS getQoSVideo()
+    {
+        final MediaSessionMgr mediaMgr;
+        if ((mediaMgr = super.getMediaSessionMgr()) != null) {
+            return mediaMgr.sessionGetQoS(twrap_media_type_t.twrap_media_video);
+        }
+        return null;
+    }
 	
 	/**
 	 * Accepts an incoming audio/video call
@@ -813,7 +884,21 @@ public class NgnAVSession extends NgnInviteSession{
     public boolean rejectCallTransfer(){
         return super.isActive() ? mSession.rejectTransfer() : false;
     }
-	
+
+	/**
+	 * Update the call session
+	 * @param newMediaType new media type
+	 * @return true if succeed and false otherwise.
+	 */
+	public boolean updateCall(NgnMediaType newMediaType) {
+		if (super.mMediaType == newMediaType) {
+			return true;
+		}
+		boolean ret;
+		super.mMediaType = newMediaType;
+		return makeCall(super.getRemotePartyUri());
+	}
+
 	/**
 	 * Checks whether the call is locally held held or not. You should use @ref resumeCall() to resume
 	 * the call.
@@ -831,10 +916,10 @@ public class NgnAVSession extends NgnInviteSession{
 		super.setLocalHold(localHold);
 		
 		if(mVideoProducer != null){
-			mVideoProducer.setOnPause(mLocalHold || mRemoteHold);
+			mVideoProducer.setOnPause(mLocalHold);
 		}
 		if(mAudioProducer != null){
-			mAudioProducer.setOnPause(mLocalHold || mRemoteHold);
+			mAudioProducer.setOnPause(mLocalHold);
 		}
 		
 		if(changed){
@@ -856,13 +941,6 @@ public class NgnAVSession extends NgnInviteSession{
 	public void setRemoteHold(boolean remoteHold){
 		final boolean changed = mRemoteHold != remoteHold;
 		super.setRemoteHold(remoteHold);
-		
-		if(mVideoProducer != null){
-			mVideoProducer.setOnPause(mLocalHold || mRemoteHold);
-		}
-		if(mAudioProducer != null){
-			mAudioProducer.setOnPause(mLocalHold || mRemoteHold);
-		}
 		
 		if(changed){
 			super.setChangedAndNotifyObservers(this);

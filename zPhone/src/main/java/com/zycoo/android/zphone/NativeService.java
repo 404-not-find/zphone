@@ -185,7 +185,7 @@ public class NativeService extends NgnNativeService implements Observer {
                         case REGISTRATION_OK:
                             // mwi
                             //TODO add function to interface
-                            ((NgnSipService) mEngine.getSipService()).doPostRegistrationOp();
+                            // ((NgnSipService) mEngine.getSipService()).doPostRegistrationOp();
                             break;
                         case REGISTRATION_NOK:
                             Toast.makeText(ZphoneApplication.getContext(),
@@ -195,7 +195,7 @@ public class NativeService extends NgnNativeService implements Observer {
                         case UNREGISTRATION_INPROGRESS:
                             break;
                         case UNREGISTRATION_OK:
-                            ((NgnSipService) mEngine.getSipService()).doPostRegistrationOp();
+                            // ((NgnSipService) mEngine.getSipService()).doPostRegistrationOp();
                             break;
                         case UNREGISTRATION_NOK:
                         default:

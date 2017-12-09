@@ -21,7 +21,6 @@
 package org.doubango.ngn;
 
 import java.io.File;
-import java.util.logging.Logger;
 
 import org.doubango.ngn.media.NgnProxyPluginMgr;
 import org.doubango.ngn.services.INgnConfigurationService;
@@ -101,28 +100,29 @@ public class NgnEngine {
 		if(!sInitialized){
 			// See 'http://code.google.com/p/imsdroid/issues/detail?id=197' for more information
 			// Load Android utils library (required to detect CPU features)
+			// We've to use "System.loadLibrary" instead of "System.load" to fix https://github.com/DoubangoTelecom/imsdroid/issues/566
 			boolean haveLibUtils = new File(String.format("%s/%s", NgnEngine.LIBS_FOLDER, "libutils_armv5te.so")).exists();
 			if (haveLibUtils) { // only "armeabi-v7a" comes with "libutils.so"
-				System.load(String.format("%s/%s", NgnEngine.LIBS_FOLDER, "libutils_armv5te.so"));
+				System.loadLibrary("utils_armv5te");
 				Log.d(TAG,"CPU_Feature="+AndroidUtils.getCpuFeatures());
 				if(NgnApplication.isCpuNeon()){
 					Log.d(TAG,"isCpuNeon()=YES");
-					System.load(String.format("%s/%s", NgnEngine.LIBS_FOLDER, "libtinyWRAP_neon.so"));
+					System.loadLibrary("tinyWRAP_neon");
 				}
 				else{
 					Log.d(TAG,"isCpuNeon()=NO");
-					System.load(String.format("%s/%s", NgnEngine.LIBS_FOLDER, "libtinyWRAP.so"));
+					System.loadLibrary("tinyWRAP");
 				}
 			}
 			else {
 				// "armeabi", "mips", "x86"...
-				System.load(String.format("%s/%s", NgnEngine.LIBS_FOLDER, "libtinyWRAP.so"));
+				System.loadLibrary("tinyWRAP");
 			}
-				
+
 			// If OpenSL ES is supported and know to work on current device then used it
 			if(NgnApplication.isSLEs2KnownToWork()){
 				final String pluginPath = String.format("%s/%s", NgnEngine.LIBS_FOLDER, "libplugin_audio_opensles.so");
-				
+
 				// returned value is the number of registered add-ons (2 = 1 consumer + 1 producer)
 				if(MediaSessionMgr.registerAudioPluginFromFile(pluginPath) < 2){
 					// die if cannot load add-ons
@@ -278,9 +278,11 @@ public class NgnEngine {
 		MediaSessionMgr.defaultsSetOpusMaxCaptureRate(16000);// /!\IMPORTANT: only 8k and 16k will work with WebRTC AEC
 		MediaSessionMgr.defaultsSetOpusMaxPlaybackRate(16000);
 		
-		MediaSessionMgr.defaultsSetCongestionCtrlEnabled(false);
+		MediaSessionMgr.defaultsSetCongestionCtrlEnabled(true);
 		MediaSessionMgr.defaultsSetBandwidthVideoDownloadMax(-1);
 		MediaSessionMgr.defaultsSetBandwidthVideoUploadMax(-1);
+		MediaSessionMgr.defaultsSetAdaptativeVideoSizeOutEnabled(false);
+		MediaSessionMgr.defaultsSetPrefVideoSizeOutRange(tmedia_pref_video_size_t.tmedia_pref_video_size_sqcif, tmedia_pref_video_size_t.tmedia_pref_video_size_2160p);
 		
 		MediaSessionMgr.defaultsSetAudioChannels(1, 1); // (mono, mono)
 		MediaSessionMgr.defaultsSetAudioPtime(20);
@@ -299,18 +301,21 @@ public class NgnEngine {
 		if(mStarted){
 			return true;
 		}
+		
 		boolean success = true;
+		
 		success &= getConfigurationService().start();
 		success &= getStorageService().start();
 		success &= getNetworkService().start();
 		success &= getHttpClientService().start();
 		success &= getHistoryService().start();
 		success &= getContactService().start();
-        success &= getSipService().start();
+		success &= getSipService().start();
 		success &= getSoundService().start();
+		
 		if(success){
 			success &= getHistoryService().load();
-			/* success &=*/getContactService().load();
+			/* success &=*/ getContactService().load();
 			
 			NgnApplication.getContext().startService(
 					new Intent(NgnApplication.getContext(), getNativeServiceClass()));
@@ -318,6 +323,7 @@ public class NgnEngine {
 		else{
 			Log.e(TAG, "Failed to start services");
 		}
+		
 		mStarted = true;
 		return success;
 	}
@@ -332,7 +338,7 @@ public class NgnEngine {
 		}
 		
 		boolean success = true;
-
+		
 		success &= getConfigurationService().stop();
 		success &= getHttpClientService().stop();
 		success &= getHistoryService().stop();

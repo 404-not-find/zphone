@@ -53,7 +53,7 @@ public interface INgnHistoryService extends INgnBaseService{
     void updateEvent(NgnHistoryEvent event);
     /**
      * Deletes an event from the history list
-     * @param event the event to remove_from_call_log
+     * @param event the event to delete
      */
     void deleteEvent(NgnHistoryEvent event);
     /**
