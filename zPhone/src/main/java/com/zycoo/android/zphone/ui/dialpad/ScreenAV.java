@@ -1099,7 +1099,7 @@ public class ScreenAV extends FragmentActivity implements OnClickListener, OnDtm
                     return;
                 }
                 if (event.values != null && event.values.length > 0) {
-                    if (event.values[0] < this.mMaxRange) {
+                    if (event.values[0] <= this.mMaxRange) {
                         Log.d(TAG, "reenableKeyguard()");
                         mAVScreen.loadProxSensorView();
                     } else {
@@ -1114,18 +1114,21 @@ public class ScreenAV extends FragmentActivity implements OnClickListener, OnDtm
             boolean enable_pro_sensor = mConfigurationService.getBoolean(ZycooConfigurationEntry.GENERAL_PROXIMITY_SENSOR, ZycooConfigurationEntry.DEFAULT_GENERAL_PROXIMITY_SENSOR);
             if (enable_pro_sensor && null != mProSensorWakeLock && its != null && event.sensor.getType() == Sensor.TYPE_PROXIMITY) {
                 if (its[0] != mMaxRange) {// 贴近手机
-                    if (mProSensorWakeLock.isHeld()) {
-                        return;
-                    } else {
-                        mProSensorWakeLock.acquire();// 申请设备电源锁
-                    }
+//                    if (mProSensorWakeLock.isHeld()) {
+//                        return;
+//                    } else {
+//                        mProSensorWakeLock.acquire();// 申请设备电源锁
+//                    }
+                    mProSensorWakeLock.acquire();// 申请设备电源锁
                 } else {// 远离手机
-                    if (mProSensorWakeLock.isHeld()) {
-                        return;
-                    } else {
-                        mProSensorWakeLock.setReferenceCounted(false);
-                        mProSensorWakeLock.release(); // 释放设备电源锁
-                    }
+//                    if (mProSensorWakeLock.isHeld()) {
+//                        return;
+//                    } else {
+//                        mProSensorWakeLock.setReferenceCounted(false);
+//                        mProSensorWakeLock.release(); // 释放设备电源锁
+//                    }
+                    mProSensorWakeLock.setReferenceCounted(false);
+                    mProSensorWakeLock.release(); // 释放设备电源锁
                 }
             }
         }
